@@ -1,0 +1,44 @@
+version: '3.5'
+
+networks:
+  cell:
+    external: false
+    name: ${MLKC_CELL_APP_NAME}
+
+services:
+  postgis:
+    image: malkab/postgis:feral_fennec
+    container_name: cell-postgis
+    shm_size: '2gb'
+
+    environment:
+      - PASSWORD=${MLKC_CELL_DB_PASSWORD}
+
+    networks:
+      - cell
+
+    ports:
+      - "${MLKC_CELL_DB_OUTER_PORT}:5432"
+
+    volumes:
+      - ./000-localhost-volumes/cell-postgis:/data
+      - ../../cell-persistence/postgres_config/postgresql.conf:/default_confs/postgresql.conf
+
+  redis:
+    image: redis:5.0
+    container_name: cell-redis
+    shm_size: '2gb'
+
+    networks:
+      - cell
+
+    ports:
+      - "${MLKC_CELL_REDIS_OUTER_PORT}:6379"
+
+    volumes:
+      - ./000-localhost-volumes/sunnsaas-redis:/data
+      - ../../cell-persistence/redis_config/redis.conf:/redis.conf:ro
+  
+    entrypoint:
+      - redis-server
+      - /redis.conf

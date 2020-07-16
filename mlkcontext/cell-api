@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# cell-api sync
+export MLKC_GIT_ROOT=malkab@euler:/home/git/
+
+# AWS PEM
+export MLKC_PEM=$MLKC_CELL_API_PEM
+export MLKC_HOST=$MLKC_CELL_API_HOST
+export MLKC_USER=$MLKC_CELL_API_USER
+export MLKC_CELL_REDIS_PASSWORD=$MLKC_CELL_REDIS_PASS
+export MLKC_CELL_DB_PASSWORD=$MLKC_CELL_DB_PASS

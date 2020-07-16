@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Test Docker
+
+docker run hello-world
+
+# Drop test image
+
+docker rm $(docker ps -aq)
+
+docker rmi hello-world:latest

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# euler sync
+export MLKC_GIT_ROOT=malkab@euler:/home/git/

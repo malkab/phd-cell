@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# ---------------------------
+#
+# Common settings for all contexts.
+#
+# ---------------------------
+#
+# Prefix variables with MLKC_.
+#
+# ---------------------------
+
+# App name
+export MLKC_CELL_APP_NAME=cell
+
+# Default Redis password
+export MLKC_CELL_REDIS_PASSWORD=redis
+
+# Default Redis outer port
+export MLKC_CELL_REDIS_OUTER_PORT=6380
+
+# Default PostgreSQL password
+export MLKC_CELL_DB_PASSWORD=postgres
+
+# Default PostgreSQL outer port
+export MLKC_CELL_DB_OUTER_PORT=5436
+
+# Default SSH port
+export MLKC_SSH_PORT=22

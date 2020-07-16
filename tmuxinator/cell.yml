@@ -1,0 +1,10 @@
+name: cell
+root: /home/git/malkab-phd/cell
+
+windows:
+
+  - cell: >
+      cd docker/020-dev ;
+      . mlkcontext dev ;
+      sleep 0.2 ;
+      clear
