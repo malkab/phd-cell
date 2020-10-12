@@ -1,3 +1,5 @@
 # Added by mlkcontext
 # -------------------
-cell-persistence/redis_config/redis.conf
+assets/redis_config/redis.conf
+assets/postgres_config/postgresql.conf
+# -------------------

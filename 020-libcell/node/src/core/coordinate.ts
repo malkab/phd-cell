@@ -1,0 +1,185 @@
+import proj4 from "proj4";
+
+import * as turf from "@turf/helpers";
+
+import { CellError, ECellErrorCode } from "./cellerror";
+
+/*
+
+  Persistance interface
+
+*/
+export interface ICoordinate {
+  epsg: string;
+  x: number;
+  y: number;
+}
+
+/*
+
+    Class
+
+*/
+export class Coordinate {
+
+  // EPSG
+  private _epsg: string;
+
+  // x, y
+  private _x: number;
+  private _y: number;
+
+  // Getters & Setters
+  get x(): number { return this._x; }
+
+  get y(): number { return this._y; }
+
+  get epsg(): string { return this._epsg; }
+
+  /**
+   *
+   * Returns the coordinates in [ x, y ] form. Useful for lots of
+   * methods, specially Turf ones.
+   *
+   */
+  get coordsPair(): [ number, number ] {
+
+    return [ this.x, this. y ];
+
+  }
+
+  get persist(): ICoordinate {
+
+    return {
+
+      epsg: this._epsg,
+      x: this._x,
+      y: this._y
+
+    } as ICoordinate;
+
+  }
+
+
+  // Constructor
+  constructor({
+      epsg,
+      x,
+      y
+    }: {
+      epsg: string,
+      x: number,
+      y: number
+  }) {
+
+    this._epsg = epsg;
+    this._x = x;
+    this._y = y;
+
+  }
+
+  // Reproject
+  public reproject(epsg: string): Coordinate {
+
+    const coords = proj4(
+      `EPSG:${this._epsg}`, `EPSG:${epsg}`).forward([this._x, this._y]);
+
+    return new Coordinate({ epsg: epsg, x: coords[0], y: coords[1] });
+
+  }
+
+  /**
+   *
+   * Reprojects but two PROJ4 definition string are given as input.
+   *
+   * TODO: a new EPSG object must be inserted into the system with de
+   * PROJ4 string definitions to process reprojections
+   *
+   * @param sourceDef         The source definition string.
+   * @param destDef           The destination definition string.
+   * @param newEpsg           The EPSG of the new Coordinate.
+   *
+   * @returns                 A new Coordinate with EPSG newEpsg and
+   *                          this Coordinate coordinates transformed
+   *                          from sourceDef to destDef.
+   *
+   */
+  public reprojectFromProj4Defs(
+    sourceDef: string,
+    destDef: string,
+    newEpsg: string): Coordinate
+  {
+
+    const coords = proj4(sourceDef, destDef, [ this._x, this._y ]);
+
+    return new Coordinate({ epsg: newEpsg, x: coords[0], y: coords[1] });
+
+  }
+
+  // Get GeoJSON
+  get geojson(): turf.Feature<turf.Point> {
+
+    return turf.point([ this._x, this._y ]);
+
+  }
+
+  // Get PostGIS GeoJSON
+  get pggeojson(): any {
+
+    return this.geojson.geometry;
+
+  }
+
+  /*
+
+      Redefines this coordinate based on a GeoJSON point
+
+  */
+  public fromGeoJSON(geojson: any) {
+
+    // If not Point, error
+    if (geojson.type !== "Point") {
+
+      throw new CellError({
+
+        code: ECellErrorCode.DATAERROR,
+        message: "GeoJSON geometry must be of type Point to initialize a Coordinate object"
+
+      });
+
+    }
+
+    this._x = geojson.coordinates[0];
+    this._y = geojson.coordinates[1];
+
+  }
+
+
+  /**
+   *
+   * Returns the euclidean distance from this Coordinate to another one.
+   *
+   * @param {Coordinate} coordinate: The target coordinate.
+   * @returns {number}: The euclidean distance.
+   */
+  public euclideanDistance(coordinate: Coordinate): number {
+
+    return Math.sqrt(Math.pow(this.x - coordinate.x, 2) + Math.pow(this.y - coordinate.y, 2));
+
+  }
+
+  /**
+   *
+   * Returns the euclidean distance from this Coordinate to a point defined by x,y in the same EPSG of this coordinate.
+   *
+   * @param {[ number, number ]} coordinates: xy target coordinates.
+   * @returns {number}: The euclidean distance.
+   */
+  public euclideanDistanceFromXY(coordinates: [ number, number ]): number {
+
+    return this.euclideanDistance(
+      new Coordinate({ epsg: this.epsg, x: coordinates[0], y: coordinates[1] }));
+
+  }
+
+}

@@ -1,0 +1,54 @@
+{
+  "name": "libcell",
+  "version": "0.0.1",
+  "description": "Cell general library",
+  "main": "main.ts",
+  "private": true,
+  "scripts": {
+    "run-production": "npm run production && node dist/main.js",
+    "production": "NODE_ENV=production webpack --config webpack-production.config.js --progress --colors",
+    "service:watch:build": "NODE_ENV=development webpack --progress --colors",
+    "service:watch:main:server": "nodemon --inspect=0.0.0.0:9229 \"./build/main.js\" --watch \"./build/**/*\"",
+    "service:watch:test:server": "nodemon --inspect=0.0.0.0:9229 \"./build/test.js\" --watch \"./build/**/*\"",
+    "service:watch:mocha:server": "mocha --inspect=0.0.0.0:9229 \"./build/mocha.js\" --watch \"./build/**/*\"",
+    "start:test": "npm-run-all --parallel service:watch:test:server service:watch:build",
+    "start:mocha": "npm-run-all --parallel service:watch:mocha:server service:watch:build",
+    "start": "npm-run-all --parallel service:watch:main:server service:watch:build",
+    "builddocs:html": "typedoc --inlineSourceMap --name \"LibCell\" --readme ./README.md --excludePrivate --excludeProtected --excludeExternals --excludeNotExported --mode modules --includeDeclarations --ignoreCompilerErrors --out ./typedoc/html/ ./src/libcell",
+    "builddocs:html:full": "typedoc --inlineSourceMap --name \"LibCell\" --readme ./README.md --excludeExternals --mode modules --includeDeclarations --ignoreCompilerErrors --out ./typedoc/html-full/ ./src/libcell",
+    "builddocs:markdown": "typedoc --inlineSourceMap --name \"LibCell\" --readme ./README.md --excludePrivate --excludeProtected --excludeExternals --mode modules --theme markdown --includeDeclarations --excludeNotExported --ignoreCompilerErrors --out ./typedoc/markdown/ ./src/libcell",
+    "builddocs:markdown:full": "typedoc --inlineSourceMap --name \"LibCell\" --readme ./README.md --excludeExternals --mode modules --theme markdown --includeDeclarations --ignoreCompilerErrors --out ./typedoc/markdown-full/ ./src/libcell",
+    "builddocs": "npm run builddocs:html ; npm run builddocs:html:full ; npm run builddocs:markdown ; npm run builddocs:markdown:full"
+  },
+  "engines": {
+    "node": "~8.9"
+  },
+  "author": "Juan Pedro Perez Alcantara",
+  "license": "ISC",
+  "dependencies": {
+    "@malkab/keeper-core": "0.0.4",
+    "@turf/helpers": "^6.1.4",
+    "@turf/turf": "^5.1.6",
+    "js-sha256": "^0.9.0",
+    "proj4": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.14.1",
+    "@types/proj4": "^2.5.0",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "ts-loader": "^4.5.0",
+    "tslint": "^5.14.0",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.1.27",
+    "typedoc-webpack-plugin": "^1.1.4",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "libcellbackend",
+  "version": "1.0.0",
+  "description": "Backend library for Cell to use at API, Controller, and Worker",
+  "scope": "@malkab",
+  "author": {
+    "name": "Juan Pedro Perez Alcantara",
+    "email": "jp.perez.alcantara@gmail.com",
+    "url": "HTTP://MY-URL"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "Cell",
+    "libcellbackend"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/owner/project#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/malkab/code-samples.git"
+  },
+  "private": false,
+  "scripts": {
+    "clean": "rm -Rf build ; rm -Rf dist",
+    "quick-test": "npm-run-all --parallel service:watch:quick-test:server service:build",
+    "start": "npm-run-all --parallel service:watch:mocha:server service:build",
+    "build-with-docs": "npm run clean ; npm run service:build-lib ; npm run build-docs ; rm -Rf docs ; cp -R typedoc/build/html docs",
+    "build": "npm run clean ; npm run service:build-lib",
+    "build-docs": "cd typedoc ; ./html ; cd ..",
+    "distribute-pack": "./node-pack/distribute-pack.sh",
+    "install-distributed-pack": "./node-pack/install-packages.sh",
+    "service:build-lib": "webpack --config webpack-production.config.js --progress --colors",
+    "service:build": "webpack --progress --colors",
+    "service:watch:quick-test:server": "nodemon --inspect=0.0.0.0:9329 \"./build/quicktest.js\" --watch \"./build/quicktest.js\"",
+    "service:watch:mocha:server": "nodemon --ext js --watch ./build/ --exec 'mocha --timeout 20000 ./build/mocha.js || true'"
+  },
+  "engines": {
+    "node": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.10",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.6.0",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "mocha": "^7.2.0",
+    "nodemon": "^2.0.4",
+    "npm-run-all": "^4.1.5",
+    "terser": "^5.2.1",
+    "terser-webpack-plugin": "^4.1.0",
+    "ts-loader": "^8.0.3",
+    "tslint": "^6.1.3",
+    "typedoc": "^0.19.2",
+    "typescript": "^4.0.2",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-filter-warnings-plugin": "^1.2.1",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "dependencies": {
+    "@malkab/node-utils": "^1.2.1",
+    "@malkab/rxpg": "^4.1.1",
+    "libcell": "file:./node-pack/libcell-v1.0.1.tgz"
+  }
+}

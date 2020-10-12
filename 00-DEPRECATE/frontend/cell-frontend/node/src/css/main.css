@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/*
+
+    Global styles
+
+*/
+
+* {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+  
+p {
+    font-family: Roboto;
+}
+
+
+/*
+
+    Global Material changes
+
+*/
+
+label.mat-radio-label {
+    padding-right: 20px;
+}
+
+div.mat-radio-label-content {
+    padding-left: 1px;
+}
+
+div.mat-radio-outer-circle, div.mat-radio-inner-circle {
+    width: 15px;
+    height: 15px;
+    top: 2px;
+}
+  
+div.mat-radio-ripple {
+    left: calc(50% - 28px);
+}
+
+
+/*
+
+    Global about
+
+*/
+div.aboutContent p, li {
+    font-size: 14px;
+    padding-bottom: 12px;
+}
+
+div.aboutContent li {
+    margin-left: 25px;
+}
+
+div.aboutContent p.indent {
+    margin-left: 25px;
+}

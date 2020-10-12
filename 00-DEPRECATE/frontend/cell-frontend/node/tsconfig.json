@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+      "target": "ES2017",
+      "module": "es6",
+      "declaration": false,
+      "moduleResolution": "node",
+      "typeRoots": [
+          "node_modules/@types"
+      ],
+      "noEmitOnError": true,
+      "noImplicitAny": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "sourceMap": true,
+      "suppressImplicitAnyIndexErrors": true,
+      "sourceRoot": "src",
+      "outDir": "build",
+      "lib": [
+          "es7",
+          "es6",
+          "dom"
+      ]
+  },
+  "exclude": [
+      "node_modules"
+  ]
+}

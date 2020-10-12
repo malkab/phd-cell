@@ -3,11 +3,11 @@ version: '3.5'
 networks:
   cell:
     external: false
-    name: ${MLKC_CELL_APP_NAME}
+    name: ${MLKC_CELL_NETWORK}
 
 services:
-  postgis:
-    image: malkab/postgis:feral_fennec
+  cell:
+    image: malkab/postgis:gargantuan_giraffe
     container_name: cell-postgis
     shm_size: '2gb'
 
@@ -22,7 +22,7 @@ services:
 
     volumes:
       - ./000-localhost-volumes/cell-postgis:/data
-      - ../../cell-persistence/postgres_config/postgresql.conf:/default_confs/postgresql.conf
+      - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
   redis:
     image: redis:5.0
@@ -37,8 +37,8 @@ services:
 
     volumes:
       - ./000-localhost-volumes/sunnsaas-redis:/data
-      - ../../cell-persistence/redis_config/redis.conf:/redis.conf:ro
-  
+      - ../../assets/redis_config/redis.conf:/redis.conf:ro
+
     entrypoint:
       - redis-server
       - /redis.conf

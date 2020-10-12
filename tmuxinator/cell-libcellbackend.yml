@@ -1,0 +1,18 @@
+name: cell
+root: /home/git/malkab-phd/cell
+
+windows:
+
+  - node: >
+      clear ;
+      sleep 0.2 ;
+      cd 030-libcellbackend/docker ;
+      . mlkcontext common ;
+      ./010-docker_node_run.sh
+
+  - psql-cell: >
+      clear ;
+      sleep 3 ;
+      cd docker/010-dev ;
+      . mlkcontext common ;
+      ./110-pg-psql.sh

@@ -9,21 +9,52 @@
 # Prefix variables with MLKC_.
 #
 # ---------------------------
+export MLKC_CELL_APP=cell
+export MLKC_CELL_VERSION=1.0.0
+export MLKC_CELL_INSTANCE_GENERATION=$(date +"%Y%m%d-%H%M%S")
 
-# App name
-export MLKC_CELL_APP_NAME=cell
+# -----
+# Docker
+# -----
+export MLKC_CELL_NETWORK=cell
+export MLKC_CELL_RAW_DATA_NETWORK=cell_raw_data
+export MLKC_CELL_PRODUCTION_IMAGE_ROOT=registry.gitlab.com/malkab-phd/cell
+export MLKC_CELL_PRODUCTION_IMAGE_TAG=$MLKC_CELL_VERSION_$MLKC_CELL_INSTANCE_GENERATION
 
-# Default Redis password
+# -----
+# Remote SSH
+# -----
+export MLKC_CELL_SSH_HOST=
+export MLKC_CELL_SSH_USER=
+
+# -----
+# PG Config for 64GB RAM, 8 CPU, SSD
+# This is for PG configuration file, not for the pool
+# -----
+export MLKC_CELL_PG_MAX_CONNECTIONS=500
+export MLKC_CELL_PG_SHARED_BUFFERS=40GB
+export MLKC_CELL_PG_EFFECTIVE_CACHE_SIZE=122GB
+export MLKC_CELL_PG_MAINTENANCE_WORK_MEM=2GB
+export MLKC_CELL_PG_CHECKPOINT_COMPLETION_TARGET=0.7
+export MLKC_CELL_PG_WAL_BUFFERS=16MB
+export MLKC_CELL_PG_DEFAULT_STATISTICS_TARGET=500
+export MLKC_CELL_PG_RANDOM_PAGE_COST=1.1
+export MLKC_CELL_PG_EFFECTIVE_IO_CONCURRENCY=200
+export MLKC_CELL_PG_WORK_MEM=332MB
+export MLKC_CELL_PG_MIN_WAL_SIZE=512MB
+export MLKC_CELL_PG_MAX_WAL_SIZE=2GB
+export MLKC_CELL_PG_MAX_WORKER_PROCESSES=8
+export MLKC_CELL_PG_MAX_PARALLEL_WORKERS_PER_GATHER=4
+export MLKC_CELL_PG_MAX_PARALLEL_WORKERS=8
+export MLKC_CELL_PG_MAX_PARALLEL_MAINTENANCE_WORKERS=4
+
+# -----
+# Persistence config
+# -----
 export MLKC_CELL_REDIS_PASSWORD=redis
-
-# Default Redis outer port
-export MLKC_CELL_REDIS_OUTER_PORT=6380
-
-# Default PostgreSQL password
+export MLKC_CELL_REDIS_OUTER_PORT=6700
 export MLKC_CELL_DB_PASSWORD=postgres
-
-# Default PostgreSQL outer port
-export MLKC_CELL_DB_OUTER_PORT=5436
-
-# Default SSH port
-export MLKC_SSH_PORT=22
+export MLKC_CELL_DB_HOST=postgis
+export MLKC_CELL_DB_USER=postgres
+export MLKC_CELL_DB_PORT=5432
+export MLKC_CELL_DB_OUTER_PORT=5600
