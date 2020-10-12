@@ -1,0 +1,53 @@
+{
+  "name": "cell-worker",
+  "version": "0.0.1",
+  "description": "The Cell worker.",
+  "main": "main.ts",
+  "private": true,
+  "scripts": {
+    "run-production": "npm run production && node dist/main.js",
+    "production": "NODE_ENV=production webpack --config webpack-production.config.js --progress --colors",
+    "service:watch:build": "NODE_ENV=development webpack --progress --colors",
+    "service:watch:main:server": "nodemon --inspect=0.0.0.0:9229 \"./build/main.js\" --watch \"./build/**/*\"",
+    "service:watch:test:server": "nodemon --inspect=0.0.0.0:9229 \"./build/test.js\" --watch \"./build/**/*\"",
+    "service:watch:mocha:server": "mocha --inspect=0.0.0.0:9229 \"./build/mocha.js\" --watch \"./build/**/*\"",
+    "start:test": "npm-run-all --parallel service:watch:test:server service:watch:build",
+    "start:mocha": "npm-run-all --parallel service:watch:mocha:server service:watch:build",
+    "start": "npm-run-all --parallel service:watch:main:server service:watch:build"
+  },
+  "engines": {
+    "node": "~8.9"
+  },
+  "author": "Juan Pedro Perez Alcantara",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/lodash": "^4.14.117",
+    "@types/mathjs": "^4.4.1",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.4",
+    "@types/pg": "^7.4.10",
+    "@types/proj4": "^2.3.4",
+    "@types/redis": "^2.8.6",
+    "chai": "^4.1.2",
+    "clean-webpack-plugin": "^0.1.19",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "npm-run-all": "^4.1.3",
+    "ts-loader": "^5.0.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@turf/turf": "^5.1.6",
+    "js-sha256": "^0.9.0",
+    "lodash": "^4.17.11",
+    "mathjs": "^5.1.2",
+    "pg": "^7.4.3",
+    "proj4": "^2.5.0",
+    "redis": "^2.8.0"
+  }
+}
