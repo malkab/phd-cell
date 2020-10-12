@@ -1,0 +1,31 @@
+version: '3.5'
+  
+
+# This configures the workers to work against the cell-api deployment
+# at XXX
+
+
+services:
+
+  worker:
+    image: registry.gitlab.com/cell-platform/cell-worker
+    working_dir: /home/node/app
+    deploy:
+      replicas: XXX
+
+    environment:
+      - REDISURL=XXX
+      - NODE_MEMORY=XXX
+      - REDISPORT=XXX
+      - REDISPASS=XXX
+      - REDIS_QUEUE_API_WORKER=queue:api-worker
+      - REDIS_QUEUE_WORKER_API=queue:worker-api
+      - REDIS_CHANNEL_WORKER=channel:worker
+      - DOCKER_HOST=XXX
+      - WORKERS_HEARTBEAT_MINUTES=1
+      - CELLDS_HOST=XXX
+      - CELLDS_PORT=XXX
+      - CELLDS_USER=XXX
+      - CELLDS_PASS=XXX
+      - CELLDS_DB=XXX
+      - POOL_SIZE=20

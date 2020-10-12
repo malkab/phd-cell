@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Add here env variables needed to build production images
+
+# Use this for a tradicional version number
+export APPVERSION=0.0.11
+
+# Use this to use the Git hash
+# export APPVERSION=$(git log -1 --pretty=%h)
+
+export NODEVERSION=10.15.2
+export NODEMEMORY=40000
+export WORKERIMAGENAME=registry.gitlab.com/cell-platform/cell-worker
+
+
+# Prepare version information
+
+VERSION="${APPVERSION} - Build $(date +"%Y%m%d-%H%M%S") - Node ${NODEVERSION}"
+

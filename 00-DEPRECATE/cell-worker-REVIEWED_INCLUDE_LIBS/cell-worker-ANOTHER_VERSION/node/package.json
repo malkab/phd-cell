@@ -1,0 +1,63 @@
+{
+  "name": "cell-worker",
+  "version": "0.0.11",
+  "description": "The Cell worker.",
+  "main": "main.ts",
+  "private": true,
+  "scripts": {
+    "run-production": "npm run production && node dist/main.js",
+    "production": "NODE_ENV=production webpack --config webpack-production.config.js --progress --colors",
+    "service:watch:build": "NODE_ENV=development webpack --progress --colors",
+    "service:watch:main:server": "nodemon --inspect=0.0.0.0:9229 \"./build/main.js\" --watch \"./build/**/*\"",
+    "service:watch:test:server": "nodemon --inspect=0.0.0.0:9229 \"./build/test.js\" --watch \"./build/**/*\"",
+    "service:watch:mocha:server": "mocha --inspect=0.0.0.0:9229 \"./build/mocha.js\" --watch \"./build/**/*\"",
+    "start:test": "npm-run-all --parallel service:watch:test:server service:watch:build",
+    "start:mocha": "npm-run-all --parallel service:watch:mocha:server service:watch:build",
+    "start": "npm-run-all --parallel service:watch:main:server service:watch:build",
+    "builddocs:html": "typedoc --inlineSourceMap --name \"CELL-WORKER\" --readme ./README.md --excludePrivate --excludeExternals --excludeProtected --excludeNotExported --mode modules --includeDeclarations --ignoreCompilerErrors --out ./typedoc/html/ ./src",
+    "builddocs:html:full": "typedoc --inlineSourceMap --name \"CELL-WORKER\" --readme ./README.md --excludeExternals --mode modules --includeDeclarations --ignoreCompilerErrors --out ./typedoc/html-full/ ./src",
+    "builddocs:markdown": "typedoc --inlineSourceMap --name \"CELL-WORKER\" --readme ./README.md --excludePrivate --excludeExternals --excludeProtected --mode modules --theme markdown --includeDeclarations --excludeNotExported --ignoreCompilerErrors --out ./typedoc/markdown/ ./src",
+    "builddocs:markdown:full": "typedoc --inlineSourceMap --name \"CELL-WORKER\" --readme ./README.md --excludeExternals --mode modules --theme markdown --includeDeclarations --ignoreCompilerErrors --out ./typedoc/markdown-full/ ./src",
+    "builddocs": "npm run builddocs:html ; npm run builddocs:html:full ; npm run builddocs:markdown ; npm run builddocs:markdown:full"
+  },
+  "engines": {
+    "node": "~8.9"
+  },
+  "author": "Juan Pedro Perez Alcantara",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/lodash": "^4.14.122",
+    "@types/mathjs": "^4.4.5",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.29",
+    "@types/pg": "^7.4.13",
+    "@types/proj4": "^2.5.0",
+    "@types/redis": "^2.8.10",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^0.1.19",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "ts-loader": "^5.3.3",
+    "tslint": "^5.13.1",
+    "uglify": "^0.1.5",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "typedoc": "^0.14.2",
+    "typedoc-plugin-markdown": "^1.1.27",
+    "typedoc-webpack-plugin": "^1.1.4",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@turf/turf": "^5.1.6",
+    "js-sha256": "^0.9.0",
+    "lodash": "^4.17.11",
+    "mathjs": "^5.6.0",
+    "pg": "^7.8.1",
+    "proj4": "^2.5.0",
+    "redis": "^2.8.0"
+  }
+}

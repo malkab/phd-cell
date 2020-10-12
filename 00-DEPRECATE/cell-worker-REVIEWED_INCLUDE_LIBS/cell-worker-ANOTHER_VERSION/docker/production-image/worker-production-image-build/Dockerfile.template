@@ -1,0 +1,23 @@
+FROM node:##NODEVERSION##
+
+LABEL author="Juan Pedro Perez"
+LABEL email="jp.perez.alcantara@gmail.com"
+
+# Environment
+ENV NODE_ENV "production"
+ENV VERSION "##VERSION##"
+
+# Working dir
+WORKDIR /home/node/app
+
+# Copy app code
+COPY assets/ ./
+
+# Copy gosu
+COPY packages/gosu /bin
+
+# Install dependencies
+RUN npm install
+
+# Command
+ENTRYPOINT exec gosu node node --max_old_space_size=$NODE_MEMORY ./main.js
