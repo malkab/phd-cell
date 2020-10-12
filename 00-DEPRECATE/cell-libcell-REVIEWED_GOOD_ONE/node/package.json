@@ -1,0 +1,65 @@
+{
+  "name": "@malkab/cell-libcell",
+  "version": "0.1.1",
+  "description": "LibCell",
+  "scope": "@malkab",
+  "author": {
+    "name": "Juan Pedro Perez Alcantara",
+    "email": "jp.perez.alcantara@gmail.com",
+    "url": "http://me.com"
+  },
+  "main": "dist/main.js",
+  "types": "dist/lib/index.d.ts",
+  "keywords": [
+    "LibCell"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/owner/project#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/malkab/code-samples.git"
+  },
+  "private": false,
+  "scripts": {
+    "clean": "rm -Rf build ; rm -Rf dist",
+    "quick-test": "npm-run-all --parallel service:watch:quick-test:server service:build",
+    "start": "npm-run-all --parallel service:watch:mocha:server service:build",
+    "build": "npm run clean ; npm run service:build-lib",
+    "build-with-docs": "npm run clean ; npm run service:build-lib ; npm run service:builddocs ; cp -R typedoc/build/html dist/docs",
+    "service:build-lib": "webpack --config webpack-production.config.js --progress --colors",
+    "service:build": "webpack --progress --colors",
+    "service:watch:quick-test:server": "nodemon --inspect=0.0.0.0:9329 \"./build/quicktest.js\" --watch \"./build/quicktest.js\"",
+    "service:watch:mocha:server": "nodemon --ext js --watch ./build/mocha.js --exec 'mocha --timeout 20000 ./build/mocha.js || true'",
+    "service:builddocs": "cd typedoc ; ./html.sh ; cd .."
+  },
+  "engines": {
+    "node": "~8.9"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.12.0",
+    "@types/proj4": "^2.5.0",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^2.0.1",
+    "mocha": "^6.2.1",
+    "nodemon": "^1.18.10",
+    "npm-run-all": "^4.1.5",
+    "terser": "^3.17.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.14.0",
+    "typedoc": "^0.14.2",
+    "typescript": "^3.3.4000",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@malkab/ts-utils": "0.0.6",
+    "@turf/helpers": "^6.1.4",
+    "@turf/turf": "^5.1.6",
+    "proj4": "^2.5.0"
+  }
+}
