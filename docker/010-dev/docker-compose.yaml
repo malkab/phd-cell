@@ -6,7 +6,7 @@ networks:
     name: ${MLKC_CELL_NETWORK}
 
 services:
-  cell:
+  cell-postgis:
     image: malkab/postgis:gargantuan_giraffe
     container_name: cell-postgis
     shm_size: '2gb'
@@ -24,7 +24,7 @@ services:
       - ./000-localhost-volumes/cell-postgis:/data
       - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
-  redis:
+  cell-redis:
     image: redis:5.0
     container_name: cell-redis
     shm_size: '2gb'
@@ -36,7 +36,7 @@ services:
       - "${MLKC_CELL_REDIS_OUTER_PORT}:6379"
 
     volumes:
-      - ./000-localhost-volumes/sunnsaas-redis:/data
+      - ./000-localhost-volumes/cell-redis:/data
       - ../../assets/redis_config/redis.conf:/redis.conf:ro
 
     entrypoint:

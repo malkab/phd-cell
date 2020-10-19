@@ -5,14 +5,18 @@ windows:
 
   - node: >
       clear ;
-      sleep 0.2 ;
+      sleep 4 ;
       cd 030-libcellbackend/docker ;
-      . mlkcontext common ;
-      ./010-docker_node_run.sh
+      . mlkcontext common
 
   - psql-cell: >
       clear ;
-      sleep 3 ;
+      sleep 2 ;
       cd docker/010-dev ;
-      . mlkcontext common ;
-      ./110-pg-psql.sh
+      . mlkcontext common
+
+  - compose: >
+      clear ;
+      sleep 0.2 ;
+      cd docker/010-dev ;
+      . mlkcontext common

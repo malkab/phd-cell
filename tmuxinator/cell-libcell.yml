@@ -7,5 +7,4 @@ windows:
       clear ;
       sleep 0.2 ;
       cd 020-libcell/docker ;
-      . mlkcontext common ;
-      ./010-docker_node_run.sh
+      . mlkcontext common
