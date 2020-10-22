@@ -52,7 +52,10 @@ module.exports = {
 
   plugins: [
     new FilterWarningsPlugin({
-      exclude: /Critical dependency: the request of a dependency is an expression/
+      exclude: [
+        /Critical dependency:/,
+        /Module not found:/
+      ]
     })
   ]
 };

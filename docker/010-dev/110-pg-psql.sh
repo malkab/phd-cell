@@ -25,9 +25,9 @@ NETWORK=$MLKC_CELL_NETWORK
 SCRIPT=
 COMMAND=
 # Container name
-CONTAINER_NAME=cell-db-psql
+CONTAINER_NAME=
 # Container host name
-CONTAINER_HOST_NAME=cell-db-psql
+CONTAINER_HOST_NAME=
 # Work dir
 WORKDIR=$(pwd)/../../010-cell-db/src
 # The version of Docker PG image to use

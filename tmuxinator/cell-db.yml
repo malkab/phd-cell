@@ -1,16 +1,16 @@
-name: cell-libcellbackend
+name: cell-db
 root: /home/git/malkab-phd/cell
 
 windows:
 
-  - node: >
-      clear ;
-      sleep 2 ;
-      cd 030-libcellbackend/docker ;
-      . mlkcontext common
-
   - psql-cell: >
       clear ;
-      sleep 0.5 ;
+      sleep 2 ;
+      cd docker/010-dev ;
+      . mlkcontext common
+
+  - compose: >
+      clear ;
+      sleep 0.2 ;
       cd docker/010-dev ;
       . mlkcontext common

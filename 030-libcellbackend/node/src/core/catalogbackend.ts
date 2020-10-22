@@ -10,8 +10,6 @@ import * as rxo from "rxjs/operators";
 
 import { NodeUtilsHashing } from '@malkab/node-utils';
 
-import { pbkdf2 } from 'crypto';
-
 /**
  *
  * Catalog class from libcell encapsulated into a PgORM class.
@@ -85,8 +83,6 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
 
         const items: string[] = o.rows.map((o: any) => o.item);
 
-        console.log("D: jejej", o);
-
         const miniHashes: string[] = NodeUtilsHashing.miniHash(items);
 
         for (const i in items) {
@@ -112,7 +108,7 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
    * Gets a catalog from the DB.
    *
    */
-  public static dbGetCatalogBackend(pg: RxPg, id: string): rx.Observable<CatalogBackend> {
+  public static get$(pg: RxPg, id: string): rx.Observable<CatalogBackend> {
 
     return PgOrm.select$<CatalogBackend>({
       pg: pg,

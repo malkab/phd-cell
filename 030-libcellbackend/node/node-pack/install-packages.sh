@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2020-10-06
+# Version: 2020-10-14
 
 # -----------------------------------------------------------------
 #
@@ -48,4 +48,11 @@ for PACK in "${PACKAGES_REMOVE[@]}" ; do
 
 done
 
-yarn add file:./$(ls node-pack/*.tgz)
+# Install the latest version
+echo
+echo --------------
+echo Installing $(ls -r node-pack/*.tgz | head -n 1)...
+echo --------------
+echo
+
+yarn add file:./$(ls -r node-pack/*.tgz | head -n 1)

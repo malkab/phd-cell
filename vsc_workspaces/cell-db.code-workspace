@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../docker"
+		},
+		{
+			"path": "../mlkcontext"
+		},
+		{
+			"path": "../010-cell-db"
+		},
+		{
+			"path": "../tmuxinator"
+		}
+	]
+}
