@@ -1,5 +1,7 @@
 export * from "./core/catalogbackend";
 
-// export * as SubmoduleA from "./submodulea/index";
+export * from "./core/pgconnection";
 
-// export * as SubmoduleB from "./submoduleb/index";
+export * from "./core/variablebackend";
+
+export * from "./core/vectorbackend";

@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../00-DEPRECATE"
+		},
+		{
+			"path": "../tmuxinator"
 		}
 	],
 	"settings": {}

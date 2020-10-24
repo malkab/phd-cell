@@ -2,21 +2,20 @@ import { IMetadated } from './imetadated';
 
 /**
  *
- * The catalog class.
+ * A Variable is an element of a Vector. It has a name, a title, and a
+ * description. A Vector is composed of several Variables, plus other things.
  *
  */
-export class Catalog implements IMetadated {
+export class Variable implements IMetadated {
 
   /**
    *
-   * ID.
+   * The ID.
    *
    */
-  get catalogId(): string { return this._catalogId; }
+  private _variableId: string;
 
-  set catalogId(catalogId: string) { this._catalogId = catalogId; }
-
-  private _catalogId: string;
+  get variableId(): string { return this._variableId }
 
   /**
    *
@@ -74,55 +73,31 @@ export class Catalog implements IMetadated {
 
   /**
    *
-   * The forward map, that is, item > minihash
-   *
-   */
-  get forward(): { [ item: string ]: string } { return this._forward; }
-
-  private _forward: { [ item: string ]: string } = {};
-
-  /**
-   *
-   * The backward map, that is, minihash > item
-   *
-   */
-  get backward(): { [ item: string ]: string } { return this._backward; }
-
-  private _backward: { [ hash: string ]: string } = {};
-
-  /**
-   *
-   * Constructor, optionally gets the forward and backward maps.
+   * Constructor.
    *
    */
   constructor({
-      catalogId,
+      variableId,
       name,
       title,
       description,
       pgConnectionId,
       sourceTable,
-      sourceField,
-      forward = {},
-      backward = {}
+      sourceField
     }: {
-      catalogId: string;
+      variableId: string;
       name: string;
       title: string;
       description: string;
       pgConnectionId: string;
       sourceTable: string;
       sourceField: string;
-      forward: { [ item: string ]: string };
-      backward: { [ hash: string ]: string };
   }) {
 
-    this._catalogId = catalogId;
+    this._variableId = variableId;
     this._name = name;
     this._title = title;
     this._description = description;
-    this._forward = forward;
-    this._backward = backward;
     this._pgConnectionId = pgConnectionId;
     this._sourceTable = sourceTable;
     this._sourceField = sourceField;

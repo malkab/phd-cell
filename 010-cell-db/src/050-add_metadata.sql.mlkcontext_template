@@ -1,0 +1,9 @@
+/**
+
+  Insert Cell version.
+
+*/
+insert into cell_meta.cell_version values(
+  '{{{MLKC_CELL_VERSION}}}',
+  '{{{MLKC_CELL_INSTANCE_GENERATION}}}'
+);

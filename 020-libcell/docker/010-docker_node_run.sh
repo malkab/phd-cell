@@ -32,9 +32,9 @@ NETWORK=$MLKC_CELL_NETWORK
 # this capability is used. Jupyter exports automatically the 8888 port.
 JUPYTER=false
 # Container name.
-CONTAINER_NAME=libcellbackend_dev
+CONTAINER_NAME=libcell_dev
 # Container host name. Incompatible with NETWORK=container:XXX.
-CONTAINER_HOST_NAME=libcellbackend_dev
+CONTAINER_HOST_NAME=libcell_dev
 # A set of volumes in the form ("source:destination" "source:destination"). Most
 # of the times the src folder of the Node source code base is replicated inside
 # the container with the same path so build systems works as expected (see
