@@ -29,15 +29,6 @@ export class Catalog implements IMetadated {
 
   /**
    *
-   * Title.
-   *
-   */
-  private _title: string;
-
-  get title(): string { return this._title }
-
-  /**
-   *
    * Description.
    *
    */
@@ -98,7 +89,6 @@ export class Catalog implements IMetadated {
   constructor({
       catalogId,
       name,
-      title,
       description,
       pgConnectionId,
       sourceTable,
@@ -108,7 +98,6 @@ export class Catalog implements IMetadated {
     }: {
       catalogId: string;
       name: string;
-      title: string;
       description: string;
       pgConnectionId: string;
       sourceTable: string;
@@ -119,7 +108,6 @@ export class Catalog implements IMetadated {
 
     this._catalogId = catalogId;
     this._name = name;
-    this._title = title;
     this._description = description;
     this._forward = forward;
     this._backward = backward;

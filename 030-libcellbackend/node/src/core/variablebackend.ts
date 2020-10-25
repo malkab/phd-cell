@@ -27,29 +27,17 @@ export class VariableBackend extends Variable implements PgOrm.IPgOrm<VariableBa
   constructor({
       variableId,
       name,
-      title,
-      description,
-      pgConnectionId,
-      sourceTable,
-      sourceField
+      description
     }: {
       variableId: string;
       name: string;
-      title: string;
       description: string;
-      pgConnectionId: string;
-      sourceTable: string;
-      sourceField: string;
   }) {
 
     super({
       description: description,
       name: name,
-      title: title,
-      variableId: variableId,
-      pgConnectionId: pgConnectionId,
-      sourceTable: sourceTable,
-      sourceField: sourceField
+      variableId: variableId
     });
 
     PgOrm.generateDefaultPgOrmMethods(this, {
@@ -57,10 +45,8 @@ export class VariableBackend extends Variable implements PgOrm.IPgOrm<VariableBa
       pgInsert$: {
         sql: `
           insert into cell_meta.variable
-          values ($1, $2, $3, $4, $5, $6, $7);`,
-        params: () => [ this.variableId, this.name, this.title,
-          this.description, this.pgConnectionId, this.sourceTable,
-          this.sourceField ]
+          values ($1, $2, $3);`,
+        params: () => [ this.variableId, this.name, this.description ]
       }
 
     })
@@ -80,11 +66,7 @@ export class VariableBackend extends Variable implements PgOrm.IPgOrm<VariableBa
         select
           variable_id as "variableId",
           name,
-          title,
-          description,
-          pg_connection_id as "pgConnectionId",
-          source_table as "sourceTable",
-          source_field as "sourceField"
+          description
         from cell_meta.variable where variable_id=$1;`,
       params: () => [ id ],
       type: VariableBackend

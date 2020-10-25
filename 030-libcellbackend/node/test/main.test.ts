@@ -27,7 +27,7 @@ describe("libcellbackend", () => {
   describe("\n\n  --- variablebackend.test ---\n",
     () => require("./tests/variablebackend.test"));
 
-  describe("\n\n  --- vectorbackend.test ---\n",
-    () => require("./tests/vectorbackend.test"));
+  describe("\n\n  --- griddertask.test ---\n",
+    () => require("./tests/griddertask.test"));
 
 });

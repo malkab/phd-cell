@@ -4,9 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { VectorBackend } from "../../src/index";
+import { VectorBackend } from "../node/src/index";
 
-import { vectorPob, cellPg } from "./common";
+import { vectorPob, cellPg } from "../node/test/tests/common";
 
 import * as rxo from "rxjs/operators";
 

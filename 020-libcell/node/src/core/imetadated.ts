@@ -15,13 +15,6 @@ export interface IMetadated {
 
   /**
    *
-   * The title of the item, a single sentence.
-   *
-   */
-  title: string;
-
-  /**
-   *
    * The description, as long as needed.
    *
    */

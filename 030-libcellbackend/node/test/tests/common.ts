@@ -1,4 +1,4 @@
-import { CatalogBackend, PgConnection, VariableBackend, VectorBackend } from "../../src/index";
+import { CatalogBackend, PgConnection, VariableBackend, GridderTasks as gt } from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -53,7 +53,7 @@ export const clearDatabase$: rx.Observable<boolean> = cellPg.executeQuery$(`
   delete from cell_meta.catalog;
   delete from cell_meta.pg_connection;
   delete from cell_meta.variable;
-  delete from cell_meta.vector;
+  delete from cell_meta.gridder_task;
 `)
 .pipe(
 
@@ -75,7 +75,6 @@ export const catScen: CatalogBackend = new CatalogBackend({
   catalogId: "sc_codigo",
   description: "Catálogo de secciones censales de Andalucía.",
   name: "Secciones censales",
-  title: "Catálogo de secciones censales",
   sourceField: "sc_codigo",
   sourceTable: "poblacion.poblacion",
   pgConnectionId: "cellRawDataConn"
@@ -85,7 +84,6 @@ export const catProv: CatalogBackend = new CatalogBackend({
   catalogId: "provincia",
   description: "Catálogo de provincias de Andalucía.",
   name: "Provincias",
-  title: "Catálogo de provincias",
   sourceField: "provincia",
   sourceTable: "poblacion.poblacion",
   pgConnectionId: "cellRawDataConn"
@@ -95,7 +93,6 @@ export const catMuni: CatalogBackend = new CatalogBackend({
   catalogId: "municipio",
   description: "Catálogo de municipios de Andalucía.",
   name: "Municipios",
-  title: "Catálogo de municipios",
   sourceField: "municipio",
   sourceTable: "poblacion.poblacion",
   pgConnectionId: "cellRawDataConn"
@@ -105,7 +102,6 @@ export const catNucp: CatalogBackend = new CatalogBackend({
   catalogId: "nuc_pobla",
   description: "Catálogo de núcleos de población de Andalucía.",
   name: "Núcleos población",
-  title: "Catálogo de municipios",
   sourceField: "nuc_pob",
   sourceTable: "poblacion.poblacion",
   pgConnectionId: "cellRawDataConn"
@@ -115,7 +111,6 @@ export const catNucPobNivel: CatalogBackend = new CatalogBackend({
   catalogId: "nuc_pob_nivel",
   description: "Catálogo de niveles de núcleos de población de Andalucía.",
   name: "Niveles de núcleos de población",
-  title: "Catálogo de niveles de población",
   sourceField: "nuc_pob_nivel",
   sourceTable: "poblacion.poblacion",
   pgConnectionId: "cellRawDataConn"
@@ -129,56 +124,36 @@ export const catNucPobNivel: CatalogBackend = new CatalogBackend({
 export const varE001517: VariableBackend = new VariableBackend({
   variableId: "e001517",
   name: "Edad 00-15 2017",
-  title: "Población de edad entre 00-15 2017",
-  description: "Población de edad en el rango de 0 a 15 años del año 2017.",
-  pgConnectionId: "cellRawDataConn",
-  sourceField: "e001517",
-  sourceTable: "poblacion.poblacion"
-});
-
-export const varE001518: VariableBackend = new VariableBackend({
-  variableId: "e001518",
-  name: "Edad 00-15 2018",
-  title: "Población de edad entre 00-15 2018",
-  description: "Población de edad en el rango de 0 a 15 años del año 2018.",
-  pgConnectionId: "cellRawDataConn",
-  sourceField: "e001518",
-  sourceTable: "poblacion.poblacion"
-});
-
-export const varE166417: VariableBackend = new VariableBackend({
-  variableId: "e166417",
-  name: "Edad 16-64 2017",
-  title: "Población de edad entre 16-64 2017",
-  description: "Población de edad en el rango de 16 a 64 años del año 2017.",
-  pgConnectionId: "cellRawDataConn",
-  sourceField: "e166417",
-  sourceTable: "poblacion.poblacion"
-});
-
-export const varE166418: VariableBackend = new VariableBackend({
-  variableId: "e166418",
-  name: "Edad 16-64 2018",
-  title: "Población de edad entre 16-64 2018",
-  description: "Población de edad en el rango de 16 a 64 años del año 2018.",
-  pgConnectionId: "cellRawDataConn",
-  sourceField: "e166418",
-  sourceTable: "poblacion.poblacion"
+  description: "Población de edad en el rango de 0 a 15 años del año 2017."
 });
 
 /**
  *
- * Vector.
+ * DiscretePolygonTopAreaGridderTask.
  *
  */
-export const vectorPob: VectorBackend = new VectorBackend({
-  vectorId: "poblacion",
-  name: "Población",
-  title: "Vector de población",
-  description: "Un vector de ejemplo para población.",
+export const provinceDiscretePolyTopAreaGridderTask: gt.DiscretePolyTopAreaGridderTaskBackend =
+new gt.DiscretePolyTopAreaGridderTaskBackend({
+  gridderTaskId: "provinceDiscretePolyTopArea",
+  name: "Provincia: máxima área",
+  description: "Asignada a la celda la variable discreta del nombre de la provincia en función de la que ocupa más área",
+  nameTemplate: "Área provincia: {{{provincia}}}",
+  descriptionTemplate: "Área de la provincia {{{provincia}}} en la celda",
   pgConnectionId: "cellRawDataConn",
-  sourceTable: "poblacion.poblacion",
-  catalogNames: [ "provincia", "municipio" ],
-  variableNames: [ "e001517", "e001518", "e166417", "e166418" ],
-  catalogFieldNames: [ "provincia", "municipio" ]
+  discreteFields: [ "provincia" ],
+  geomField: "geom",
+  sourceTable: "context.municipio"
 });
+
+export const provinceDiscretePolyAreaSummaryGridderTask: gt.DiscretePolyAreaSummaryGridderTaskBackend =
+new gt.DiscretePolyAreaSummaryGridderTaskBackend({
+  gridderTaskId: "provinceDiscreteAreaSummary",
+  name: "Desglose de área de provincias",
+  description: "Área de cada provincia en la celda",
+  nameTemplate: "Área provincia: {{{provincia}}}",
+  descriptionTemplate: "Área de la provincia {{{provincia}}} en la celda",
+  pgConnectionId: "cellRawDataConn",
+  discreteFields: [ "provincia" ],
+  geomField: "geom",
+  sourceTable: "context.municipio"
+})

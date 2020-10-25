@@ -33,7 +33,6 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
   constructor({
       catalogId,
       name,
-      title,
       description,
       pgConnectionId,
       sourceTable,
@@ -43,7 +42,6 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
     }: {
       catalogId: string;
       name: string;
-      title: string;
       description: string;
       pgConnectionId: string;
       sourceTable: string;
@@ -55,7 +53,6 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
     super({
       catalogId: catalogId,
       name: name,
-      title: title,
       description: description,
       forward: forward,
       backward: backward,
@@ -69,8 +66,8 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
       pgInsert$: {
         sql: `
           insert into cell_meta.catalog
-          values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-        params: () => [ this.catalogId, this.name, this.title, this.description,
+          values ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        params: () => [ this.catalogId, this.name, this.description,
           this.pgConnectionId, this.sourceTable, this.sourceField,
           this.forward, this.backward ]
       },
@@ -80,15 +77,14 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
           update cell_meta.catalog
           set
             name = $1,
-            title = $2,
-            description = $3,
-            pg_connection_id = $4,
-            source_table = $5,
-            source_field = $6,
-            forward = $7,
-            backward = $8
-          where catalog_id = $9`,
-        params: () => [ this.name, this.title, this.description,
+            description = $2,
+            pg_connection_id = $3,
+            source_table = $4,
+            source_field = $5,
+            forward = $6,
+            backward = $7
+          where catalog_id = $8`,
+        params: () => [ this.name, this.description,
           this.pgConnectionId, this.sourceTable, this.sourceField,
           this.forward, this.backward, this.catalogId ]
       }
@@ -160,7 +156,6 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
         select
           catalog_id as "catalogId",
           name,
-          title,
           description,
           forward,
           backward

@@ -1,6 +1,6 @@
 {
   "name": "libcell",
-  "version": "1.0.9",
+  "version": "1.0.20",
   "description": "Cell main library for both back and frontend.",
   "scope": "@malkab",
   "author": {

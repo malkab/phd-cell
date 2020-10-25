@@ -124,15 +124,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
 
   /**
    *
-   * Title.
-   *
-   */
-  private _title: string;
-
-  get title(): string { return this._title }
-
-  /**
-   *
    * Description.
    *
    */
@@ -148,7 +139,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
   constructor({
       pgConnectionId,
       name,
-      title,
       description,
       applicationName = "cell",
       db = "cell",
@@ -174,7 +164,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
   }) {
 
     this._name = name;
-    this._title = title;
     this._description = description;
     this._pgConnectionId = pgConnectionId;
     this._applicationName = applicationName;
@@ -192,10 +181,11 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
         pgInsert$: {
 
           sql: `insert into cell_meta.pg_connection
-            values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
-          params: () => [ this.pgConnectionId, this.applicationName, this.db,
-            this.host, this.maxPoolSize, this.minPoolSize, this.pass, this.port,
-            this.dbUser, this.name, this.title, this.description ]
+            values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+          params: () => [ this.pgConnectionId, this.name, this.description,
+            this.applicationName, this.db, this.host, this.maxPoolSize,
+            this.minPoolSize, this.pass, this.port,
+            this.dbUser ]
 
         }
 
@@ -269,7 +259,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
           port,
           db_user as "dbUser",
           name,
-          title,
           description
         from cell_meta.pg_connection
         where pg_connection_id = $1`,

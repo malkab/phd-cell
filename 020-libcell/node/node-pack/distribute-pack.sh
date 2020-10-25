@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2020-10-06
+# Version: 2020-10-25
 
 # -----------------------------------------------------------------
 #
@@ -41,14 +41,20 @@ if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
 
 fi
 
+# Drop existing packages
+rm ./node-pack/*.tgz
+
 # Package
-yarn run build
+yarn build
 yarn version --patch --no-git-tag-version
 yarn pack
 
 # Copy to other repos
 for REPO in "${REPO[@]}" ; do
 
+  # Drop remote REPO packages
+  rm $REPO/node/node-pack/*.tgz
   cp -f ./*.tgz $REPO/node/node-pack/
+  mv ./*.tgz ./node-pack
 
 done

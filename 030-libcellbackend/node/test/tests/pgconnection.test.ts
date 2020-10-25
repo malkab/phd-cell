@@ -29,7 +29,9 @@ describe("PgConnection", function() {
     observable: cellRawDataConn.pgInsert$(cellPg),
 
     assertions: [
-      (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ]
+      (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
+
+    verbose: false
 
   }),
 
@@ -45,7 +47,9 @@ describe("PgConnection", function() {
     observable: PgConnection.get$(cellPg, cellRawDataConn.pgConnectionId),
 
     assertions: [
-      (o: PgConnection) => expect(o.name).to.be.equal(cellRawDataConn.name) ]
+      (o: PgConnection) => expect(o.name).to.be.equal(cellRawDataConn.name) ],
+
+    verbose: false
 
   }),
 

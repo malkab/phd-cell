@@ -55,7 +55,9 @@ describe("Create provincia Catalog", function() {
 
       }
 
-    ]
+    ],
+
+    verbose: false
 
   })
 
@@ -104,7 +106,9 @@ describe("Create municipio Catalog", function() {
 
       }
 
-    ]
+    ],
+
+    verbose: false
 
   })
 
@@ -153,7 +157,9 @@ describe("Create núcleo población Catalog", function() {
 
       }
 
-    ]
+    ],
+
+    verbose: false
 
   })
 
@@ -202,7 +208,9 @@ describe("Create nivel núcleo población Catalog", function() {
 
       }
 
-    ]
+    ],
+
+    verbose: false
 
   })
 
@@ -251,7 +259,9 @@ describe("Create sección censal Catalog", function() {
 
       }
 
-    ]
+    ],
+
+    verbose: false
 
   })
 
