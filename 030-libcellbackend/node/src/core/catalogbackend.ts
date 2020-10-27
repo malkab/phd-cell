@@ -100,46 +100,41 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
    */
   public build(pg: PgConnection): rx.Observable<CatalogBackend | undefined> {
 
+    pg.open();
+
     // Get the elements to hash
-    return pg.open()
-    .pipe(
+    if (pg.conn) {
 
-      rxo.concatMap((o: PgConnection) => {
+      return pg.conn.executeQuery$(`
+        select distinct coalesce(${this.sourceField}::varchar, 'null') as item
+        from ${this.sourceTable}
+        order by item;`);
 
-        if (o.conn) {
+      } else {
 
-          return o.conn.executeQuery$(`
-            select distinct coalesce(${this.sourceField}::varchar, 'null') as item
-            from ${this.sourceTable}
-            order by item;`);
+        return rx.throwError(new Error(`unable to connect to ${o.db}`))
 
-        } else {
+      }
 
-          return rx.throwError(new Error(`unable to connect to ${o.db}`))
+    }),
 
-        }
+    rxo.map((o: QueryResult | undefined): CatalogBackend | undefined=> {
 
-      }),
+      const items: string[] = o.rows.map((o: any) => o.item);
 
-      rxo.map((o: QueryResult | undefined): CatalogBackend | undefined=> {
+      const miniHashes: string[] = NodeUtilsHashing.miniHash(items);
 
-        const items: string[] = o.rows.map((o: any) => o.item);
+      for (const i in items) {
 
-        const miniHashes: string[] = NodeUtilsHashing.miniHash(items);
+        this.forward[items[i]] = miniHashes[i];
 
-        for (const i in items) {
+        this.backward[miniHashes[i]] = items[i];
 
-          this.forward[items[i]] = miniHashes[i];
+      }
 
-          this.backward[miniHashes[i]] = items[i];
+      return this;
 
-        }
-
-        return this;
-
-      })
-
-    )
+    })
 
   }
 

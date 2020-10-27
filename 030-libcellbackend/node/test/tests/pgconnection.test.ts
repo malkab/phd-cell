@@ -6,9 +6,32 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { PgConnection } from "../../src/index";
 
-import { cellPg, cellRawDataConn } from "./common";
+import { cellPg, cellRawDataConn, clearDatabase$ } from "./common";
+
+import { QueryResult } from "@malkab/rxpg";
 
 import * as rxo from "rxjs/operators";
+
+import * as rx from "rxjs";
+
+/**
+ *
+ * Initial database clearance.
+ *
+ */
+describe("Initial database clearance", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Initial database clearance",
+
+    observable: clearDatabase$,
+
+    assertions: [ (o: boolean) => expect(o).to.be.true ]
+
+  })
+
+})
 
 /**
  *
@@ -63,42 +86,23 @@ describe("PgConnection", function() {
     testCaseName: "open()",
 
     observable: PgConnection.get$(cellPg, cellRawDataConn.pgConnectionId)
-      .pipe(
+    .pipe(
 
-        rxo.concatMap((o: PgConnection) => o.open())
+      rxo.map((o: PgConnection) => o.open()),
 
-      ),
+      rxo.concatMap((o: PgConnection) => o.conn.executeQuery$(
+        "select postgis_full_version() as x"
+      ))
 
-    assertions: [
-      (o: PgConnection) => expect(o.name).to.be.equal(cellRawDataConn.name) ]
-
-  }),
-
-  /**
-   *
-   * Conenection DB open() fail.
-   *
-   */
-  rxMochaTests({
-
-    testCaseName: "open() fail",
-
-    observable: PgConnection.get$(cellPg, cellRawDataConn.pgConnectionId)
-      .pipe(
-
-        rxo.concatMap((o: PgConnection) => {
-
-          o.db = "postgres";
-          expect(o.db).to.be.equal("postgres");
-          return o.open()
-
-        })
-
-      ),
+    ),
 
     assertions: [
-      (o: Error) =>
-        expect(o.message).to.be.equal("DB postgres not a PostGIS DB") ]
+
+      (o: QueryResult) => expect(o.command).to.be.equal("SELECT")
+
+    ],
+
+    verbose: false
 
   })
 

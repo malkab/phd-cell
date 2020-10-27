@@ -200,7 +200,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    * Connect to the DB.
    *
    */
-  public open(): rx.Observable<PgConnection> {
+  public open(): PgConnection {
 
     this._conn = new RxPg({
       applicationName: this._applicationName,
@@ -213,15 +213,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
       user: this._dbUser
     })
 
-    return this._conn.executeQuery$("select postgis_full_version() as pgversion;")
-    .pipe(
-
-      rxo.map((o: QueryResult) => this),
-
-      rxo.catchError((o: Error) =>
-        rx.throwError(new Error(`DB ${this._db} not a PostGIS DB`)))
-
-    )
+    return this;
 
   }
 
