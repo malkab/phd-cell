@@ -6,11 +6,30 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { CatalogBackend, PgConnection, GridderTasks as gt } from "../../src/index";
 
-import { catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg, provinceDiscretePolyTopAreaGridderTask, provinceDiscretePolyAreaSummaryGridderTask } from "./common";
+import { clearDatabase$, catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg, provinceDiscretePolyTopAreaGridderTask, provinceDiscretePolyAreaSummaryGridderTask } from "./common";
 
 import * as rxo from "rxjs/operators";
 
 import * as rx from "rxjs";
+
+/**
+ *
+ * Initial database clearance.
+ *
+ */
+describe("Initial database clearance", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Initial database clearance",
+
+    observable: clearDatabase$,
+
+    assertions: [ (o: boolean) => expect(o).to.be.true ]
+
+  })
+
+})
 
 /**
  *
@@ -23,22 +42,18 @@ describe("GridderTask ORM", function() {
 
 /**
  *
- * DiscretePolygonTopAreaGridderTask tests.
+ * DiscretePolyTopAreaGridderTaskBackend tests.
  *
  */
-describe("DiscretePolygonTopAreaGridderTaskBackend ORM", function() {
+describe("DiscretePolyTopAreaGridderTaskBackend ORM", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolygonTopAreaGridderTaskBackend ORM",
+    testCaseName: "DiscretePolyTopAreaGridderTaskBackend ORM",
 
     observable: rx.concat(
 
       provinceDiscretePolyTopAreaGridderTask.pgInsert$(cellPg),
-
-      provinceDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPg),
-
-      gt.get$(cellPg, "provinceDiscreteAreaSummary"),
 
       gt.get$(cellPg, "provinceDiscretePolyTopArea")
 
@@ -50,10 +65,39 @@ describe("DiscretePolygonTopAreaGridderTaskBackend ORM", function() {
         expect(o.name).to.be.equal("Provincia: máxima área"),
 
       (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.name).to.be.equal("Desglose de área de provincias"),
+        expect(o.discreteFields).to.deep.equal([ "provincia" ])
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * DiscretePolyAreaSummaryGridderTaskBackend tests.
+ *
+ */
+describe("DiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
+
+  rxMochaTests({
+
+    testCaseName: "DiscretePolyAreaSummaryGridderTaskBackend ORM",
+
+    observable: rx.concat(
+
+      provinceDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPg),
+
+      gt.get$(cellPg, "provinceDiscreteAreaSummary")
+
+    ),
+
+    assertions: [
 
       (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.discreteFields).to.deep.equal([ "provincia" ]),
+        expect(o.name).to.be.equal("Desglose de área de provincias"),
 
       (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
         expect(o.discreteFields).to.deep.equal([ "provincia" ])

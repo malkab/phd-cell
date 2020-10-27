@@ -6,11 +6,30 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { VariableBackend } from "../../src/index";
 
-import { varE001517, cellPg } from "./common";
+import { clearDatabase$, varE001517, cellPg } from "./common";
 
 import * as rxo from "rxjs/operators";
 
 import * as rx from "rxjs";
+
+/**
+ *
+ * Initial database clearance.
+ *
+ */
+describe("Initial database clearance", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Initial database clearance",
+
+    observable: clearDatabase$,
+
+    assertions: [ (o: boolean) => expect(o).to.be.true ]
+
+  })
+
+})
 
 /**
  *

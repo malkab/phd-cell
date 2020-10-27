@@ -70,4 +70,11 @@ export class GridderTaskBackend extends GT.GridderTask implements PgOrm.IPgOrm<G
 
   }
 
+  // /**
+  //  *
+  //  * Apply the gridder task to a cell.
+  //  *
+  //  */
+  // public computeCell(cell: Cell)
+
 }

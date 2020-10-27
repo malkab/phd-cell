@@ -108,33 +108,34 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
       return pg.conn.executeQuery$(`
         select distinct coalesce(${this.sourceField}::varchar, 'null') as item
         from ${this.sourceTable}
-        order by item;`);
+        order by item;`)
+      .pipe(
 
-      } else {
+        rxo.map((o: QueryResult | undefined): CatalogBackend | undefined=> {
 
-        return rx.throwError(new Error(`unable to connect to ${o.db}`))
+          const items: string[] = o.rows.map((o: any) => o.item);
 
-      }
+          const miniHashes: string[] = NodeUtilsHashing.miniHash(items);
 
-    }),
+          for (const i in items) {
 
-    rxo.map((o: QueryResult | undefined): CatalogBackend | undefined=> {
+            this.forward[items[i]] = miniHashes[i];
 
-      const items: string[] = o.rows.map((o: any) => o.item);
+            this.backward[miniHashes[i]] = items[i];
 
-      const miniHashes: string[] = NodeUtilsHashing.miniHash(items);
+          }
 
-      for (const i in items) {
+          return this;
 
-        this.forward[items[i]] = miniHashes[i];
+        })
 
-        this.backward[miniHashes[i]] = items[i];
+      )
 
-      }
+    } else {
 
-      return this;
+      return rx.throwError(new Error(`unable to connect to ${pg.db}`))
 
-    })
+    }
 
   }
 

@@ -12,8 +12,6 @@ import { QueryResult } from "@malkab/rxpg";
 
 import * as rxo from "rxjs/operators";
 
-import * as rx from "rxjs";
-
 /**
  *
  * Initial database clearance.
@@ -56,7 +54,7 @@ describe("PgConnection", function() {
 
     verbose: false
 
-  }),
+  })
 
   /**
    *
@@ -74,7 +72,7 @@ describe("PgConnection", function() {
 
     verbose: false
 
-  }),
+  })
 
   /**
    *

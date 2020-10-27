@@ -32,14 +32,14 @@ create schema cell_meta;
 
 -- Main CellDS objects table
 create table cell_meta.grid(
-    grid_id varchar(150),
-    value jsonb,
-    primary key (grid_id)
+    grid_id varchar(64) primary key,
+    name varchar(150),
+    description text,
+    origin_epsg varchar(10),
+    origin_x float,
+    origin_y float,
+    zoom_levels jsonb[]
 );
-
-create index value_gin
-on cell_meta.grid
-using gin(value);
 
 /*
 
@@ -134,13 +134,13 @@ create or replace function public.cell__getgridorigin(
     _grid_id varchar(100)
 ) returns geometry as
 $$
-    select st_setsrid(
-        st_makepoint(
-            (value -> 'origin' ->> 'x')::float,
-            (value -> 'origin' ->> 'y')::float
-        ), (value -> 'origin' ->> 'epsg'):: integer)
-    from cell_meta.grid
-    where grid_id = _grid_id
+  select st_setsrid(
+    st_makepoint(
+      origin_x,
+      origin_y
+    ), origin_epsg::integer)
+  from cell_meta.grid
+  where grid_id = _grid_id
 $$
 language sql;
 
@@ -154,12 +154,12 @@ create or replace function cell__getgridsrs(
 ) returns integer as
 $$
 
-    select
-        (value -> 'origin' ->> 'epsg')::integer
-    from
-        cell_meta.grid
-    where
-        grid_id = _grid_id
+  select
+    origin_epsg::integer
+  from
+    cell_meta.grid
+  where
+    grid_id = _grid_id
 
 $$
 language sql;
@@ -175,7 +175,7 @@ create or replace function public.cell__getzoomlevelsize(
 ) returns float as
 $$
     select
-        (value -> 'zoomlevels' -> _zoomlevel ->> 'size')::float
+        (zoom_levels[_zoomlevel] ->> 'size')::float
     from cell_meta.grid
     where grid_id = _grid_id
 $$

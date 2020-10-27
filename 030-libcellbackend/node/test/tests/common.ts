@@ -1,4 +1,4 @@
-import { CatalogBackend, PgConnection, VariableBackend, GridderTasks as gt } from "../../src/index";
+import { CatalogBackend, PgConnection, VariableBackend, GridderTasks as gt, GridBackend } from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -54,6 +54,7 @@ export const clearDatabase$: rx.Observable<boolean> = cellPg.executeQuery$(`
   delete from cell_meta.pg_connection;
   delete from cell_meta.variable;
   delete from cell_meta.gridder_task;
+  delete from cell_meta.grid;
 `)
 .pipe(
 
@@ -156,4 +157,30 @@ new gt.DiscretePolyAreaSummaryGridderTaskBackend({
   discreteFields: [ "provincia" ],
   geomField: "geom",
   sourceTable: "context.municipio"
+})
+
+/**
+ *
+ * Grid.
+ *
+ */
+export const gridBackend: GridBackend = new GridBackend({
+  description: "A grid based on the official EU one",
+  gridId: "eu-grid",
+  name: "eu-grid",
+  originEpsg: "3035",
+  originX: 2700000,
+  originY: 1500000,
+  zoomLevels: [
+    {"name": "100 km", "size": 100000},
+    {"name": "50 km", "size": 50000},
+    {"name": "10 km", "size": 10000},
+    {"name": "5 km", "size": 5000},
+    {"name": "1 km", "size": 1000},
+    {"name": "500 m", "size": 500},
+    {"name": "250 m", "size": 250},
+    {"name": "125 m", "size": 125},
+    {"name": "25 m", "size": 25},
+    {"name": "5 m", "size": 5}
+  ]
 })

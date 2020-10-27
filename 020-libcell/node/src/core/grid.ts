@@ -15,6 +15,15 @@ export class Grid {
 
   /**
    *
+   * Grid ID.
+   *
+   */
+  private _gridId: string;
+
+  get gridId(): string { return this._gridId }
+
+  /**
+   *
    * The EPSG of the grid.
    *
    */
@@ -59,37 +68,28 @@ export class Grid {
 
   private _description: string;
 
-  /**
-   *
-   * Long description of the grid.
-   *
-   */
-  get longDescription(): string { return this._longDescription; }
-
-  private _longDescription: string;
-
   /*
 
     Constructor.
 
   */
   constructor({
+      gridId,
       name,
       description,
-      longDescription,
       origin,
       zoomLevels
     }: {
-      name: string,
-      description: string,
-      longDescription: string,
-      origin: Coordinate,
-      zoomLevels: ZoomLevel[]
+      gridId: string;
+      name: string;
+      description: string;
+      origin: Coordinate;
+      zoomLevels: ZoomLevel[];
   }) {
 
+    this._gridId = gridId;
     this._name = name;
     this._description = description;
-    this._longDescription = longDescription;
     this._epsg = origin.epsg;
     this._zoomLevels = zoomLevels;
     this._origin = origin;
@@ -108,7 +108,14 @@ export class Grid {
     const x: number = Math.floor((coordinate.x - this._origin.x) / size);
     const y: number = Math.floor((coordinate.y - this._origin.y) / size);
 
-    return new Cell({ grid: this, zoom: zoomLevel, x: x, y: y });
+    return new Cell({
+      grid: this,
+      zoom: zoomLevel,
+      x: x,
+      y: y,
+      epsg: this._epsg,
+      gridId: this._gridId,
+    });
 
   }
 
@@ -136,7 +143,14 @@ export class Grid {
 
       for (let y = lowerLeft.y ; y <= upperRight.y ; y++) {
 
-        out.push(new Cell({ grid: this, zoom: zoomLevel, x: x, y: y }));
+        out.push(new Cell({
+          grid: this,
+          zoom: zoomLevel,
+          x: x,
+          y: y,
+          epsg: this._epsg,
+          gridId: this._gridId
+        }));
 
       }
 

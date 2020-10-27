@@ -19,7 +19,7 @@ MATCH_MLKCONTEXT=
 # Remove packages firts. Upgrading from *.tgz is clumsy, remove target packages
 # first.
 PACKAGES_REMOVE=(
-  whatever
+  libcell
 )
 
 

@@ -2,7 +2,6 @@ name: cell-libcellbackend
 root: /home/git/malkab-phd/cell
 
 windows:
-
   - libcellbackend/node: >
       clear ;
       sleep 2 ;

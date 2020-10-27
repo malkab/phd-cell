@@ -17,6 +17,13 @@ export class ZoomLevel {
   // Size
   private _size: number;
 
+  /**
+   *
+   * Safe serial for databases.
+   *
+   */
+  get apiSafeSerial(): any { return { name: this.name, size: this.size } }
+
   /*
 
     Getters & Setters
@@ -31,7 +38,13 @@ export class ZoomLevel {
       Constructor
 
   */
-  constructor(name: string, size: number) {
+  constructor({
+      name,
+      size
+    }: {
+      name: string;
+      size: number;
+  }) {
 
     this._name = name;
     this._size = size;

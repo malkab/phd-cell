@@ -6,11 +6,57 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { CatalogBackend, PgConnection } from "../../src/index";
 
-import { catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg } from "./common";
+import { cellRawDataConn, clearDatabase$, catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg } from "./common";
 
 import * as rxo from "rxjs/operators";
 
 import * as rx from "rxjs";
+
+/**
+ *
+ * Initial database clearance.
+ *
+ */
+describe("Initial database clearance", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Initial database clearance",
+
+    observable: clearDatabase$,
+
+    assertions: [ (o: boolean) => expect(o).to.be.true ]
+
+  })
+
+})
+
+/**
+ *
+ * Insert PgConnection.
+ *
+ */
+describe("PgConnection pgInsert$", function() {
+
+  /**
+   *
+   * Connection DB insert.
+   *
+   */
+  rxMochaTests({
+
+    testCaseName: "PgConnection pgInsert$",
+
+    observable: cellRawDataConn.pgInsert$(cellPg),
+
+    assertions: [
+      (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
+
+    verbose: false
+
+  })
+
+})
 
 /**
  *

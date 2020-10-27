@@ -33,10 +33,12 @@ export class Cell {
 
   /**
    *
-   * The cell grid.
+   * EPSG.
    *
    */
-  private _grid: Grid;
+  private _epsg: string;
+
+  get epsg(): string { return this._epsg }
 
   /**
    *
@@ -66,9 +68,23 @@ export class Cell {
    * The cell's grid.
    *
    */
-  get grid(): Grid { return this._grid; }
+  private _grid: Grid | undefined;
 
-  set grid(grid: Grid) { this._grid = grid; }
+  get grid(): Grid | undefined {
+
+    if (this._grid) {
+
+      return this._grid;
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
+
+  }
+
+  set grid(grid: Grid | undefined) { this._grid = grid; }
 
   /**
    *
@@ -82,14 +98,37 @@ export class Cell {
    * Size of the side of the cell.
    *
    */
-  get sideSize(): number { return +this.grid.zoomLevels[this.zoom].size; }
+  get sideSize(): number {
+
+    if(this._grid) {
+
+      return +(this._grid.zoomLevels[this.zoom].size);
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
+
+  }
 
   /**
    *
    * Area of the cell.
    *
    */
-  get area(): number { return this.sideSize * this.sideSize; }
+  get area(): number {
+
+    if (this.sideSize) {
+
+      return this.sideSize * this.sideSize;
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
+  }
 
   /**
    *
@@ -98,15 +137,23 @@ export class Cell {
    */
   get lowerLeft(): Coordinate {
 
-    const ox: number = this._grid.origin.x;
-    const oy: number = this._grid.origin.y;
-    const s: number = this._grid.zoomLevels[this._zoom].size;
+    if (this._grid) {
 
-    return new Coordinate({
-      epsg: this._grid.epsg,
-      x: ox + (this._x * s) - this._offset,
-      y: oy + (this._y * s) - this._offset
-    });
+      const ox: number = this._grid.origin.x;
+      const oy: number = this._grid.origin.y;
+      const s: number = this._grid.zoomLevels[this._zoom].size;
+
+      return new Coordinate({
+        epsg: this._grid.epsg,
+        x: ox + (this._x * s) - this._offset,
+        y: oy + (this._y * s) - this._offset
+      });
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
 
   }
 
@@ -117,15 +164,23 @@ export class Cell {
    */
   get upperRight(): Coordinate {
 
-    const ox: number = this._grid.origin.x;
-    const oy: number = this._grid.origin.y;
-    const s: number = this._grid.zoomLevels[this._zoom].size;
+    if (this._grid) {
 
-    return new Coordinate({
-      epsg: this._grid.epsg,
-      x: ox + ((this._x + 1) * s) + this._offset,
-      y: oy + ((this._y + 1) * s) + this._offset
-    });
+      const ox: number = this._grid.origin.x;
+      const oy: number = this._grid.origin.y;
+      const s: number = this._grid.zoomLevels[this._zoom].size;
+
+      return new Coordinate({
+        epsg: this._grid.epsg,
+        x: ox + ((this._x + 1) * s) + this._offset,
+        y: oy + ((this._y + 1) * s) + this._offset
+      });
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
 
   }
 
@@ -136,11 +191,19 @@ export class Cell {
    */
   get center(): Coordinate {
 
-    return new Coordinate({
-      epsg: this.grid.epsg,
-      x: this.lowerLeft.x + (this.sideSize / 2),
-      y: this.lowerLeft.y + (this.sideSize / 2)
-    });
+    if (this._grid) {
+
+      return new Coordinate({
+        epsg: this._grid.epsg,
+        x: this.lowerLeft.x + (this.sideSize / 2),
+        y: this.lowerLeft.y + (this.sideSize / 2)
+      });
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
 
   }
 
@@ -183,14 +246,22 @@ export class Cell {
    */
   get ewkt(): string {
 
-    const ll: Coordinate = this.lowerLeft;
-    const ur: Coordinate = this.upperRight;
+    if (this._grid) {
 
-    let ewkt: string = `SRID=${this._grid.epsg};`;
+      const ll: Coordinate = this.lowerLeft;
+      const ur: Coordinate = this.upperRight;
 
-    ewkt += `POLYGON((${ll.x} ${ll.y},${ur.x} ${ll.y},${ur.x} ${ur.y},${ll.x} ${ur.y},${ll.x} ${ll.y}))`;
+      let ewkt: string = `SRID=${this._grid.epsg};`;
 
-    return ewkt;
+      ewkt += `POLYGON((${ll.x} ${ll.y},${ur.x} ${ll.y},${ur.x} ${ur.y},${ll.x} ${ur.y},${ll.x} ${ll.y}))`;
+
+      return ewkt;
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
 
   }
 
@@ -257,6 +328,15 @@ export class Cell {
 
   /**
    *
+   * Grid ID.
+   *
+   */
+  private _gridId: string;
+
+  get gridId(): string { return this._gridId }
+
+  /**
+   *
    * Returns the corners of the cell as four Coordinates, starting
    * from the lower left and ending clockwise at the lower right. Returns a data structure in the form:
    *
@@ -279,35 +359,43 @@ export class Cell {
     lowerRight: Coordinate
   } {
 
-    return {
+    if (this._grid) {
 
-      // Lower left
-      lowerLeft: new Coordinate({
-        epsg: this.grid.epsg,
-        x: this.lowerLeft.x,
-        y: this.lowerLeft.y
-      }),
+      return {
 
-      // Upper left
-      upperLeft: new Coordinate({
-        epsg: this.grid.epsg,
-        x: this.lowerLeft.x,
-        y: this.upperRight.y
-      }),
+        // Lower left
+        lowerLeft: new Coordinate({
+          epsg: this._grid.epsg,
+          x: this.lowerLeft.x,
+          y: this.lowerLeft.y
+        }),
 
-      // Upper right
-      upperRight: new Coordinate({
-        epsg: this.grid.epsg,
-        x: this.upperRight.x,
-        y: this.upperRight.y
-      }),
+        // Upper left
+        upperLeft: new Coordinate({
+          epsg: this._grid.epsg,
+          x: this.lowerLeft.x,
+          y: this.upperRight.y
+        }),
 
-      // Lower right
-      lowerRight: new Coordinate({
-        epsg: this.grid.epsg,
-        x: this.upperRight.x,
-        y: this.lowerLeft.y
-      })
+        // Upper right
+        upperRight: new Coordinate({
+          epsg: this._grid.epsg,
+          x: this.upperRight.x,
+          y: this.upperRight.y
+        }),
+
+        // Lower right
+        lowerRight: new Coordinate({
+          epsg: this._grid.epsg,
+          x: this.upperRight.x,
+          y: this.lowerLeft.y
+        })
+
+      }
+
+    } else {
+
+      throw new Error("cell: undefined grid");
 
     }
 
@@ -337,25 +425,31 @@ export class Cell {
    *
    */
   constructor({
-      grid,
+      gridId,
+      grid = undefined,
+      epsg,
       zoom,
       x,
       y,
       data = {},
       offset = 0
     }: {
-      grid: Grid,
-      zoom: number,
-      x: number,
-      y: number,
-      data?: any,
-      offset?: number
+      gridId: string;
+      grid?: Grid;
+      epsg: string;
+      zoom: number;
+      x: number;
+      y: number;
+      data?: any;
+      offset?: number;
   }) {
 
     this._zoom = zoom;
     this._x = Math.round(x);
     this._y = Math.round(y);
+    this._gridId = gridId;
     this._grid = grid;
+    this._epsg = epsg;
     this._data = data;
     this._offset = offset;
 
@@ -368,36 +462,46 @@ export class Cell {
    */
   public getSubCells(zoom: number): Cell[] {
 
-    const thisSize = this.grid.zoomLevels[this.zoom].size;
-    const targetSize = this.grid.zoomLevels[zoom].size;
-    const sizeRatio = thisSize / targetSize;
+    if (this._grid) {
 
-    const out: Cell[] = [];
+      const thisSize = this._grid.zoomLevels[this.zoom].size;
+      const targetSize = this._grid.zoomLevels[zoom].size;
+      const sizeRatio = thisSize / targetSize;
 
-    for (
-      let x = this.x * sizeRatio ;
-      x < (this.x * sizeRatio) + sizeRatio ;
-      x++
-    ) {
+      const out: Cell[] = [];
 
       for (
-        let y = this.y * sizeRatio ;
-        y < (this.y * sizeRatio) + sizeRatio ;
-        y++
+        let x = this.x * sizeRatio ;
+        x < (this.x * sizeRatio) + sizeRatio ;
+        x++
       ) {
 
-        out.push(new Cell({
-          grid: this.grid,
-          zoom: zoom,
-          x: x,
-          y: y}
-        ));
+        for (
+          let y = this.y * sizeRatio ;
+          y < (this.y * sizeRatio) + sizeRatio ;
+          y++
+        ) {
+
+          out.push(new Cell({
+            gridId: this._gridId,
+            zoom: zoom,
+            x: x,
+            y: y,
+            epsg: this._epsg,
+            grid: this._grid
+          }));
+
+        }
 
       }
 
-    }
-
     return out;
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
 
   }
 
@@ -437,13 +541,21 @@ export class Cell {
    */
   private _getBbox(): Bbox {
 
-    return new Bbox({
-      epsg: this.grid.epsg,
-      maxx: this.upperRight.x,
-      maxy: this.upperRight.y,
-      minx: this.lowerLeft.x,
-      miny: this.lowerLeft.y
-    } as IBbox);
+    if(this._grid) {
+
+      return new Bbox({
+        epsg: this._grid.epsg,
+        maxx: this.upperRight.x,
+        maxy: this.upperRight.y,
+        minx: this.lowerLeft.x,
+        miny: this.lowerLeft.y
+      } as IBbox);
+
+    } else {
+
+      throw new Error("cell: undefined grid");
+
+    }
 
   }
 

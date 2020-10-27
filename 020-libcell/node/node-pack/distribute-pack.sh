@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2020-10-25
+# Version: 2020-10-26
 
 # -----------------------------------------------------------------
 #
@@ -49,12 +49,14 @@ yarn build
 yarn version --patch --no-git-tag-version
 yarn pack
 
+# Move package to node-pack
+mv ./*.tgz ./node-pack
+
 # Copy to other repos
 for REPO in "${REPO[@]}" ; do
 
   # Drop remote REPO packages
   rm $REPO/node/node-pack/*.tgz
-  cp -f ./*.tgz $REPO/node/node-pack/
-  mv ./*.tgz ./node-pack
+  cp -f ./node-pack/*.tgz $REPO/node/node-pack/
 
 done

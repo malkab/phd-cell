@@ -1,10 +1,52 @@
 name: cell
 root: /home/git/malkab-phd/cell
 
-windows:
+startup_window: cell/full_backend
 
-  - cell: >
+# This shows a custom layout obtained with PREFIX : list-windows after configuring it with PREFIX : resize-pane
+# Predefined layouts are: even-horizontal, even-vertical, main-horizontal, main-vertical, and tiled.
+windows:
+  - cell/full_backend:
+      layout: 935c,317x73,0,0{210x73,0,0[210x36,0,0,0,210x36,0,37,4],106x73,211,0[106x18,211,0,1,106x17,211,19,5,106x18,211,37,2,106x17,211,56,3]}
+      panes:
+        - api: >
+            clear ;
+            sleep 1 ;
+            . mlkcontext common
+        - controller: >
+            clear ;
+            sleep 2 ;
+            . mlkcontext common
+        - worker_0: >
+            clear ;
+            sleep 3 ;
+            . mlkcontext common
+        - worker_1: >
+            clear ;
+            sleep 4 ;
+            . mlkcontext common
+        - worker_2: >
+            clear ;
+            sleep 5 ;
+            . mlkcontext common
+        - worker_3: >
+            clear ;
+            sleep 6 ;
+            . mlkcontext common
+  - sunnsaasds-psql: >
+      clear ;
+      sleep 7 ;
+      . mlkcontext common ;
+      cd 010-cell-db/docker ;
+      ./110-pg-psql.sh
+  - sunnsaasds: >
       clear ;
       sleep 0.2 ;
-      cd docker/010-dev ;
-      . mlkcontext common
+      . mlkcontext common ;
+      cd 010-cell-db/docker ;
+      ./010-compose_up.sh
+  - docker: >
+      clear ;
+      sleep 8 ;
+      . mlkcontext common ;
+      cd docker/010-dev
