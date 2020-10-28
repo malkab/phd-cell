@@ -24,10 +24,14 @@ describe("libcellbackend", () => {
   // describe("\n\n  --- variablebackend.test ---\n",
   //   () => require("./tests/variablebackend.test"));
 
-  // describe("\n\n  --- griddertask.test ---\n",
-  //   () => require("./tests/griddertask.test"));
+  // describe("\n\n  --- gridbackend.test ---\n",
+  //   () => require("./tests/gridbackend.test"));
 
-  describe("\n\n  --- gridbackend.test ---\n",
-    () => require("./tests/gridbackend.test"));
+  describe("\n\n  --- cellbackend.test ---\n",
+    () => require("./tests/cellbackend.test"));
+
+  describe("\n\n  --- griddertask.test ---\n",
+    () => require("./tests/griddertask.test"));
+
 
 });

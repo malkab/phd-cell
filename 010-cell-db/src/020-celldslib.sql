@@ -58,7 +58,7 @@ create schema cell_data;
 
 */
 create table cell_data.data(
-    grid_id varchar(100),
+    grid_id varchar(100) references cell_meta.grid(grid_id),
     epsg integer,
     zoom integer,
     x bigint,
@@ -175,7 +175,7 @@ create or replace function public.cell__getzoomlevelsize(
 ) returns float as
 $$
     select
-        (zoom_levels[_zoomlevel] ->> 'size')::float
+        (zoom_levels[_zoomlevel+1] ->> 'size')::float
     from cell_meta.grid
     where grid_id = _grid_id
 $$
@@ -191,20 +191,20 @@ language sql;
 
 */
 create or replace function public.cell__cellgeom(
-    _cell cell__cell
+  _cell cell__cell
 ) returns geometry as
 $$
 
-    select
-        st_makeenvelope(
-            st_x(gridorigin) + ((_cell).x * gridsize),
-            st_y(gridorigin) + ((_cell).y * gridsize),
-            st_x(gridorigin) + (((_cell).x + 1) * gridsize),
-            st_y(gridorigin) + (((_cell).y + 1) * gridsize),
-            (_cell).epsg)
-    from
-        cell__getgridorigin((_cell).grid_id) as gridorigin,
-        cell__getzoomlevelsize((_cell).grid_id, (_cell).zoom) as gridsize;
+  select
+    st_makeenvelope(
+      st_x(gridorigin) + ((_cell).x * gridsize),
+      st_y(gridorigin) + ((_cell).y * gridsize),
+      st_x(gridorigin) + (((_cell).x + 1) * gridsize),
+      st_y(gridorigin) + (((_cell).y + 1) * gridsize),
+      (_cell).epsg)
+  from
+    cell__getgridorigin((_cell).grid_id) as gridorigin,
+    cell__getzoomlevelsize((_cell).grid_id, (_cell).zoom) as gridsize;
 
 $$
 language sql;
@@ -219,11 +219,11 @@ language sql;
 
 */
 create or replace function public.cell__cellgeom4326(
-    _cell cell__cell
+  _cell cell__cell
 ) returns geometry as
 $$
 
-    select st_transform(cell__cellgeom(_cell), 4326);
+  select st_transform(cell__cellgeom(_cell), 4326);
 
 $$
 language sql;

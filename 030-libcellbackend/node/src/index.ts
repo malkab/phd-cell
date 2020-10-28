@@ -6,4 +6,6 @@ export * from "./core/variablebackend";
 
 export * from "./core/gridbackend";
 
+export * from "./core/cellbackend";
+
 export * as GridderTasks from "./griddertasks/index";

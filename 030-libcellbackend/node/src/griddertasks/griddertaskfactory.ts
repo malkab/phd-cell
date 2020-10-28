@@ -1,4 +1,5 @@
 import { DiscretePolyAreaSummaryGridderTaskBackend } from './discretepolyareasummarygriddertaskbackend';
+
 import { DiscretePolyTopAreaGridderTaskBackend } from './discretepolytopareagriddertaskbackend';
 
 import { GridderTasks as gt } from 'libcell';
@@ -7,24 +8,54 @@ import { RxPg, PgOrm } from '@malkab/rxpg';
 
 import * as rx from "rxjs";
 
+import * as rxo from "rxjs/operators";
+
+import { GridderTask } from 'libcell/dist/griddertasks';
+
+import { PgConnection } from '../core/pgconnection';
+
 /**
  *
  * Factory for creating GridderTasks specialized classes.
  *
  */
-export function gridderTaskFactory(params: any): rx.Observable<
+export function gridderTaskFactory(pg: RxPg, params: any): rx.Observable<
 DiscretePolyAreaSummaryGridderTaskBackend |
 DiscretePolyTopAreaGridderTaskBackend> {
 
   if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
 
-    return rx.of(new DiscretePolyAreaSummaryGridderTaskBackend(params));
+    return PgConnection.get$(pg, params.pgConnectionId)
+    .pipe(
+
+      rxo.map((pg: PgConnection) => {
+
+        return new DiscretePolyAreaSummaryGridderTaskBackend({
+          ...params,
+          pgConnection: pg
+        });
+
+      })
+
+    )
 
   };
 
   if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
 
-    return rx.of(new DiscretePolyTopAreaGridderTaskBackend(params));
+    return PgConnection.get$(pg, params.pgConnectionId)
+    .pipe(
+
+      rxo.map((pg: PgConnection) => {
+
+        return new DiscretePolyTopAreaGridderTaskBackend({
+          ...params,
+          pgConnection: pg
+        });
+
+      })
+
+    )
 
   }
 
@@ -46,12 +77,13 @@ export function get$(pg: RxPg, id: string): rx.Observable<any> {
         source_table as "sourceTable",
         name_template as "nameTemplate",
         description_template as "descriptionTemplate",
+        geom_field as "geomField",
         additional_params as "additionalParams"
       from cell_meta.gridder_task where gridder_task_id = $1;`,
     params: () => [ id ],
     type: gt.GridderTask,
     newFunction: (params: any) =>
-      gridderTaskFactory({
+      gridderTaskFactory(pg, {
         ...params,
         ...params.additionalParams
       })

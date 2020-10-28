@@ -6,30 +6,31 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { CatalogBackend, PgConnection, GridderTasks as gt } from "../../src/index";
 
-import { clearDatabase$, catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg, provinceDiscretePolyTopAreaGridderTask, provinceDiscretePolyAreaSummaryGridderTask } from "./common";
+import { clearDatabase$, testCell, cellBackends, cellPg, provinceDiscretePolyTopAreaGridderTask, provinceDiscretePolyAreaSummaryGridderTask, cellRawDataConn } from "./common";
 
 import * as rxo from "rxjs/operators";
 
 import * as rx from "rxjs";
+import { DiscretePolyTopAreaGridderTaskBackend } from "../../src/griddertasks";
 
-/**
- *
- * Initial database clearance.
- *
- */
-describe("Initial database clearance", function() {
+// /**
+//  *
+//  * Initial database clearance.
+//  *
+//  */
+// describe("Initial database clearance", function() {
 
-  rxMochaTests({
+//   rxMochaTests({
 
-    testCaseName: "Initial database clearance",
+//     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+//     observable: clearDatabase$,
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+//     assertions: [ (o: boolean) => expect(o).to.be.true ]
 
-  })
+//   })
 
-})
+// })
 
 /**
  *
@@ -53,19 +54,37 @@ describe("DiscretePolyTopAreaGridderTaskBackend ORM", function() {
 
     observable: rx.concat(
 
+      cellRawDataConn.pgInsert$(cellPg),
+
       provinceDiscretePolyTopAreaGridderTask.pgInsert$(cellPg),
 
       gt.get$(cellPg, "provinceDiscretePolyTopArea")
+      .pipe(
+
+        rxo.concatMap((o: DiscretePolyTopAreaGridderTaskBackend) => {
+
+          return o.computeCell(testCell)
+
+        })
+
+      )
 
     ),
 
     assertions: [
 
+      (o: PgConnection) => expect(o.pgConnectionId).to.be.equal("cellRawDataConn"),
+
       (o: gt.DiscretePolyTopAreaGridderTaskBackend) =>
         expect(o.name).to.be.equal("Provincia: máxima área"),
 
-      (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.discreteFields).to.deep.equal([ "provincia" ])
+      (o: any) => {
+
+        console.log("D: mnnnn", o);
+
+        expect(o.rowCount).to.deep.equal(0);
+
+      }
 
     ],
 

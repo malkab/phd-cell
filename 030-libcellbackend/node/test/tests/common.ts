@@ -1,4 +1,4 @@
-import { CatalogBackend, PgConnection, VariableBackend, GridderTasks as gt, GridBackend } from "../../src/index";
+import { CellBackend, CatalogBackend, PgConnection, VariableBackend, GridderTasks as gt, GridBackend } from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -51,10 +51,11 @@ export const cellRawDataConn: PgConnection = new PgConnection({
  */
 export const clearDatabase$: rx.Observable<boolean> = cellPg.executeQuery$(`
   delete from cell_meta.catalog;
-  delete from cell_meta.pg_connection;
   delete from cell_meta.variable;
   delete from cell_meta.gridder_task;
+  delete from cell_data.data;
   delete from cell_meta.grid;
+  delete from cell_meta.pg_connection;
 `)
 .pipe(
 
@@ -141,7 +142,7 @@ new gt.DiscretePolyTopAreaGridderTaskBackend({
   nameTemplate: "Área provincia: {{{provincia}}}",
   descriptionTemplate: "Área de la provincia {{{provincia}}} en la celda",
   pgConnectionId: "cellRawDataConn",
-  discreteFields: [ "provincia" ],
+  discreteFields: [ "provincia", "municipio" ],
   geomField: "geom",
   sourceTable: "context.municipio"
 });
@@ -156,7 +157,7 @@ new gt.DiscretePolyAreaSummaryGridderTaskBackend({
   pgConnectionId: "cellRawDataConn",
   discreteFields: [ "provincia" ],
   geomField: "geom",
-  sourceTable: "context.municipio"
+  sourceTable: "context.provincia"
 })
 
 /**
@@ -183,4 +184,41 @@ export const gridBackend: GridBackend = new GridBackend({
     {"name": "25 m", "size": 25},
     {"name": "5 m", "size": 5}
   ]
+})
+
+/**
+ *
+ * Cells.
+ *
+ */
+export const cellBackends: CellBackend[] = [];
+
+for (let z = 0; z<1; z++) {
+
+  for (let x = 0; x<6; x++) {
+
+    for (let y = 0; y<4; y++) {
+
+      cellBackends.push(new CellBackend({
+        epsg: "3035",
+        gridId: "eu-grid",
+        x: x,
+        y: y,
+        zoom: z,
+        grid: gridBackend
+      }))
+
+    }
+
+  }
+
+}
+
+export const testCell: CellBackend = new CellBackend({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 0,
+  x: 2,
+  y: 2,
+  grid: gridBackend
 })

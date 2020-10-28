@@ -1,3 +1,5 @@
+import { PgConnection } from 'src/core/pgconnection';
+
 import { IMetadated } from "../core/imetadated";
 
 import { EGRIDDERTASKTYPE } from "./egriddertasktype";
@@ -44,6 +46,15 @@ export class GridderTask implements IMetadated {
   protected _pgConnectionId: string;
 
   get pgConnectionId(): string { return this._pgConnectionId }
+
+  /**
+   *
+   * PgConnection.
+   *
+   */
+  protected _pgConnection: PgConnection | undefined;
+
+  get pgConnection(): PgConnection | undefined { return this._pgConnection }
 
   /**
    *
@@ -118,6 +129,7 @@ export class GridderTask implements IMetadated {
       name,
       description,
       pgConnectionId,
+      pgConnection = undefined,
       sourceTable,
       nameTemplate,
       descriptionTemplate,
@@ -127,6 +139,7 @@ export class GridderTask implements IMetadated {
       name: string;
       description: string;
       pgConnectionId: string;
+      pgConnection?: PgConnection;
       sourceTable: string;
       nameTemplate: string;
       descriptionTemplate: string;
@@ -145,6 +158,8 @@ export class GridderTask implements IMetadated {
     this._gridderTaskType = undefined;
     this._gridderTaskTypeName = undefined;
     this._gridderTaskTypeDescription = undefined;
+
+    this._pgConnection = pgConnection;
 
   }
 

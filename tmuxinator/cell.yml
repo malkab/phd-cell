@@ -11,34 +11,34 @@ windows:
       panes:
         - api: >
             clear ;
-            sleep 1 ;
+            sleep 2 ;
             . mlkcontext common
         - controller: >
             clear ;
-            sleep 2 ;
+            sleep 4 ;
             . mlkcontext common
         - worker_0: >
             clear ;
-            sleep 3 ;
+            sleep 6 ;
             . mlkcontext common
         - worker_1: >
             clear ;
-            sleep 4 ;
+            sleep 8 ;
             . mlkcontext common
         - worker_2: >
             clear ;
-            sleep 5 ;
+            sleep 10 ;
             . mlkcontext common
         - worker_3: >
             clear ;
-            sleep 6 ;
+            sleep 12 ;
             . mlkcontext common
   - sunnsaasds-psql: >
       clear ;
-      sleep 7 ;
+      sleep 14 ;
       . mlkcontext common ;
-      cd 010-cell-db/docker ;
-      ./110-pg-psql.sh
+      cd docker/010-dev ;
+      ./100-pg-psql.sh
   - sunnsaasds: >
       clear ;
       sleep 0.2 ;
@@ -47,6 +47,6 @@ windows:
       ./010-compose_up.sh
   - docker: >
       clear ;
-      sleep 8 ;
+      sleep 16 ;
       . mlkcontext common ;
       cd docker/010-dev

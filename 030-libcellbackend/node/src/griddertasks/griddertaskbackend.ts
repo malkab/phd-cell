@@ -6,6 +6,8 @@ import { RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
+import { CellBackend } from "../core/cellbackend";
+
 /**
  *
  * Base class to define GridderTasks.
@@ -60,21 +62,25 @@ export class GridderTaskBackend extends GT.GridderTask implements PgOrm.IPgOrm<G
       pgInsert$: {
         sql: `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
         params: () => [ this.gridderTaskId, this.gridderTaskType, this.name,
           this.description, this.pgConnectionId, this.sourceTable,
-          this.nameTemplate, this.descriptionTemplate, null ]
+          this.nameTemplate, this.descriptionTemplate, this.geomField, null ]
       }
 
     })
 
   }
 
-  // /**
-  //  *
-  //  * Apply the gridder task to a cell.
-  //  *
-  //  */
-  // public computeCell(cell: Cell)
+  /**
+   *
+   * Apply the gridder task to a cell.
+   *
+   */
+  public computeCell(cell: CellBackend): rx.Observable<any> {
+
+    throw new Error("computeCell must be implemented in child classes");
+
+  }
 
 }

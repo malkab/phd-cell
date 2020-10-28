@@ -79,10 +79,11 @@ create table cell_meta.gridder_task(
   gridder_task_type varchar(64),
   name varchar(150),
   description text,
-  pg_connection_id varchar(64),
+  pg_connection_id varchar(64) references cell_meta.pg_connection(pg_connection_id),
   source_table varchar(150),
   name_template varchar(300),
   description_template text,
+  geom_field varchar(150),
   additional_params jsonb
 );
 

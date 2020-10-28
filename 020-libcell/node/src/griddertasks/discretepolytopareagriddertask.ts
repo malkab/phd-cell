@@ -1,5 +1,7 @@
 import { EGRIDDERTASKTYPE } from './egriddertasktype';
 
+import { PgConnection } from 'src/core/pgconnection';
+
 import { GridderTask } from "./griddertask";
 
 /**
@@ -28,6 +30,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
       name,
       description,
       pgConnectionId,
+      pgConnection = undefined,
       sourceTable,
       discreteFields,
       geomField,
@@ -38,6 +41,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
       name: string;
       description: string;
       pgConnectionId: string;
+      pgConnection?: PgConnection;
       sourceTable: string;
       discreteFields: string[];
       geomField: string;
@@ -50,6 +54,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
       name: name,
       description: description,
       pgConnectionId: pgConnectionId,
+      pgConnection: pgConnection,
       sourceTable: sourceTable,
       descriptionTemplate: descriptionTemplate,
       nameTemplate: nameTemplate,

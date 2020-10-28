@@ -6,6 +6,8 @@ import { RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
+import { PgConnection } from 'src/core/pgconnection';
+
 /**
  *
  * Base class to define GridderTasks.
@@ -29,6 +31,7 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
       name,
       description,
       pgConnectionId,
+      pgConnection = undefined,
       sourceTable,
       discreteFields,
       geomField,
@@ -39,6 +42,7 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
       name: string;
       description: string;
       pgConnectionId: string;
+      pgConnection?: PgConnection;
       sourceTable: string;
       discreteFields: string[];
       geomField: string;
@@ -51,6 +55,7 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
       name: name,
       description: description,
       pgConnectionId: pgConnectionId,
+      pgConnection: pgConnection,
       sourceTable: sourceTable,
       descriptionTemplate: descriptionTemplate,
       nameTemplate: nameTemplate,
@@ -63,11 +68,12 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
       pgInsert$: {
         sql: `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
         params: () => [ this.gridderTaskId, this.gridderTaskType, this.name,
           this.description, this.pgConnectionId, this.sourceTable,
           this.nameTemplate,
-          this.descriptionTemplate, { discreteFields: this.discreteFields } ]
+          this.descriptionTemplate, this.geomField,
+          { discreteFields: this.discreteFields } ]
         }
 
       })
