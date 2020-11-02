@@ -7,30 +7,6 @@ begin;
 
 /**
 
-  catalog
-
-*/
-create table cell_meta.catalog(
-  catalog_id varchar(64) primary key,
-  name varchar(150),
-  description text,
-  pg_connection_id varchar(64),
-  source_table varchar(150),
-  source_field varchar(150),
-  forward jsonb,
-  backward jsonb
-);
-
-create index catalog_forward_gin
-on cell_meta.catalog
-using gin(forward);
-
-create index catalog_backward_gin
-on cell_meta.catalog
-using gin(backward);
-
-/**
-
   pg_connection
 
 */
@@ -50,17 +26,6 @@ create table cell_meta.pg_connection(
 
 /**
 
-  Variable
-
-*/
-create table cell_meta.variable(
-  variable_id varchar(64) primary key,
-  name varchar(150),
-  description text
-);
-
-/**
-
   Version
 
 */
@@ -71,20 +36,54 @@ create table cell_meta.cell_version(
 
 /**
 
-  GridderTasks
+  GridderTasks. GridderTasks are at the top of the hierarchy of data structure.
+  GridderTasks generate one or more variables with optionally catalogs entries.
 
 */
 create table cell_meta.gridder_task(
   gridder_task_id varchar(64) primary key,
   gridder_task_type varchar(64),
+  -- This is the name of the specific GridderTask
   name varchar(150),
+  -- This is the description of the specific GridderTask
   description text,
-  pg_connection_id varchar(64) references cell_meta.pg_connection(pg_connection_id),
   source_table varchar(150),
-  name_template varchar(300),
-  description_template text,
   geom_field varchar(150),
   additional_params jsonb
 );
+
+/**
+
+  Variable. Variables are created by GridderTasks, that can create one or many
+  of them, and also create catalog entries.
+
+*/
+create table cell_meta.variable(
+  gridder_task_id varchar(64) references cell_meta.gridder_task(gridder_task_id),
+  variable_id varchar(64),
+  key varchar(64) unique,
+  name varchar(150),
+  description text,
+  primary key (gridder_task_id, variable_id)
+);
+
+/**
+
+  Catalog. The catalog is a set of key / values for discrete variables to use
+  short keys instead of long ones.
+
+*/
+create table cell_meta.catalog(
+  gridder_task_id varchar(64),
+  variable_id varchar(64),
+  key varchar(64),
+  value varchar(500),
+  primary key (gridder_task_id, variable_id, key)
+);
+
+alter table cell_meta.catalog
+add constraint catalog_variable_fkey
+foreign key (gridder_task_id, variable_id) references
+cell_meta.variable(gridder_task_id, variable_id);
 
 commit;

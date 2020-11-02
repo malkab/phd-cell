@@ -10,7 +10,13 @@ import * as rxo from "rxjs/operators";
 
 import { CellBackend } from "../core/cellbackend";
 
-import { PgConnection } from 'src/core/pgconnection';
+import { VariableBackend } from "../core/variablebackend";
+
+import { IComputeCellResults } from './icomputecellresults';
+
+import { CatalogBackend } from "../core/catalogbackend";
+
+import { processTemplate } from "../core/utils";
 
 /**
  *
@@ -34,37 +40,34 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
       gridderTaskId,
       name,
       description,
-      pgConnectionId,
-      pgConnection = undefined,
       sourceTable,
-      discreteFields,
       geomField,
-      nameTemplate,
-      descriptionTemplate
+      discreteFields,
+      variableName,
+      variableDescription,
+      categoryTemplate
     }: {
       gridderTaskId: string;
       name: string;
       description: string;
-      pgConnectionId: string;
-      pgConnection?: PgConnection;
       sourceTable: string;
-      discreteFields: string[];
       geomField: string;
-      nameTemplate: string;
-      descriptionTemplate: string;
+      discreteFields: string[];
+      variableName: string;
+      variableDescription: string;
+      categoryTemplate: string;
   }) {
 
     super({
       gridderTaskId: gridderTaskId,
       name: name,
       description: description,
-      pgConnectionId: pgConnectionId,
-      pgConnection: pgConnection,
       sourceTable: sourceTable,
-      descriptionTemplate: descriptionTemplate,
-      nameTemplate: nameTemplate,
       discreteFields: discreteFields,
-      geomField: geomField
+      geomField: geomField,
+      variableName: variableName,
+      variableDescription: variableDescription,
+      categoryTemplate: categoryTemplate
     });
 
     PgOrm.generateDefaultPgOrmMethods(this, {
@@ -72,15 +75,24 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
       pgInsert$: {
         sql: `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
-        params: () => [ this.gridderTaskId, this.gridderTaskType, this.name,
-          this.description, this.pgConnectionId, this.sourceTable,
-          this.nameTemplate,
-          this.descriptionTemplate, this.geomField,
-          { discreteFields: this.discreteFields } ]
-        }
+        values ($1, $2, $3, $4, $5, $6, $7);`,
+        params: () => [
+          this.gridderTaskId,
+          this.gridderTaskType,
+          this.name,
+          this.description,
+          this.sourceTable,
+          this.geomField,
+          {
+            discreteFields: this.discreteFields,
+            variableName: this.variableName,
+            variableDescription: this.variableDescription,
+            categoryTemplate: this.categoryTemplate
+          }
+        ]
+      }
 
-      })
+    })
 
   }
 
@@ -89,82 +101,91 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
    * Apply the gridder task to a cell.
    *
    */
-  public computeCell(cell: CellBackend): rx.Observable<any> {
+  public computeCell$(sourcePg: RxPg, cellPg: RxPg, cell: CellBackend):
+  rx.Observable<any> {
 
-    this.pgConnection?.open();
+    // Create the new variable
+    const variable: VariableBackend = new VariableBackend({
+      description: this.variableDescription,
+      gridderTaskId: this.gridderTaskId,
+      name: this.variableName,
+      variableId: this.gridderTaskId,
+      gridderTask: this
+    })
 
-    // Take geometries colliding with the cell
-    let sqlDebug: string = `
-      create table test.y0 as
-      with a as (
-        select
-          ${this.discreteFields.join(",")},
-          ${this.geomField} as geom,
-          st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}')) as geom_inter,
-          st_area(st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))) as a
-        from ${this.sourceTable}
-        where st_intersects(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))
-      )
-      select
-        ${this.discreteFields.join(",")},
-        st_union(geom) as geom,
-        st_union(geom_inter) as geom_inter,
-        sum(a) as a
-      from a
-      group by ${this.discreteFields.join(",")}
-      order by a desc
-      limit 1;
-    `;
+    // To store the analysis result row
+    let resultRow: any;
 
-    console.log("D: nnnnn", sqlDebug);
+    // To store the templated category value
+    let category: string;
 
-    let sql: string = `
-      with a as (
-        select
-          ${this.discreteFields.join(",")},
-          ${this.geomField} as geom,
-          st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}')) as geom_inter,
-          st_area(st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))) as a
-        from ${this.sourceTable}
-        where st_intersects(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))
-      )
-      select
-        ${this.discreteFields.join(",")},
-        sum(a) as a
-      from a
-      group by ${this.discreteFields.join(",")}
-      order by a desc
-      limit 1;
-    `;
+    // Set into the DB
+    return variable.dbSet$(cellPg)
+    .pipe(
 
-    if (this.pgConnection) {
+      rxo.concatMap((o: any) => {
 
-      if (this.pgConnection.conn) {
+        // Analysis SQL
+        let sql: string = `
+          with a as (
+            select
+              ${this.discreteFields.join(",")},
+              ${this.geomField} as geom,
+              st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}')) as geom_inter,
+              st_area(st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))) as a
+            from ${this.sourceTable}
+            where st_intersects(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))
+          )
+          select
+            ${this.discreteFields.join(",")},
+            sum(a)::float as a
+          from a
+          group by ${this.discreteFields.join(",")}
+          order by a desc
+          limit 1;`;
 
-        return this.pgConnection?.conn?.executeQuery$(sqlDebug)
+        return sourcePg.executeQuery$(sql)
         .pipe(
 
-          rxo.map((o: QueryResult) => {
+          // Get the new entry at the catalog
+          rxo.concatMap((o: QueryResult) => {
 
-            console.log("D: jjjee", o);
+            resultRow = o.rows[0];
 
-            return o;
+            // const catalog: CatalogBackend = new CatalogBackend({
+            //   gridderTaskId: this.gridderTaskId,
+            //   variableId: variable.variableId
+            // });
+
+            return CatalogBackend.get$(cellPg, this.gridderTaskId, variable.variableId);
+
+          }),
+
+          rxo.concatMap((o: CatalogBackend) => {
+
+            category = processTemplate(this.categoryTemplate, resultRow);
+
+            return o.dbAddEntries$(cellPg, [ category ])
+
+          }),
+
+          rxo.concatMap((o: CatalogBackend) => {
+
+            const sql: string = `select cell__setcell((
+              '${cell.gridId}', ${cell.epsg}, ${cell.zoom}, ${cell.x},
+              ${cell.y}, '{ "${variable.key}": "${o.backward.get(category)}" }'::jsonb)::cell__cell
+            )`;
+
+            // Insert cell
+            return cellPg.executeQuery$(sql);
 
           })
 
-        );
+        )
 
-      } else {
+      })
 
-        throw new Error("Cannot open PgConnection");
-
-      }
-
-    } else {
-
-      throw new Error("Cannot open PgConnection");
-
-    }
+    )
 
   }
 

@@ -1,4 +1,4 @@
-import { GridderTasks as GT } from "libcell";
+import { GridderTasks as gt } from "libcell";
 
 import { PgOrm } from "@malkab/rxpg"
 
@@ -13,13 +13,16 @@ import { CellBackend } from "../core/cellbackend";
  * Base class to define GridderTasks.
  *
  */
-export class GridderTaskBackend extends GT.GridderTask implements PgOrm.IPgOrm<GridderTaskBackend> {
+export class GridderTaskBackend extends gt.GridderTask implements PgOrm.IPgOrm<GridderTaskBackend> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<GridderTaskBackend> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<GridderTaskBackend> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<GridderTaskBackend> = (pg) => rx.of();
+  public pgDelete$: (pg: RxPg) => rx.Observable<GridderTaskBackend> = (pg) =>
+    { throw new Error("GridderTaskBackend pgDelete$ must be redefined in child classes") };
+  public pgInsert$: (pg: RxPg) => rx.Observable<GridderTaskBackend> = (pg) =>
+    { throw new Error("GridderTaskBackend pgInsert$ must be redefined in child classes") };
+  public pgUpdate$: (pg: RxPg) => rx.Observable<GridderTaskBackend> = (pg) =>
+    { throw new Error("GridderTaskBackend pgUpdate$ must be redefined in child classes") };
 
   /**
    *
@@ -30,19 +33,13 @@ export class GridderTaskBackend extends GT.GridderTask implements PgOrm.IPgOrm<G
       gridderTaskId,
       name,
       description,
-      pgConnectionId,
       sourceTable,
-      nameTemplate,
-      descriptionTemplate,
       geomField
     }: {
       gridderTaskId: string;
       name: string;
       description: string;
-      pgConnectionId: string;
       sourceTable: string;
-      nameTemplate: string;
-      descriptionTemplate: string;
       geomField: string;
   }) {
 
@@ -50,25 +47,9 @@ export class GridderTaskBackend extends GT.GridderTask implements PgOrm.IPgOrm<G
       gridderTaskId: gridderTaskId,
       name: name,
       description: description,
-      pgConnectionId: pgConnectionId,
       sourceTable: sourceTable,
-      nameTemplate: nameTemplate,
-      descriptionTemplate: descriptionTemplate,
       geomField: geomField
     });
-
-    PgOrm.generateDefaultPgOrmMethods(this, {
-
-      pgInsert$: {
-        sql: `
-        insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
-        params: () => [ this.gridderTaskId, this.gridderTaskType, this.name,
-          this.description, this.pgConnectionId, this.sourceTable,
-          this.nameTemplate, this.descriptionTemplate, this.geomField, null ]
-      }
-
-    })
 
   }
 
@@ -77,7 +58,8 @@ export class GridderTaskBackend extends GT.GridderTask implements PgOrm.IPgOrm<G
    * Apply the gridder task to a cell.
    *
    */
-  public computeCell(cell: CellBackend): rx.Observable<any> {
+  public computeCell(sourcePg: RxPg, cellPg: RxPg, cell: CellBackend):
+  rx.Observable<any> {
 
     throw new Error("computeCell must be implemented in child classes");
 

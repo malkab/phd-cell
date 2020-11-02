@@ -4,89 +4,49 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { CatalogBackend, PgConnection, GridderTasks as gt } from "../../src/index";
+import { PgConnection, GridderTasks as gt } from "../../src/index";
 
-import { clearDatabase$, testCell, cellBackends, cellPg, provinceDiscretePolyTopAreaGridderTask, provinceDiscretePolyAreaSummaryGridderTask, cellRawDataConn } from "./common";
-
-import * as rxo from "rxjs/operators";
-
-import * as rx from "rxjs";
-import { DiscretePolyTopAreaGridderTaskBackend } from "../../src/griddertasks";
-
-// /**
-//  *
-//  * Initial database clearance.
-//  *
-//  */
-// describe("Initial database clearance", function() {
-
-//   rxMochaTests({
-
-//     testCaseName: "Initial database clearance",
-
-//     observable: clearDatabase$,
-
-//     assertions: [ (o: boolean) => expect(o).to.be.true ]
-
-//   })
-
-// })
+import { cellPgConn, cellRawData, clearDatabase$, municipioDiscretePolyTopAreaGridderTask, municipioDiscretePolyAreaSummaryGridderTask } from "./common";
 
 /**
  *
- * GridderTask tests.
+ * Initial database clearance.
  *
  */
-describe("GridderTask ORM", function() {
+describe("Initial database clearance", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Initial database clearance",
+
+    observable: clearDatabase$,
+
+    assertions: [ (o: boolean) => expect(o).to.be.true ]
+
+  })
 
 })
 
 /**
  *
- * DiscretePolyTopAreaGridderTaskBackend tests.
+ * Test PgConnection.
  *
  */
-describe("DiscretePolyTopAreaGridderTaskBackend ORM", function() {
+describe("Create PgConnection", function() {
 
+  /**
+   *
+   * Connection DB insert.
+   *
+   */
   rxMochaTests({
 
-    testCaseName: "DiscretePolyTopAreaGridderTaskBackend ORM",
+    testCaseName: "ORM pgInsert$",
 
-    observable: rx.concat(
-
-      cellRawDataConn.pgInsert$(cellPg),
-
-      provinceDiscretePolyTopAreaGridderTask.pgInsert$(cellPg),
-
-      gt.get$(cellPg, "provinceDiscretePolyTopArea")
-      .pipe(
-
-        rxo.concatMap((o: DiscretePolyTopAreaGridderTaskBackend) => {
-
-          return o.computeCell(testCell)
-
-        })
-
-      )
-
-    ),
+    observable: cellRawData.pgInsert$(cellPgConn),
 
     assertions: [
-
-      (o: PgConnection) => expect(o.pgConnectionId).to.be.equal("cellRawDataConn"),
-
-      (o: gt.DiscretePolyTopAreaGridderTaskBackend) =>
-        expect(o.name).to.be.equal("Provincia: máxima área"),
-
-      (o: any) => {
-
-        console.log("D: mnnnn", o);
-
-        expect(o.rowCount).to.deep.equal(0);
-
-      }
-
-    ],
+      (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
 
     verbose: false
 
@@ -96,30 +56,42 @@ describe("DiscretePolyTopAreaGridderTaskBackend ORM", function() {
 
 /**
  *
- * DiscretePolyAreaSummaryGridderTaskBackend tests.
+ * DiscretePolyTopAreaGridderTaskBackend ORM.
  *
  */
-describe("DiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
+describe("municipioDiscretePolyTopAreaGridderTask ORM", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolyAreaSummaryGridderTaskBackend ORM",
+    testCaseName: "pgInsert$()",
 
-    observable: rx.concat(
+    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
 
-      provinceDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPg),
+    assertions: [
 
-      gt.get$(cellPg, "provinceDiscreteAreaSummary")
+      (o: gt.DiscretePolyTopAreaGridderTaskBackend) =>
+        expect(o.gridderTaskId, "Check ID").to.be.equal("municipioDiscretePolyTopArea")
 
-    ),
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+describe("municipioDiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
+
+  rxMochaTests({
+
+    testCaseName: "pgInsert$()",
+
+    observable: municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn),
 
     assertions: [
 
       (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.name).to.be.equal("Desglose de área de provincias"),
-
-      (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.discreteFields).to.deep.equal([ "provincia" ])
+        expect(o.gridderTaskId, "Check ID").to.be.equal("municipioDiscreteAreaSummary")
 
     ],
 

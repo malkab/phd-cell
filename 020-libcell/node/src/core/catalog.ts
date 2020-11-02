@@ -1,119 +1,81 @@
-import { IMetadated } from './imetadated';
+import { Variable } from './variable';
 
 /**
  *
- * The catalog class.
+ * This class manages a discrete catalog for a discrete variable.
  *
  */
-export class Catalog implements IMetadated {
+export class Catalog {
 
   /**
    *
-   * ID.
+   * GridderTaskId ID this catalog belongs to.
    *
    */
-  get catalogId(): string { return this._catalogId; }
+  protected _gridderTaskId: string;
 
-  set catalogId(catalogId: string) { this._catalogId = catalogId; }
-
-  private _catalogId: string;
+  get gridderTaskId(): string { return this._gridderTaskId }
 
   /**
    *
-   * Name.
+   * Variable ID this catalog belongs to.
    *
    */
-  private _name: string;
+  protected _variableId: string;
 
-  get name(): string { return this._name }
+  get variableId(): string { return this._variableId }
 
   /**
    *
-   * Description.
+   * Variable this catalog belongs to, if available.
    *
    */
-  private _description: string;
+  protected _variable: Variable | undefined;
 
-  get description(): string { return this._description }
+  get variable(): Variable | undefined { return this._variable }
 
   /**
    *
-   * The ID of the PgConnection.
+   * Forward: the key > value mapping for the catalog.
    *
    */
-  private _pgConnectionId: string;
+  protected _forward: Map<string, string>;
 
-  get pgConnectionId(): string { return this._pgConnectionId }
+  get forward(): Map<string, string> { return this._forward }
 
   /**
    *
-   * The source table.
+   * Backward: the value > key mapping for the catalog.
    *
    */
-  private _sourceTable: string;
+  protected _backward: Map<string, string>;
 
-  get sourceTable(): string { return this._sourceTable }
-
-  /**
-   *
-   * The source field.
-   *
-   */
-  private _sourceField: string;
-
-  get sourceField(): string { return this._sourceField }
+  get backward(): Map<string, string> { return this._backward }
 
   /**
    *
-   * The forward map, that is, item > minihash
-   *
-   */
-  get forward(): { [ item: string ]: string } { return this._forward; }
-
-  private _forward: { [ item: string ]: string } = {};
-
-  /**
-   *
-   * The backward map, that is, minihash > item
-   *
-   */
-  get backward(): { [ item: string ]: string } { return this._backward; }
-
-  private _backward: { [ hash: string ]: string } = {};
-
-  /**
-   *
-   * Constructor, optionally gets the forward and backward maps.
+   * Constructor.
    *
    */
   constructor({
-      catalogId,
-      name,
-      description,
-      pgConnectionId,
-      sourceTable,
-      sourceField,
-      forward = {},
-      backward = {}
+      gridderTaskId,
+      variableId,
+      variable = undefined,
+      forward = new Map<string, string>(),
+      backward = new Map<string, string>()
     }: {
-      catalogId: string;
-      name: string;
-      description: string;
-      pgConnectionId: string;
-      sourceTable: string;
-      sourceField: string;
-      forward: { [ item: string ]: string };
-      backward: { [ hash: string ]: string };
+      gridderTaskId: string;
+      variableId: string;
+      variable?: Variable;
+      forward?: Map<string, string>;
+      backward?: Map<string, string>;
   }) {
 
-    this._catalogId = catalogId;
-    this._name = name;
-    this._description = description;
+    this._gridderTaskId = gridderTaskId;
+    this._variableId = variableId;
+    this._variable = variable;
     this._forward = forward;
     this._backward = backward;
-    this._pgConnectionId = pgConnectionId;
-    this._sourceTable = sourceTable;
-    this._sourceField = sourceField;
 
   }
 

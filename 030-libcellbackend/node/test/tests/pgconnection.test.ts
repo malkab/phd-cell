@@ -6,9 +6,9 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { PgConnection } from "../../src/index";
 
-import { cellPg, cellRawDataConn, clearDatabase$ } from "./common";
+import { cellPgConn, cellRawData, cellPg, cellRawDataConn, clearDatabase$ } from "./common";
 
-import { QueryResult } from "@malkab/rxpg";
+import { RxPg, QueryResult } from "@malkab/rxpg";
 
 import * as rxo from "rxjs/operators";
 
@@ -47,7 +47,7 @@ describe("PgConnection", function() {
 
     testCaseName: "ORM pgInsert$",
 
-    observable: cellRawDataConn.pgInsert$(cellPg),
+    observable: cellRawData.pgInsert$(cellPgConn),
 
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
@@ -65,10 +65,10 @@ describe("PgConnection", function() {
 
     testCaseName: "ORM get$",
 
-    observable: PgConnection.get$(cellPg, cellRawDataConn.pgConnectionId),
+    observable: PgConnection.get$(cellPgConn, cellRawData.pgConnectionId),
 
     assertions: [
-      (o: PgConnection) => expect(o.name).to.be.equal(cellRawDataConn.name) ],
+      (o: PgConnection) => expect(o.name).to.be.equal(cellRawData.name) ],
 
     verbose: false
 
@@ -83,12 +83,12 @@ describe("PgConnection", function() {
 
     testCaseName: "open()",
 
-    observable: PgConnection.get$(cellPg, cellRawDataConn.pgConnectionId)
+    observable: PgConnection.get$(cellPgConn, cellRawData.pgConnectionId)
     .pipe(
 
       rxo.map((o: PgConnection) => o.open()),
 
-      rxo.concatMap((o: PgConnection) => o.conn.executeQuery$(
+      rxo.concatMap((o: RxPg) => o.executeQuery$(
         "select postgis_full_version() as x"
       ))
 

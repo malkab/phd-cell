@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { GridBackend } from "../../src/index";
 
-import { gridBackend, clearDatabase$, cellPg } from "./common";
+import { gridBackend, clearDatabase$, cellPgConn } from "./common";
 
 /**
  *
@@ -38,7 +38,7 @@ describe("GridBackend pgInsert$", function() {
 
     testCaseName: "GridBackend pgInsert$",
 
-    observable: gridBackend.pgInsert$(cellPg),
+    observable: gridBackend.pgInsert$(cellPgConn),
 
     assertions: [
       (o: GridBackend) => expect(o.name).to.be.equal("eu-grid") ],

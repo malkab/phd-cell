@@ -1,4 +1,4 @@
-import { Catalog } from "libcell";
+import { Catalog, Variable } from "libcell";
 
 import { PgOrm } from "@malkab/rxpg";
 
@@ -11,6 +11,7 @@ import * as rxo from "rxjs/operators";
 import { NodeUtilsHashing } from '@malkab/node-utils';
 
 import { PgConnection } from "./pgconnection";
+import { conformsTo } from 'lodash';
 
 /**
  *
@@ -21,9 +22,9 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<CatalogBackend> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<CatalogBackend> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<CatalogBackend> = (pg) => rx.of();
+  public pgInsert$: (pg: RxPg) => rx.Observable<CatalogBackend> = (pg) => rx.of(this);
+  public pgDelete$: (pg: RxPg) => rx.Observable<CatalogBackend> = (pg) => rx.of(this);
+  public pgUpdate$: (pg: RxPg) => rx.Observable<CatalogBackend> = (pg) => rx.of(this);
 
   /**
    *
@@ -31,134 +32,144 @@ export class CatalogBackend extends Catalog implements PgOrm.IPgOrm<CatalogBacke
    *
    */
   constructor({
-      catalogId,
-      name,
-      description,
-      pgConnectionId,
-      sourceTable,
-      sourceField,
-      forward,
-      backward
+      gridderTaskId,
+      variableId,
+      variable = undefined,
+      forward = undefined,
+      backward = undefined
     }: {
-      catalogId: string;
-      name: string;
-      description: string;
-      pgConnectionId: string;
-      sourceTable: string;
-      sourceField: string;
+      gridderTaskId: string;
+      variableId: string;
+      variable?: Variable;
       forward?: any;
       backward?: any;
   }) {
 
     super({
-      catalogId: catalogId,
-      name: name,
-      description: description,
+      gridderTaskId: gridderTaskId,
+      variableId: variableId,
+      variable: variable,
       forward: forward,
-      backward: backward,
-      pgConnectionId: pgConnectionId,
-      sourceField: sourceField,
-      sourceTable: sourceTable
+      backward: backward
     });
-
-    PgOrm.generateDefaultPgOrmMethods(this, {
-
-      pgInsert$: {
-        sql: `
-          insert into cell_meta.catalog
-          values ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        params: () => [ this.catalogId, this.name, this.description,
-          this.pgConnectionId, this.sourceTable, this.sourceField,
-          this.forward, this.backward ]
-      },
-
-      pgUpdate$: {
-        sql: `
-          update cell_meta.catalog
-          set
-            name = $1,
-            description = $2,
-            pg_connection_id = $3,
-            source_table = $4,
-            source_field = $5,
-            forward = $6,
-            backward = $7
-          where catalog_id = $8`,
-        params: () => [ this.name, this.description,
-          this.pgConnectionId, this.sourceTable, this.sourceField,
-          this.forward, this.backward, this.catalogId ]
-      }
-
-    })
 
   }
 
   /**
    *
-   * Builds the catalog from a set of items
+   * Load forward and backward.
    *
    */
-  public build(pg: PgConnection): rx.Observable<CatalogBackend | undefined> {
+  public dbLoadForwardBackward$(pg: RxPg): rx.Observable<CatalogBackend> {
 
-    pg.open();
+    const sql: string = `
+      select key, value
+      from cell_meta.catalog
+      where
+        gridder_task_id = $1 and
+        variable_id = $2;`;
 
-    // Get the elements to hash
-    if (pg.conn) {
+    return pg.executeParamQuery$(sql, [ this.gridderTaskId, this.variableId ])
+    .pipe(
 
-      return pg.conn.executeQuery$(`
-        select distinct coalesce(${this.sourceField}::varchar, 'null') as item
-        from ${this.sourceTable}
-        order by item;`)
-      .pipe(
+      rxo.map((o: QueryResult) => {
 
-        rxo.map((o: QueryResult | undefined): CatalogBackend | undefined=> {
+        o.rows.map((o: any) => {
 
-          const items: string[] = o.rows.map((o: any) => o.item);
-
-          const miniHashes: string[] = NodeUtilsHashing.miniHash(items);
-
-          for (const i in items) {
-
-            this.forward[items[i]] = miniHashes[i];
-
-            this.backward[miniHashes[i]] = items[i];
-
-          }
-
-          return this;
+          this._forward.set(o.key, o.value);
+          this._backward.set(o.value, o.key);
 
         })
 
-      )
+        return this;
 
-    } else {
+      })
 
-      return rx.throwError(new Error(`unable to connect to ${pg.db}`))
-
-    }
+    )
 
   }
 
   /**
    *
-   * Gets a catalog from the DB.
+   * Add an entry to the catalog.
    *
    */
-  public static get$(pg: RxPg, id: string): rx.Observable<CatalogBackend> {
+  public dbAddEntries$(pg: RxPg, entries: string[]): rx.Observable<CatalogBackend> {
 
-    return PgOrm.select$<CatalogBackend>({
-      pg: pg,
-      sql: `
-        select
-          catalog_id as "catalogId",
-          name,
-          description,
-          forward,
-          backward
-        from cell_meta.catalog where catalog_id=$1`,
-      params: () => [ id ],
-      type: CatalogBackend
-    })
+    // Add hashes to the set
+    const newMiniHashes: string[] = NodeUtilsHashing.miniHash({
+      values: entries,
+      existingMiniHashes: Array.from(this.forward.keys())
+    });
+
+    // SQL to insert at DB
+    let sql: string = "";
+
+    // Add new mini hashes to catalogs and compose SQL to set them at the DB
+    for(let i = 0; i < newMiniHashes.length; i++) {
+
+      this.forward.set(newMiniHashes[i], entries[i]);
+      this.backward.set(entries[i], newMiniHashes[i]);
+
+      sql = `${sql}
+        insert into cell_meta.catalog values(
+          '${this.gridderTaskId}',
+          '${this._variableId}',
+          '${newMiniHashes[i]}',
+          '${entries[i]}');`;
+
+    }
+
+    // Write to the DB
+    return pg.executeQuery$(sql)
+    .pipe( rxo.map((o: QueryResult) => this) )
+
+  }
+
+  /**
+   *
+   * Gets a catalog from the DB and loads its forward and backward.
+   *
+   */
+  public static get$(pg: RxPg, gridderTaskId: string, variableId: string): rx.Observable<CatalogBackend> {
+
+    return new CatalogBackend({
+      gridderTaskId: gridderTaskId,
+      variableId: variableId
+    }).dbLoadForwardBackward$(pg);
+
+  }
+
+  /**
+   *
+   * Sets a variable, that is, pgInsert$ if it doesn't exists, nothing if
+   * exists.
+   *
+   */
+  public dbSet$(pg: RxPg): rx.Observable<CatalogBackend> {
+
+    const sql: string = `
+      select * from cell_meta.variable
+      where gridder_task_id = $1 and variable_id = $2;`;
+
+    return pg.executeParamQuery$(sql, [ this.gridderTaskId, this.variableId ])
+    .pipe(
+
+      rxo.concatMap((o: QueryResult) => {
+
+        if (o.rowCount === 0) {
+
+          return this.pgInsert$(pg);
+
+        } else {
+
+          return rx.of(this);
+
+        }
+
+      })
+
+    )
 
   }
 

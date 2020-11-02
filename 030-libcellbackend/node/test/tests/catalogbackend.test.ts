@@ -4,9 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { CatalogBackend, PgConnection } from "../../src/index";
+import { CatalogBackend, PgConnection, GridderTasks as gt, VariableBackend } from "../../src/index";
 
-import { cellRawDataConn, clearDatabase$, catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg } from "./common";
+import { cellRawData, cellPgConn, clearDatabase$, municipioDiscretePolyTopAreaGridderTask, variable, catalog } from "./common";
 
 import * as rxo from "rxjs/operators";
 
@@ -47,7 +47,7 @@ describe("PgConnection pgInsert$", function() {
 
     testCaseName: "PgConnection pgInsert$",
 
-    observable: cellRawDataConn.pgInsert$(cellPg),
+    observable: cellRawData.pgInsert$(cellPgConn),
 
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
@@ -60,44 +60,22 @@ describe("PgConnection pgInsert$", function() {
 
 /**
  *
- * Create provincia Catalog.
+ * Insert DiscretePolyTopAreaGridderTaskBackend.
  *
  */
-describe("Create provincia Catalog", function() {
+describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
 
   rxMochaTests({
 
-    testCaseName: "Create provincia Catalog",
+    testCaseName: "pgInsert$()",
 
-    observable: rx.concat(
-
-      catProv.pgInsert$(cellPg)
-      .pipe(
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catProv.catalogId)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          PgConnection.get$(cellPg, "cellRawDataConn")),
-
-        rxo.concatMap((o: PgConnection) => catProv.build(o)),
-
-        rxo.concatMap((o: CatalogBackend) => o.pgUpdate$(cellPg)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catProv.catalogId))
-
-      )
-
-    ),
+    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
 
     assertions: [
 
-      (o: CatalogBackend) => {
+      (o: gt.DiscretePolyTopAreaGridderTaskBackend) => {
 
-        expect(o.name).to.be.equal("Provincias");
-        expect(o.forward["Jaén"]).to.be.equal("a");
-        expect(o.backward["a"]).to.be.equal("Jaén");
+        expect(o.gridderTaskId, "GridderTask pgInsert$()").to.be.equal("municipioDiscretePolyTopArea")
 
       }
 
@@ -111,44 +89,22 @@ describe("Create provincia Catalog", function() {
 
 /**
  *
- * Create municipio Catalog.
+ * Create variable.
  *
  */
-describe("Create municipio Catalog", function() {
+describe("Create variable", function() {
 
   rxMochaTests({
 
-    testCaseName: "Create municipio Catalog",
+    testCaseName: "Create variable",
 
-    observable: rx.concat(
-
-      catMuni.pgInsert$(cellPg)
-      .pipe(
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catMuni.catalogId)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          PgConnection.get$(cellPg, "cellRawDataConn")),
-
-        rxo.concatMap((o: PgConnection) => catMuni.build(o)),
-
-        rxo.concatMap((o: CatalogBackend) => o.pgUpdate$(cellPg)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catMuni.catalogId))
-
-      )
-
-    ),
+    observable: variable.pgInsert$(cellPgConn),
 
     assertions: [
 
-      (o: CatalogBackend) => {
+      (o: VariableBackend) => {
 
-        expect(o.name).to.be.equal("Municipios");
-        expect(o.forward["Jaén"]).to.be.equal("ae3");
-        expect(o.backward["ae3"]).to.be.equal("Jaén");
+        expect(o.name).to.be.equal("Var name");
 
       }
 
@@ -162,44 +118,23 @@ describe("Create municipio Catalog", function() {
 
 /**
  *
- * Create nucleo poblacion Catalog.
+ * Create Catalog and load catalog data.
  *
  */
-describe("Create núcleo población Catalog", function() {
+describe("Create catalog and load catalog data", function() {
 
   rxMochaTests({
 
-    testCaseName: "Create núcleo población Catalog",
+    testCaseName: "Create catalog and load catalog data",
 
-    observable: rx.concat(
-
-      catNucp.pgInsert$(cellPg)
-      .pipe(
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catNucp.catalogId)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          PgConnection.get$(cellPg, "cellRawDataConn")),
-
-        rxo.concatMap((o: PgConnection) => catNucp.build(o)),
-
-        rxo.concatMap((o: CatalogBackend) => o.pgUpdate$(cellPg)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catNucp.catalogId))
-
-      )
-
-    ),
+    observable: catalog.dbLoadForwardBackward$(cellPgConn),
 
     assertions: [
 
       (o: CatalogBackend) => {
 
-        expect(o.name).to.be.equal("Núcleos población");
-        expect(o.forward["Jaén"]).to.be.equal("ae35");
-        expect(o.backward["ae35"]).to.be.equal("Jaén");
+        expect(o.variableId).to.be.equal("var");
+        expect(o.forward.keys.length).to.be.equal(0);
 
       }
 
@@ -213,44 +148,32 @@ describe("Create núcleo población Catalog", function() {
 
 /**
  *
- * Create nivel núcleo población Catalog.
+ * Create Catalog and add some entries.
  *
  */
-describe("Create nivel núcleo población Catalog", function() {
+describe("Insert one key on empty catalog", function() {
 
   rxMochaTests({
 
-    testCaseName: "Create nivel núcleo población Catalog",
+    testCaseName: "Insert one key on empty catalog",
 
-    observable: rx.concat(
-
-      catNucPobNivel.pgInsert$(cellPg)
+    observable: catalog.dbLoadForwardBackward$(cellPgConn)
       .pipe(
 
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catNucPobNivel.catalogId)),
+        rxo.concatMap((o: CatalogBackend) => {
 
-        rxo.concatMap((o: CatalogBackend) =>
-          PgConnection.get$(cellPg, "cellRawDataConn")),
+          return o.dbAddEntries$(cellPgConn, [ "value" ]);
 
-        rxo.concatMap((o: PgConnection) => catNucPobNivel.build(o)),
+        })
 
-        rxo.concatMap((o: CatalogBackend) => o.pgUpdate$(cellPg)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catNucPobNivel.catalogId))
-
-      )
-
-    ),
+      ),
 
     assertions: [
 
       (o: CatalogBackend) => {
 
-        expect(o.name).to.be.equal("Niveles de núcleos de población");
-        expect(o.forward["CAB"]).to.be.equal("3");
-        expect(o.backward["3"]).to.be.equal("CAB");
+        expect(o.variableId).to.be.equal("var");
+        expect(o.forward.size).to.be.equal(1);
 
       }
 
@@ -264,44 +187,110 @@ describe("Create nivel núcleo población Catalog", function() {
 
 /**
  *
- * Create sección censal Catalog.
+ * Load Catalog and add more entries.
  *
  */
-describe("Create sección censal Catalog", function() {
+describe("Load Catalog and add more entries", function() {
 
   rxMochaTests({
 
-    testCaseName: "Create sección censal Catalog",
+    testCaseName: "Load Catalog and add more entries",
 
     observable: rx.concat(
 
-      catScen.pgInsert$(cellPg)
+      catalog.dbLoadForwardBackward$(cellPgConn),
+
+      catalog.dbLoadForwardBackward$(cellPgConn)
       .pipe(
 
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catScen.catalogId)),
+        rxo.concatMap((o: CatalogBackend) => {
 
-        rxo.concatMap((o: CatalogBackend) =>
-          PgConnection.get$(cellPg, "cellRawDataConn")),
+          return o.dbAddEntries$(cellPgConn, [ "value0", "value1", "value2" ])
 
-        rxo.concatMap((o: PgConnection) => catScen.build(o)),
-
-        rxo.concatMap((o: CatalogBackend) => o.pgUpdate$(cellPg)),
-
-        rxo.concatMap((o: CatalogBackend) =>
-          CatalogBackend.get$(cellPg, catScen.catalogId))
+        })
 
       )
 
-    ),
+     ),
 
     assertions: [
 
       (o: CatalogBackend) => {
 
-        expect(o.name).to.be.equal("Secciones censales");
-        expect(o.forward["4109101042"]).to.be.equal("ea87");
-        expect(o.backward["ea87"]).to.be.equal("4109101042");
+        expect(o.forward.size, "Number of existing keys in catalog")
+        .to.be.equal(1);
+
+        expect(o.forward.get("c"), "Get existing key 'c'")
+          .to.be.equal("value");
+
+        expect(o.backward.get("value"), "Get existing value 'value'")
+          .to.be.equal("c");
+
+      },
+
+      (o: CatalogBackend) => {
+
+        expect(o.forward.size, "Number of existing keys in catalog after addind 3 new")
+          .to.be.equal(4);
+
+        expect(o.variableId, "Variable ID")
+          .to.be.equal("var");
+
+        expect(o.forward.get("c"), "Get existing key 'c'")
+          .to.be.equal("value");
+
+        expect(o.backward.get("value"), "Get existing value 'value'")
+          .to.be.equal("c");
+
+        expect(o.forward.get("3"), "Get existing key '3'")
+          .to.be.equal("value1");
+
+        expect(o.backward.get("value1"), "Get existing value 'value1'")
+          .to.be.equal("3");
+
+      }
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * get$ Catalog and load data.
+ *
+ */
+describe("get$ catalog and load data", function() {
+
+  rxMochaTests({
+
+    testCaseName: "get$ catalog and load data",
+
+    observable: CatalogBackend.get$(cellPgConn, "municipioDiscretePolyTopArea",
+      "var"),
+
+    assertions: [
+
+      (o: CatalogBackend) => {
+
+        expect(o.forward.size).to.be.equal(4);
+
+        expect(o.variableId).to.be.equal("var");
+
+        expect(o.forward.get("c"), "Get existing key 'c'")
+          .to.be.equal("value");
+
+        expect(o.backward.get("value"), "Get existing value 'value'")
+          .to.be.equal("c");
+
+        expect(o.forward.get("3"), "Get existing key '3'")
+          .to.be.equal("value1");
+
+        expect(o.backward.get("value1"), "Get existing value 'value1'")
+          .to.be.equal("3");
 
       }
 

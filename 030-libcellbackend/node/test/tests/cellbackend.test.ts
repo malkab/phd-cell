@@ -4,11 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { CatalogBackend, PgConnection, GridBackend, CellBackend } from "../../src/index";
+import { GridBackend, CellBackend } from "../../src/index";
 
-import { cellRawDataConn, gridBackend, clearDatabase$, catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg, cellBackends } from "./common";
-
-import * as rxo from "rxjs/operators";
+import { gridBackend, clearDatabase$, cellPgConn, cellBackends } from "./common";
 
 import * as rx from "rxjs";
 
@@ -44,9 +42,9 @@ describe("CellBackend pgInsert$", function() {
 
     observable: rx.concat(
 
-      gridBackend.pgInsert$(cellPg),
+      gridBackend.pgInsert$(cellPgConn),
 
-      rx.zip(...cellBackends.map((o: CellBackend) => o.pgInsert$(cellPg)))
+      rx.zip(...cellBackends.map((o: CellBackend) => o.pgInsert$(cellPgConn)))
 
     ),
 
@@ -56,7 +54,7 @@ describe("CellBackend pgInsert$", function() {
 
       (o: CellBackend[]) => {
 
-        expect(o.length).to.be.equal(225);
+        expect(o.length, "Number of cells generated").to.be.equal(24);
 
         expect(o[0].ewkt).to.be.equal("SRID=3035;POLYGON((2700000 1500000,2800000 1500000,2800000 1600000,2700000 1600000,2700000 1500000))");
 

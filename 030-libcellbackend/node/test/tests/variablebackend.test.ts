@@ -4,11 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { VariableBackend } from "../../src/index";
+import { VariableBackend, GridderTasks as gt, PgConnection } from "../../src/index";
 
-import { clearDatabase$, varE001517, cellPg } from "./common";
-
-import * as rxo from "rxjs/operators";
+import { clearDatabase$, variable, cellRawData, cellPgConn, municipioDiscretePolyTopAreaGridderTask } from "./common";
 
 import * as rx from "rxjs";
 
@@ -33,24 +31,75 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Create variable varE001517.
+ * Insert PgConnection.
  *
  */
-describe("Create variable varE001517", function() {
+describe("Insert PgConnection", function() {
+
+  /**
+   *
+   * Connection DB insert.
+   *
+   */
+  rxMochaTests({
+
+    testCaseName: "pgInsert$",
+
+    observable: cellRawData.pgInsert$(cellPgConn),
+
+    assertions: [
+      (o: PgConnection) =>
+        expect(o.name, "pgInsert$").to.be.equal("Cell Raw Data") ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Insert DiscretePolyTopAreaGridderTaskBackend.
+ *
+ */
+describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
 
   rxMochaTests({
 
-    testCaseName: "Create variable varE001517",
+    testCaseName: "pgInsert$()",
+
+    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
+
+    assertions: [
+
+      (o: gt.DiscretePolyTopAreaGridderTaskBackend) => {
+
+        expect(o.gridderTaskId, "GridderTask pgInsert$()").to.be.equal("municipioDiscretePolyTopArea")
+
+      }
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Variable pgInsert$.
+ *
+ */
+describe("Variable pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Variable pgInsert$",
 
     observable: rx.concat(
 
-      varE001517.pgInsert$(cellPg)
-      .pipe(
-
-        rxo.concatMap((o: VariableBackend) =>
-          VariableBackend.get$(cellPg, varE001517.variableId)),
-
-      )
+      variable.pgInsert$(cellPgConn)
 
     ),
 
@@ -58,7 +107,40 @@ describe("Create variable varE001517", function() {
 
       (o: VariableBackend) => {
 
-        expect(o.name).to.be.equal("Edad 00-15 2017");
+        expect(o.name).to.be.equal("Var name");
+
+      }
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Variable dbSet$.
+ *
+ */
+describe("Variable dbSet$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Variable dbSet$",
+
+    observable: rx.concat(
+
+      variable.dbSet$(cellPgConn)
+
+    ),
+
+    assertions: [
+
+      (o: VariableBackend) => {
+
+        expect(o.name).to.be.equal("Var name");
 
       }
 

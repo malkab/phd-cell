@@ -151,7 +151,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
     }: {
       pgConnectionId: string;
       name: string;
-      title: string;
       description: string;
       applicationName?: string;
       db?: string;
@@ -200,7 +199,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    * Connect to the DB.
    *
    */
-  public open(): PgConnection {
+  public open(): RxPg {
 
     this._conn = new RxPg({
       applicationName: this._applicationName,
@@ -213,7 +212,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
       user: this._dbUser
     })
 
-    return this;
+    return this._conn;
 
   }
 

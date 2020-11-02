@@ -30,37 +30,31 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
       gridderTaskId,
       name,
       description,
-      pgConnectionId,
-      pgConnection = undefined,
       sourceTable,
-      discreteFields,
       geomField,
-      nameTemplate,
-      descriptionTemplate
+      discreteFields,
+      variableNameTemplate,
+      variableDescriptionTemplate
     }: {
       gridderTaskId: string;
       name: string;
       description: string;
-      pgConnectionId: string;
-      pgConnection?: PgConnection;
       sourceTable: string;
-      discreteFields: string[];
       geomField: string;
-      nameTemplate: string;
-      descriptionTemplate: string;
+      discreteFields: string[];
+      variableNameTemplate: string;
+      variableDescriptionTemplate: string;
   }) {
 
     super({
       gridderTaskId: gridderTaskId,
       name: name,
       description: description,
-      pgConnectionId: pgConnectionId,
-      pgConnection: pgConnection,
       sourceTable: sourceTable,
-      descriptionTemplate: descriptionTemplate,
-      nameTemplate: nameTemplate,
+      geomField: geomField,
       discreteFields: discreteFields,
-      geomField: geomField
+      variableNameTemplate: variableNameTemplate,
+      variableDescriptionTemplate: variableDescriptionTemplate
     });
 
     PgOrm.generateDefaultPgOrmMethods(this, {
@@ -68,15 +62,23 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
       pgInsert$: {
         sql: `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
-        params: () => [ this.gridderTaskId, this.gridderTaskType, this.name,
-          this.description, this.pgConnectionId, this.sourceTable,
-          this.nameTemplate,
-          this.descriptionTemplate, this.geomField,
-          { discreteFields: this.discreteFields } ]
-        }
+        values ($1, $2, $3, $4, $5, $6, $7);`,
+        params: () => [
+          this.gridderTaskId,
+          this.gridderTaskType,
+          this.name,
+          this.description,
+          this.sourceTable,
+          this.geomField,
+          {
+            discreteFields: this.discreteFields,
+            variableNameTemplate: this.variableNameTemplate,
+            variableDescriptionTemplate: this.variableDescriptionTemplate
+          }
+        ]
+      }
 
-      })
+    })
 
   }
 

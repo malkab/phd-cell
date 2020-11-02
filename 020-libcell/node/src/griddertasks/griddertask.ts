@@ -1,5 +1,3 @@
-import { PgConnection } from 'src/core/pgconnection';
-
 import { IMetadated } from "../core/imetadated";
 
 import { EGRIDDERTASKTYPE } from "./egriddertasktype";
@@ -22,7 +20,8 @@ export class GridderTask implements IMetadated {
 
   /**
    *
-   * GridderTask type name.
+   * GridderTask type name. This is the name of the GridderTask type itself, not
+   * the specific task. It will be fixed for all GridderTasks for this type.
    *
    */
   protected _gridderTaskTypeName: string | undefined;
@@ -31,30 +30,14 @@ export class GridderTask implements IMetadated {
 
   /**
    *
-   * GridderTask type description.
+   * GridderTask type description. Like name, this is the GridderTask
+   * description type itself, not for the specific GridderTask. All GridderTasks
+   * of this type will have the same description.
    *
    */
   protected _gridderTaskTypeDescription: string | undefined;
 
   get gridderTaskTypeDescription(): string | undefined { return this._gridderTaskTypeDescription }
-
-  /**
-   *
-   * PgConnectionId.
-   *
-   */
-  protected _pgConnectionId: string;
-
-  get pgConnectionId(): string { return this._pgConnectionId }
-
-  /**
-   *
-   * PgConnection.
-   *
-   */
-  protected _pgConnection: PgConnection | undefined;
-
-  get pgConnection(): PgConnection | undefined { return this._pgConnection }
 
   /**
    *
@@ -94,24 +77,6 @@ export class GridderTask implements IMetadated {
 
   /**
    *
-   * Name template for variables.
-   *
-   */
-  protected _nameTemplate: string;
-
-  get nameTemplate(): string { return this._nameTemplate }
-
-  /**
-   *
-   * Description template for variables.
-   *
-   */
-  protected _descriptionTemplate: string;
-
-  get descriptionTemplate(): string { return this._descriptionTemplate }
-
-  /**
-   *
    * Description template for variables.
    *
    */
@@ -123,43 +88,33 @@ export class GridderTask implements IMetadated {
    *
    * Constructor.
    *
+   * @param __namedParameters
+   * GridderTask deconstructed parameters.
+   *
    */
   constructor({
       gridderTaskId,
       name,
       description,
-      pgConnectionId,
-      pgConnection = undefined,
       sourceTable,
-      nameTemplate,
-      descriptionTemplate,
       geomField
     }: {
       gridderTaskId: string;
       name: string;
       description: string;
-      pgConnectionId: string;
-      pgConnection?: PgConnection;
       sourceTable: string;
-      nameTemplate: string;
-      descriptionTemplate: string;
       geomField: string;
   }) {
 
     this._gridderTaskId = gridderTaskId;
     this._name = name;
     this._description = description;
-    this._pgConnectionId = pgConnectionId;
     this._sourceTable = sourceTable;
-    this._nameTemplate = nameTemplate;
-    this._descriptionTemplate = descriptionTemplate;
     this._geomField = geomField;
 
     this._gridderTaskType = undefined;
     this._gridderTaskTypeName = undefined;
     this._gridderTaskTypeDescription = undefined;
-
-    this._pgConnection = pgConnection;
 
   }
 
