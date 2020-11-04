@@ -182,7 +182,7 @@ for (let z = 0; z<1; z++) {
 
 }
 
-export const testCell022: CellBackend = new CellBackend({
+export const testCell_0_2_2: CellBackend = new CellBackend({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -191,7 +191,16 @@ export const testCell022: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell032: CellBackend = new CellBackend({
+export const testCell_0_2_3: CellBackend = new CellBackend({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 0,
+  x: 2,
+  y: 3,
+  grid: gridBackend
+})
+
+export const testCell_0_3_2: CellBackend = new CellBackend({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -200,7 +209,7 @@ export const testCell032: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell021: CellBackend = new CellBackend({
+export const testCell_0_2_1: CellBackend = new CellBackend({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -209,11 +218,51 @@ export const testCell021: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell031: CellBackend = new CellBackend({
+export const testCell_0_3_1: CellBackend = new CellBackend({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
   x: 3,
   y: 1,
+  grid: gridBackend
+})
+
+// This is a full coverage for municipios with a single municipio
+export const testCell_2_27_32: CellBackend = new CellBackend({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 27,
+  y: 32,
+  grid: gridBackend
+})
+
+// This is a partial coverage for municipios
+export const testCell_2_24_31: CellBackend = new CellBackend({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 24,
+  y: 31,
+  grid: gridBackend
+})
+
+// This is a full coverage with several municipios
+export const testCell_2_28_30: CellBackend = new CellBackend({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 28,
+  y: 30,
+  grid: gridBackend
+})
+
+// No coverage of municipios at all
+export const testCell_2_25_32: CellBackend = new CellBackend({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 25,
+  y: 32,
   grid: gridBackend
 })

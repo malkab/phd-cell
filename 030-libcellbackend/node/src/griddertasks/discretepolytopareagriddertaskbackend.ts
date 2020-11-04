@@ -98,11 +98,12 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
 
   /**
    *
-   * Apply the gridder task to a cell.
+   * Apply the gridder task to a cell. Returns the child cells to compute the
+   * next level on. Min zoom is the lowest zoom level to reach.
    *
    */
-  public computeCell$(sourcePg: RxPg, cellPg: RxPg, cell: CellBackend):
-  rx.Observable<any> {
+  public computeCell$(sourcePg: RxPg, cellPg: RxPg, cell: CellBackend, minZoom: number):
+  rx.Observable<CellBackend[]> {
 
     // Create the new variable
     const variable: VariableBackend = new VariableBackend({
@@ -118,6 +119,9 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
 
     // To store the templated category value
     let category: string;
+
+    // Flag that the category got 100% of coverage
+    let fullCoverage: boolean = false;
 
     // Set into the DB
     return variable.dbSet$(cellPg)
@@ -150,13 +154,8 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
           // Get the new entry at the catalog
           rxo.concatMap((o: QueryResult) => {
 
+            if (o.rows[0].a / cell.area === 1) fullCoverage = true;
             resultRow = o.rows[0];
-
-            // const catalog: CatalogBackend = new CatalogBackend({
-            //   gridderTaskId: this.gridderTaskId,
-            //   variableId: variable.variableId
-            // });
-
             return CatalogBackend.get$(cellPg, this.gridderTaskId, variable.variableId);
 
           }),
@@ -164,20 +163,67 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
           rxo.concatMap((o: CatalogBackend) => {
 
             category = processTemplate(this.categoryTemplate, resultRow);
-
             return o.dbAddEntries$(cellPg, [ category ])
 
           }),
 
           rxo.concatMap((o: CatalogBackend) => {
 
-            const sql: string = `select cell__setcell((
+            let sql: string = `select cell__setcell((
               '${cell.gridId}', ${cell.epsg}, ${cell.zoom}, ${cell.x},
               ${cell.y}, '{ "${variable.key}": "${o.backward.get(category)}" }'::jsonb)::cell__cell
-            )`;
+            );`;
+
+            // Check fullCoverage and not yet at the lowest zoom level
+            if (fullCoverage && cell.zoom < minZoom) {
+
+              // An array for storing child cells
+              let childCells: CellBackend[] =
+                cell.getSubCellBackends(cell.zoom+1);
+
+              while (childCells.length > 0) {
+
+                const c: CellBackend | undefined = childCells.shift();
+
+                if (c) {
+
+                  sql = `${sql}select cell__setcell((
+                    '${c.gridId}', ${c.epsg}, ${c.zoom}, ${c.x},
+                    ${c.y}, '{ "${variable.key}": "${o.backward.get(category)}" }'::jsonb)::cell__cell
+                  );`;
+
+                  if (c.zoom < minZoom) {
+
+                    console.log("D: bgbg", c.zoom, minZoom);
+
+                    childCells = childCells.concat(c.getSubCellBackends(c.zoom+1));
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            console.log("D: jjje", sql);
 
             // Insert cell
             return cellPg.executeQuery$(sql);
+
+          }),
+
+          rxo.map((o: any) => {
+
+            if (cell.zoom < minZoom && !fullCoverage) {
+
+              return cell.getSubCellBackends(cell.zoom+1)
+
+            } else {
+
+              return [];
+
+            }
 
           })
 

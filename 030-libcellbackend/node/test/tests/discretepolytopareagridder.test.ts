@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { GridderTasks as gt, PgConnection, GridBackend } from "../../src/index";
 
-import { cellPgConn, cellRawData, cellRawDataConn, gridBackend, testCell021, testCell031, testCell022, testCell032, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
+import { cellPgConn, cellRawData, cellRawDataConn, gridBackend, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
 
 import * as rx from "rxjs";
 
@@ -115,10 +115,10 @@ describe("DiscretePolyTopAreaGridderTaskBackend computeCell$", function() {
 
     observable: rx.concat(
 
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell021),
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell031),
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell022),
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell032)
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_27_32, 7),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_24_31, 4),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_28_30, 4),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_25_32, 4)
 
     ),
 
@@ -126,7 +126,25 @@ describe("DiscretePolyTopAreaGridderTaskBackend computeCell$", function() {
 
       (o: any) => {
 
-        console.log("D: jj", );
+        expect(o.length, "Child cells for 2,27,32").to.be.equal(0);
+
+      },
+
+      (o: any) => {
+
+        expect(o.length, "Child cells for 2,24,31").to.be.equal(4);
+
+      },
+
+      (o: any) => {
+
+        expect(o.length, "Child cells for 2,28,32").to.be.equal(4);
+
+      },
+
+      (o: any) => {
+
+        expect(o.length, "Child cells for 2,25,32").to.be.undefined;
 
       }
 

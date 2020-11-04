@@ -6,9 +6,11 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { GridBackend, CellBackend } from "../../src/index";
 
-import { gridBackend, clearDatabase$, cellPgConn, cellBackends } from "./common";
+import { gridBackend, clearDatabase$, cellPgConn, cellBackends, testCell_0_2_3 } from "./common";
 
 import * as rx from "rxjs";
+
+import * as rxo from "rxjs/operators";
 
 /**
  *
@@ -57,6 +59,46 @@ describe("CellBackend pgInsert$", function() {
         expect(o.length, "Number of cells generated").to.be.equal(24);
 
         expect(o[0].ewkt).to.be.equal("SRID=3035;POLYGON((2700000 1500000,2800000 1500000,2800000 1600000,2700000 1600000,2700000 1500000))");
+
+      }
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Get child cells and pgInsert$ them.
+ *
+ */
+describe("Get child cells and pgInsert$ them", function() {
+
+
+
+  rxMochaTests({
+
+    testCaseName: "Get child cells and pgInsert$ them",
+
+    observable: rx.of(testCell_0_2_3.getSubCellBackends(2))
+      .pipe(
+
+        rxo.concatMap((o: CellBackend[]) => {
+
+          return rx.zip(...o.map((i: CellBackend) => i.pgInsert$(cellPgConn)))
+
+        })
+
+      ),
+
+    assertions: [
+
+      (o: CellBackend[]) => {
+
+        expect(o.length).to.be.equal(400)
 
       }
 

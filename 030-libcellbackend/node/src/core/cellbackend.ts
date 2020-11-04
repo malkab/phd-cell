@@ -4,9 +4,7 @@ import { RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
-import { Cell } from "libcell";
-
-import { GridBackend } from "./gridbackend";
+import { Cell, Grid } from "libcell";
 
 /**
  *
@@ -17,9 +15,9 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of();
+  public pgDelete$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of(this);
+  public pgInsert$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of(this);
+  public pgUpdate$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of(this);
 
   /**
    *
@@ -37,7 +35,7 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
       offset = 0
     }: {
       gridId: string;
-      grid?: GridBackend;
+      grid?: Grid;
       epsg: string;
       zoom: number;
       x: number;
@@ -52,8 +50,8 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
       x: x,
       y: y,
       zoom: zoom,
-      data: data,
       grid: grid,
+      data: data,
       offset: offset
     })
 
@@ -72,6 +70,28 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
         }
 
       })
+
+  }
+
+  /**
+   *
+   * Get subcells as CellBackend.
+   *
+   */
+  public getSubCellBackends(zoom: number): CellBackend[] {
+
+    const cells: Cell[] = super.getSubCells(zoom);
+
+    return cells.map((c: Cell) => new CellBackend({
+      gridId: this.gridId,
+      epsg: this.epsg,
+      x: c.x,
+      y: c.y,
+      zoom: c.zoom,
+      data: c.data,
+      grid: this.grid,
+      offset: c.offset
+    }))
 
   }
 
