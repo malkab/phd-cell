@@ -56,6 +56,7 @@ export const cellRawDataConn: RxPg = cellRawData.open();
  *
  */
 export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeQuery$(`
+delete from cell_meta.gridder_job;
 delete from cell_meta.catalog;
 delete from cell_meta.variable;
 delete from cell_meta.gridder_task;
@@ -265,4 +266,19 @@ export const testCell_2_25_32: CellBackend = new CellBackend({
   x: 25,
   y: 32,
   grid: gridBackend
+})
+
+/**
+ *
+ * Gridder Job for top area for Huelva.
+ *
+ */
+export const gridderJobHuelva: gt.GridderJob = new gt.GridderJob({
+  gridderJobId: "gridderJobHuelva",
+  gridderTaskId: "municipioDiscretePolyTopArea",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  pgConnectionId: "cellRawDataConn",
+  pgConnection: cellRawData,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
 })

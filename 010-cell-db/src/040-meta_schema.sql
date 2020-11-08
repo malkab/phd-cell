@@ -86,4 +86,31 @@ add constraint catalog_variable_fkey
 foreign key (gridder_task_id, variable_id) references
 cell_meta.variable(gridder_task_id, variable_id);
 
+/**
+
+  GridderJob: the application of GridderTask to an area and between two zoom
+  levels.
+
+*/
+create table cell_meta.gridder_job(
+  gridder_job_id varchar(64) primary key,
+  gridder_task_id varchar(64) references cell_meta.gridder_task(gridder_task_id),
+  max_zoom_level integer,
+  min_zoom_level integer,
+  pg_connection_id varchar(64),
+  sql_area_retrieval text,
+  area geometry(polygon, 4326)
+);
+
+/**
+
+  GridderCell: a job from a GridderJob on a given cell.
+
+*/
+create table cell_meta.gridder_cell(
+  gridder_cell_id varchar(64) primary key,
+  gridder_job_id varchar(64) references cell_meta.gridder_job(gridder_job_id),
+  cell cell__cell
+);
+
 commit;

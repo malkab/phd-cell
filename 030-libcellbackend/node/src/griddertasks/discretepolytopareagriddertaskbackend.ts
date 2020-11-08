@@ -194,8 +194,6 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
 
                   if (c.zoom < minZoom) {
 
-                    console.log("D: bgbg", c.zoom, minZoom);
-
                     childCells = childCells.concat(c.getSubCellBackends(c.zoom+1));
 
                   }
@@ -205,8 +203,6 @@ export class DiscretePolyTopAreaGridderTaskBackend extends GT.DiscretePolyTopAre
               }
 
             }
-
-            console.log("D: jjje", sql);
 
             // Insert cell
             return cellPg.executeQuery$(sql);

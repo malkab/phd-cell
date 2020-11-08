@@ -109,6 +109,9 @@ describe("DiscretePolyTopAreaGridderTaskBackend pgInsert$", function() {
  */
 describe("DiscretePolyTopAreaGridderTaskBackend computeCell$", function() {
 
+  // Set a high timeout, 5 min
+  this.timeout(300000);
+
   rxMochaTests({
 
     testCaseName: "DiscretePolyTopAreaGridderTaskBackend computeCell$",
