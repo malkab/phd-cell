@@ -61,15 +61,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
   /**
    *
-   * PgConnection ID.
-   *
-   */
-  private _pgConnectionId: string;
-
-  get pgConnectionId(): any { return this._pgConnectionId }
-
-  /**
-   *
    * SQL to retrieve the area from the PgConnection.
    *
    */
@@ -96,7 +87,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
       gridderTaskId,
       maxZoomLevel,
       minZoomLevel,
-      pgConnectionId,
       sqlAreaRetrieval,
       area = undefined
     }: {
@@ -104,8 +94,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
       gridderTaskId: string;
       maxZoomLevel: number;
       minZoomLevel: number;
-      pgConnectionId: string;
-      pgConnection?: PgConnection;
       sqlAreaRetrieval: string;
       area?: any;
   }) {
@@ -114,7 +102,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
     this._gridderTaskId = gridderTaskId;
     this._maxZoomLevel = maxZoomLevel;
     this._minZoomLevel = minZoomLevel;
-    this._pgConnectionId = pgConnectionId;
     this._sqlAreaRetrieval = sqlAreaRetrieval;
     this._area = area;
 
@@ -122,9 +109,9 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
       pgInsert$: {
         sql: `
           insert into cell_meta.gridder_job
-          values ($1, $2, $3, $4, $5, $6, $7);`,
+          values ($1, $2, $3, $4, $5, $6);`,
         params: () => [ this._gridderJobId, this._gridderTaskId,
-          this._maxZoomLevel, this._minZoomLevel, this._pgConnectionId,
+          this._maxZoomLevel, this._minZoomLevel,
           this._sqlAreaRetrieval, this._area ]
       }
     })
@@ -145,7 +132,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
           gridder_task_id as "gridderTaskId",
           max_zoom_level as "maxZoomLevel",
           min_zoom_level as "minZoomLevel",
-          pg_connection_id as "pgConnectionId",
           sql_area_retrieval as "sqlAreaRetrieval",
           area
         from cell_meta.gridder_job
@@ -194,5 +180,18 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
     )
 
   }
+
+  /**
+   *
+   * Start the job.
+   *
+   */
+  // public eventStart$(cellPgConnection: PgConnection): rx.Observable<any> {
+
+  //   const cellPg: RxPg = cellPgConnection.open();
+
+  //   return
+
+  // }
 
 }

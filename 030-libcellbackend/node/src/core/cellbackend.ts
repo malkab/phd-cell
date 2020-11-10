@@ -21,6 +21,18 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
 
   /**
    *
+   * Returns a representation of the cell to insert into a database cell in the
+   * form (grid_id, epsg, zoom, x, y, '{}'::json)::cell__cell for insert SQL.
+   *
+   */
+  get sqlInsertRepresentation(): string {
+
+    return `('${this.gridId}', ${this.epsg}, ${this.zoom}, ${this.x}, ${this.y}, '{}'::json)::cell__cell`
+
+  }
+
+  /**
+   *
    * Constructor.
    *
    */

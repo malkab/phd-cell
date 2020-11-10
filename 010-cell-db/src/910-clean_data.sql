@@ -5,6 +5,11 @@
 */
 begin;
 
+delete from cell_data.data;
+delete from cell_meta.gridder_cell;
+delete from cell_meta.gridder_job;
+delete from cell_meta.gridder_task;
+delete from cell_meta.variable;
 delete from cell_meta.catalog;
 delete from cell_meta.grid;
 delete from cell_meta.pg_connection;

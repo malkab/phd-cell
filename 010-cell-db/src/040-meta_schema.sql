@@ -97,7 +97,6 @@ create table cell_meta.gridder_job(
   gridder_task_id varchar(64) references cell_meta.gridder_task(gridder_task_id),
   max_zoom_level integer,
   min_zoom_level integer,
-  pg_connection_id varchar(64),
   sql_area_retrieval text,
   area geometry(polygon, 4326)
 );

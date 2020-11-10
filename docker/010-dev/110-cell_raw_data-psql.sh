@@ -25,11 +25,11 @@ NETWORK=$MLKC_CELL_NETWORK
 SCRIPT=
 COMMAND=
 # Container name
-CONTAINER_NAME=
+CONTAINER_NAME=cell_raw_data_psql
 # Container host name
-CONTAINER_HOST_NAME=
+CONTAINER_HOST_NAME=cell_raw_data_psql
 # Work dir
-WORKDIR=$(pwd)/../../010-cell-db/src
+WORKDIR=$(pwd)
 # The version of Docker PG image to use
 POSTGIS_DOCKER_TAG=gargantuan_giraffe
 # The host
@@ -41,7 +41,7 @@ USER=$MLKC_CELL_DB_USER
 # The pass
 PASS=$MLKC_CELL_DB_PASSWORD
 # The DB
-DB=cell
+DB=postgres
 # Declare volumes, a line per volume, complete in source:destination form. No
 # strings needed, $(pwd)/../data/:/ext_src/ works perfectly.
 VOLUMES=(

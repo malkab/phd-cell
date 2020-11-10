@@ -10,8 +10,6 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
-import { GridderTask } from 'libcell/dist/griddertasks';
-
 import { PgConnection } from '../core/pgconnection';
 
 /**
@@ -63,7 +61,7 @@ DiscretePolyTopAreaGridderTaskBackend> {
 
 }
 
-export function get$(pg: RxPg, id: string): rx.Observable<any> {
+export function gridderTaskGet$(pg: RxPg, id: string): rx.Observable<any> {
 
   return PgOrm.select$<gt.GridderTask>({
     pg: pg,

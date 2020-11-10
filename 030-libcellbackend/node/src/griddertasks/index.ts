@@ -7,3 +7,5 @@ export * from "./griddertaskbackend";
 export * from "./griddertaskfactory";
 
 export * from "./gridderjob";
+
+export * from "./griddercell";

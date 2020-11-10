@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { GridderTasks as gt, PgConnection, GridBackend } from "../../src/index";
 
-import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataConn, gridBackend, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
+import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataExternal, cellRawDataConn, gridBackend, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
 
 import * as rx from "rxjs";
 
@@ -147,17 +147,15 @@ describe("gridderJobHuelva get and area retrieval", function() {
     observable: gt.GridderJob.get$(cellPgConn, "gridderJobHuelva")
       .pipe(
 
-        rxo.concatMap((o: gt.GridderJob) => {
-
-          return o.getArea$(cellRawData, cellPg);
-
-        })
+        rxo.concatMap((o: gt.GridderJob) =>
+          o.getArea$(cellRawDataExternal, cellPg))
 
       ),
 
     assertions: [
 
-      (o: gt.GridderJob) => expect(o.gridderJobId).to.be.equal("gridderJobHuelva")
+      (o: gt.GridderJob) =>
+        expect(o.gridderJobId).to.be.equal("gridderJobHuelva")
 
     ],
 

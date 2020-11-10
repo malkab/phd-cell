@@ -31,7 +31,7 @@ export const cellPgConn: RxPg = cellPg.open();
 
 /**
  *
- * PgConnections.
+ * PgConnection to kepler, internal.
  *
  */
 export const cellRawData: PgConnection = new PgConnection({
@@ -52,17 +52,40 @@ export const cellRawDataConn: RxPg = cellRawData.open();
 
 /**
  *
+ * PgConnection to kepler, external.
+ *
+ */
+export const cellRawDataExternal: PgConnection = new PgConnection({
+  pgConnectionId: "cellRawDataConn",
+  applicationName: "libcellbackend_quick_test",
+  db: "cell_raw_data",
+  host: "XXX",
+  maxPoolSize: 200,
+  minPoolSize: 50,
+  pass: "XXX",
+  port: 5432,
+  dbUser: "postgres",
+  description: "Connection to Cell Raw Data database to consume original data vectors.",
+  name: "Cell Raw Data"
+});
+
+export const cellRawDataExternalConn: RxPg = cellRawDataExternal.open();
+
+/**
+ *
  * Clear the database.
  *
  */
 export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeQuery$(`
-delete from cell_meta.gridder_job;
-delete from cell_meta.catalog;
-delete from cell_meta.variable;
-delete from cell_meta.gridder_task;
 delete from cell_data.data;
+delete from cell_meta.gridder_cell;
+delete from cell_meta.gridder_job;
+delete from cell_meta.gridder_task;
+delete from cell_meta.variable;
+delete from cell_meta.catalog;
 delete from cell_meta.grid;
 delete from cell_meta.pg_connection;
+delete from cell_meta.cell_version;
 `)
 .pipe(
 
@@ -278,7 +301,20 @@ export const gridderJobHuelva: gt.GridderJob = new gt.GridderJob({
   gridderTaskId: "municipioDiscretePolyTopArea",
   maxZoomLevel: 0,
   minZoomLevel: 2,
-  pgConnectionId: "cellRawDataConn",
-  pgConnection: cellRawData,
   sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
+/**
+ *
+ * GridderCell.
+ *
+ */
+export const gridderCellA: gt.GridderCell = new gt.GridderCell({
+  gridderCellId: "gridderCellA",
+  gridderJobId: "gridderJobHuelva",
+  epsg: "3035",
+  gridId: "eu-grid",
+  x: 0,
+  y: 0,
+  zoom: 0
 })
