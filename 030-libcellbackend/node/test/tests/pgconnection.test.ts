@@ -23,7 +23,7 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
     assertions: [ (o: boolean) => expect(o).to.be.true ]
 
@@ -33,10 +33,10 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Test PgConnection.
+ * pgInsert$.
  *
  */
-describe("PgConnection", function() {
+describe("pgInsert$", function() {
 
   /**
    *
@@ -45,9 +45,9 @@ describe("PgConnection", function() {
    */
   rxMochaTests({
 
-    testCaseName: "ORM pgInsert$",
+    testCaseName: "pgInsert$",
 
-    observable: cellRawData.pgInsert$(cellPgConn),
+    observables: [ cellRawData.pgInsert$(cellPgConn) ],
 
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
@@ -56,16 +56,20 @@ describe("PgConnection", function() {
 
   })
 
-  /**
-   *
-   * Connection DB get.
-   *
-   */
+})
+
+/**
+ *
+ * Connection DB get$.
+ *
+ */
+describe("get$", function() {
+
   rxMochaTests({
 
-    testCaseName: "ORM get$",
+    testCaseName: "get$",
 
-    observable: PgConnection.get$(cellPgConn, cellRawData.pgConnectionId),
+    observables: [ PgConnection.get$(cellPgConn, cellRawData.pgConnectionId) ],
 
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal(cellRawData.name) ],
@@ -74,16 +78,20 @@ describe("PgConnection", function() {
 
   })
 
-  /**
-   *
-   * Connection DB open().
-   *
-   */
+})
+
+/**
+ *
+ * Connection DB open().
+ *
+ */
+describe("open()", function() {
+
   rxMochaTests({
 
     testCaseName: "open()",
 
-    observable: PgConnection.get$(cellPgConn, cellRawData.pgConnectionId)
+    observables: [ PgConnection.get$(cellPgConn, cellRawData.pgConnectionId)
     .pipe(
 
       rxo.map((o: PgConnection) => o.open()),
@@ -92,7 +100,7 @@ describe("PgConnection", function() {
         "select postgis_full_version() as x"
       ))
 
-    ),
+    ) ],
 
     assertions: [
 
@@ -100,7 +108,7 @@ describe("PgConnection", function() {
 
     ],
 
-    verbose: false
+    verbose: true
 
   })
 

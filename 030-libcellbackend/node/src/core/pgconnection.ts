@@ -88,6 +88,15 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
 
   /**
    *
+   * timeout.
+   *
+   */
+  private _timeout: number;
+
+  get timeout(): number { return this._timeout }
+
+  /**
+   *
    * pass.
    *
    */
@@ -145,6 +154,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
       host = "postgis",
       maxPoolSize = 200,
       minPoolSize = 50,
+      timeout = 0,
       pass = "postgres",
       port = 5432,
       dbUser = "postgres"
@@ -157,6 +167,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
       host?: string;
       maxPoolSize?: number;
       minPoolSize?: number;
+      timeout?: number;
       pass?: string;
       port?: number;
       dbUser?: string;
@@ -170,6 +181,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
     this._host = host;
     this._maxPoolSize = maxPoolSize;
     this._minPoolSize = minPoolSize;
+    this._timeout = timeout;
     this._pass = pass;
     this._port = port;
     this._dbUser = dbUser;
@@ -207,6 +219,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
       host: this._host,
       maxPoolSize: this._maxPoolSize,
       minPoolSize: this._minPoolSize,
+      idleTimeoutMillis: this._timeout,
       pass: this._pass,
       port: this._port,
       user: this._dbUser

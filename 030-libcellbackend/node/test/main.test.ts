@@ -15,8 +15,8 @@ Mocha testing
 // Add test suites here
 describe("libcellbackend", () => {
 
-  // describe("\n\n  --- pgconnection.test ---\n",
-  //   () => require("./tests/pgconnection.test"));
+  describe("\n\n  --- pgconnection.test ---\n",
+    () => require("./tests/pgconnection.test"));
 
   // describe("\n\n  --- griddertask.test ---\n",
   //   () => require("./tests/griddertask.test"));
@@ -39,8 +39,8 @@ describe("libcellbackend", () => {
   // describe("\n\n  --- gridderjob.test ---\n",
   //   () => require("./tests/gridderjob.test"));
 
-  describe("\n\n  --- griddercell.test ---\n",
-    () => require("./tests/griddercell.test"));
+  // describe("\n\n  --- griddercell.test ---\n",
+  //   () => require("./tests/griddercell.test"));
 
 
 });

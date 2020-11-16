@@ -19,7 +19,7 @@ export const cellPg: PgConnection = new PgConnection({
   db: "cell",
   host: "localhost",
   maxPoolSize: 200,
-  minPoolSize: 50,
+  minPoolSize: 200,
   pass: "postgres",
   port: 5600,
   dbUser: "postgres",

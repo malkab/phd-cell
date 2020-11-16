@@ -64,7 +64,7 @@
   },
   "dependencies": {
     "@malkab/node-utils": "^1.5.17",
-    "@malkab/rxpg": "^4.1.5",
-    "libcell": "file:./node-pack/libcell-v1.0.40.tgz"
+    "@malkab/rxpg": "^4.1.7",
+    "libcell": "file:./node-pack/libcell-v1.0.43.tgz"
   }
 }

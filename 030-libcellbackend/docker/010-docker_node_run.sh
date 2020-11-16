@@ -14,7 +14,7 @@
 # -----------------------------------------------------------------
 
 # Check mlk-context to check. If void, no check will be performed.
-MATCH_MLKCONTEXT=common
+MATCH_MLKCONTEXT=
 # Node image version.
 NODE_VERSION=12.16.3
 # Env mode: production / development.
