@@ -4,9 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { GridBackend, CellBackend } from "../../src/index";
+import { Grid, Cell } from "../../src/index";
 
-import { gridBackend, clearDatabase$, cellPgConn, cellBackends, testCell_0_2_3 } from "./common";
+import { gridBackend, clearDatabase$, cellPgConn, cells, testCell_0_2_3 } from "./common";
 
 import * as rx from "rxjs";
 
@@ -23,9 +23,31 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+    assertions: [
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
+
+    ],
+
+    verbose: false
 
   })
 
@@ -42,19 +64,19 @@ describe("CellBackend pgInsert$", function() {
 
     testCaseName: "CellBackend pgInsert$",
 
-    observable: rx.concat(
+    observables: [ rx.concat(
 
       gridBackend.pgInsert$(cellPgConn),
 
-      rx.zip(...cellBackends.map((o: CellBackend) => o.pgInsert$(cellPgConn)))
+      rx.zip(...cells.map((o: Cell) => o.pgInsert$(cellPgConn)))
 
-    ),
+    ) ],
 
     assertions: [
 
-      (o: GridBackend) => expect(o.name).to.be.equal("eu-grid"),
+      (o: Grid) => expect(o.name).to.be.equal("eu-grid"),
 
-      (o: CellBackend[]) => {
+      (o: Cell[]) => {
 
         expect(o.length, "Number of cells generated").to.be.equal(24);
 
@@ -77,28 +99,26 @@ describe("CellBackend pgInsert$", function() {
  */
 describe("Get child cells and pgInsert$ them", function() {
 
-
-
   rxMochaTests({
 
     testCaseName: "Get child cells and pgInsert$ them",
 
-    observable: rx.of(testCell_0_2_3.getSubCellBackends(2))
+    observables: [ rx.of(testCell_0_2_3.getSubCellBackends(2))
       .pipe(
 
-        rxo.concatMap((o: CellBackend[]) => {
+        rxo.concatMap((o: Cell[]) => {
 
-          return rx.zip(...o.map((i: CellBackend) => i.pgInsert$(cellPgConn)))
+          return rx.zip(...o.map((i: Cell) => i.pgInsert$(cellPgConn)))
 
         })
 
-      ),
+      ) ],
 
     assertions: [
 
-      (o: CellBackend[]) => {
+      (o: Cell[]) => {
 
-        expect(o.length).to.be.equal(400)
+        expect(o.length).to.be.equal(100)
 
       }
 

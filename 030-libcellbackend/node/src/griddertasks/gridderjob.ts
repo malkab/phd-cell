@@ -6,10 +6,13 @@ import * as rxo from "rxjs/operators";
 
 import { PgConnection } from 'src/core/pgconnection';
 
+import { gridderTaskGet$ } from "./griddertaskfactory";
+
 /**
  *
- * This class defines a GridderJob, that is, the application of a GridderTask
- * on a given area and between two zoom ranges.
+ * This class defines a GridderJob, that is, the application of a GridderTask on
+ * a given area and between two zoom ranges. This is the upper level in the
+ * gridding process. A GridderJob generates GridderTasks that grid the cells.
  *
  */
 export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
@@ -107,12 +110,12 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
     PgOrm.generateDefaultPgOrmMethods(this, {
       pgInsert$: {
-        sql: `
+        sql: () => `
           insert into cell_meta.gridder_job
           values ($1, $2, $3, $4, $5, $6);`,
-        params: () => [ this._gridderJobId, this._gridderTaskId,
+        params$: () => rx.of([ this._gridderJobId, this._gridderTaskId,
           this._maxZoomLevel, this._minZoomLevel,
-          this._sqlAreaRetrieval, this._area ]
+          this._sqlAreaRetrieval, this._area ])
       }
     })
 
@@ -154,7 +157,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
     const sourcePg: RxPg = areaSourcePgConnection.open();
     const cellPg: RxPg = cellPgConnection.open();
 
-    return sourcePg.executeQuery$(
+    return sourcePg.executeParamQuery$(
       `select st_asewkt(st_transform(st_union(geom), 4326)) as area from (${this._sqlAreaRetrieval}) a`)
     .pipe(
 
@@ -166,7 +169,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
           update cell_meta.gridder_job
           set area = st_geomfromewkt('${this.area}'::text)
           where gridder_job_id = $1`,
-          [ this.gridderJobId ]
+          { params: [ this.gridderJobId ] }
         );
 
       }),

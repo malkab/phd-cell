@@ -31,10 +31,8 @@ export class ZoomLevel {
         Private members
 
     */
-
     // Name
     private _name: string;
-
     // Size
     private _size: number;
 

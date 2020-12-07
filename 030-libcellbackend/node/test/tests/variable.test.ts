@@ -21,9 +21,31 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+    assertions: [
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
+
+    ],
+
+    verbose: false
 
   })
 
@@ -45,13 +67,15 @@ describe("Insert PgConnection", function() {
 
     testCaseName: "pgInsert$",
 
-    observable: cellRawData.pgInsert$(cellPgConn),
+    observables: [ cellRawData.pgInsert$(cellPgConn) ],
 
     assertions: [
       (o: PgConnection) =>
         expect(o.name, "pgInsert$").to.be.equal("Cell Raw Data") ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 
@@ -68,7 +92,7 @@ describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
 
     testCaseName: "pgInsert$()",
 
-    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
+    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
@@ -80,7 +104,9 @@ describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
 
     ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 
@@ -97,11 +123,11 @@ describe("Variable pgInsert$", function() {
 
     testCaseName: "Variable pgInsert$",
 
-    observable: rx.concat(
+    observables: [ rx.concat(
 
       variable.pgInsert$(cellPgConn)
 
-    ),
+    ) ],
 
     assertions: [
 
@@ -113,40 +139,9 @@ describe("Variable pgInsert$", function() {
 
     ],
 
-    verbose: false
+    verbose: false,
 
-  })
-
-})
-
-/**
- *
- * Variable dbSet$.
- *
- */
-describe("Variable dbSet$", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Variable dbSet$",
-
-    observable: rx.concat(
-
-      variable.dbSet$(cellPgConn)
-
-    ),
-
-    assertions: [
-
-      (o: VariableBackend) => {
-
-        expect(o.name).to.be.equal("Var name");
-
-      }
-
-    ],
-
-    verbose: false
+    active: true
 
   })
 

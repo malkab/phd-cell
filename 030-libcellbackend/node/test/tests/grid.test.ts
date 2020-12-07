@@ -19,9 +19,31 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+    assertions: [
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
+
+    ],
+
+    verbose: false
 
   })
 
@@ -38,7 +60,7 @@ describe("GridBackend pgInsert$", function() {
 
     testCaseName: "GridBackend pgInsert$",
 
-    observable: gridBackend.pgInsert$(cellPgConn),
+    observables: [ gridBackend.pgInsert$(cellPgConn) ],
 
     assertions: [
       (o: GridBackend) => expect(o.name).to.be.equal("eu-grid") ],

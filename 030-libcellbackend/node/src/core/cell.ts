@@ -4,20 +4,22 @@ import { RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
-import { Cell, Grid } from "libcell";
+import { Cell as CellL } from "@malkab/libcell";
+
+import { Grid } from "./grid";
 
 /**
  *
  * Variable, backend version.
  *
  */
-export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
+export class Cell extends CellL implements PgOrm.IPgOrm<Cell> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of(this);
-  public pgInsert$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of(this);
-  public pgUpdate$: (pg: RxPg) => rx.Observable<CellBackend> = (pg) => rx.of(this);
+  public pgDelete$: (pg: RxPg) => rx.Observable<Cell> = (pg) => rx.of(this);
+  public pgInsert$: (pg: RxPg) => rx.Observable<Cell> = (pg) => rx.of(this);
+  public pgUpdate$: (pg: RxPg) => rx.Observable<Cell> = (pg) => rx.of(this);
 
   /**
    *
@@ -30,6 +32,15 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
     return `('${this.gridId}', ${this.epsg}, ${this.zoom}, ${this.x}, ${this.y}, '{}'::json)::cell__cell`
 
   }
+
+  /**
+   *
+   * Redefinition of grid member.
+   *
+   */
+  protected _grid: Grid | undefined;
+  get grid(): Grid | undefined { return this._grid }
+  set grid(grid: Grid | undefined) { this._grid = grid }
 
   /**
    *
@@ -62,23 +73,24 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
       x: x,
       y: y,
       zoom: zoom,
-      grid: grid,
       data: data,
       offset: offset
     })
+
+    this._grid = grid;
 
     PgOrm.generateDefaultPgOrmMethods(this,
       {
 
         pgInsert$: {
-          sql: `
+          sql: () => `
             insert into cell_data.data values(
               $1, $2, $3, $4, $5, '{}'::jsonb,
               cell__cellgeom(($1, $2, $3, $4, $5, '{}'::jsonb)::cell__cell),
               cell__cellgeom4326(($1, $2, $3, $4, $5, '{}'::jsonb)::cell__cell)
             )`,
-          params: () => [ this.gridId, this.epsg, this.zoom,
-            this.x, this.y ]
+          params$: () => rx.of([ this.gridId, this.epsg, this.zoom,
+            this.x, this.y ])
         }
 
       })
@@ -87,14 +99,14 @@ export class CellBackend extends Cell implements PgOrm.IPgOrm<CellBackend> {
 
   /**
    *
-   * Get subcells as CellBackend.
+   * Get subcells as .
    *
    */
-  public getSubCellBackends(zoom: number): CellBackend[] {
+  public getSubCellBackends(zoom: number): Cell[] {
 
-    const cells: Cell[] = super.getSubCells(zoom);
+    const cells: CellL[] = super.getSubCells(zoom);
 
-    return cells.map((c: Cell) => new CellBackend({
+    return cells.map((c: CellL) => new Cell({
       gridId: this.gridId,
       epsg: this.epsg,
       x: c.x,

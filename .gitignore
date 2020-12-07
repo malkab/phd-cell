@@ -1,6 +1,6 @@
 # Added by mlkcontext
 # -------------------
-assets/postgres_config/postgresql.conf
-assets/redis_config/redis.conf
 010-cell-db/src/050-add_metadata.sql
+assets/redis_config/redis.conf
+assets/postgres_config/postgresql.conf
 # -------------------

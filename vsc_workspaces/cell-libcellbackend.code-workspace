@@ -4,12 +4,6 @@
 			"path": "../030-libcellbackend"
 		},
 		{
-			"path": "../020-libcell"
-		},
-		{
-			"path": "../010-cell-db"
-		},
-		{
 			"path": "../00-DEPRECATE"
 		},
 		{

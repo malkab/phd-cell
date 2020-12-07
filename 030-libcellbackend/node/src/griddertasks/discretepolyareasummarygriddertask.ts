@@ -1,4 +1,4 @@
-import { GridderTasks as GT } from "libcell";
+import { GridderTasks as GT } from "@malkab/libcell";
 
 import { PgOrm } from "@malkab/rxpg"
 
@@ -13,13 +13,13 @@ import { PgConnection } from 'src/core/pgconnection';
  * Base class to define GridderTasks.
  *
  */
-export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAreaSummaryGridderTask implements PgOrm.IPgOrm<DiscretePolyAreaSummaryGridderTaskBackend> {
+export class DiscretePolyAreaSummaryGridderTask extends GT.DiscretePolyAreaSummaryGridderTask implements PgOrm.IPgOrm<DiscretePolyAreaSummaryGridderTask> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<DiscretePolyAreaSummaryGridderTaskBackend> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<DiscretePolyAreaSummaryGridderTaskBackend> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<DiscretePolyAreaSummaryGridderTaskBackend> = (pg) => rx.of();
+  public pgDelete$: (pg: RxPg) => rx.Observable<DiscretePolyAreaSummaryGridderTask> = (pg) => rx.of();
+  public pgInsert$: (pg: RxPg) => rx.Observable<DiscretePolyAreaSummaryGridderTask> = (pg) => rx.of();
+  public pgUpdate$: (pg: RxPg) => rx.Observable<DiscretePolyAreaSummaryGridderTask> = (pg) => rx.of();
 
   /**
    *
@@ -60,10 +60,10 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
     PgOrm.generateDefaultPgOrmMethods(this, {
 
       pgInsert$: {
-        sql: `
+        sql: () => `
         insert into cell_meta.gridder_task
         values ($1, $2, $3, $4, $5, $6, $7);`,
-        params: () => [
+        params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
           this.name,
@@ -75,7 +75,7 @@ export class DiscretePolyAreaSummaryGridderTaskBackend extends GT.DiscretePolyAr
             variableNameTemplate: this.variableNameTemplate,
             variableDescriptionTemplate: this.variableDescriptionTemplate
           }
-        ]
+        ])
       }
 
     })

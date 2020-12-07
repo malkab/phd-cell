@@ -16,7 +16,6 @@ export class Variable implements IMetadated {
    *
    */
   protected _gridderTaskId: string;
-
   get gridderTaskId(): string { return this._gridderTaskId }
 
   /**
@@ -25,8 +24,8 @@ export class Variable implements IMetadated {
    *
    */
   protected _gridderTask: GridderTask | undefined;
-
   get gridderTask(): GridderTask | undefined { return this._gridderTask }
+  set gridderTask(gridderTask: GridderTask | undefined) { this._gridderTask = gridderTask }
 
   /**
    *
@@ -34,7 +33,6 @@ export class Variable implements IMetadated {
    *
    */
   protected _variableId: string;
-
   get variableId(): string { return this._variableId }
 
   /**
@@ -43,7 +41,6 @@ export class Variable implements IMetadated {
    *
    */
   protected _name: string;
-
   get name(): string { return this._name }
 
   /**
@@ -52,7 +49,6 @@ export class Variable implements IMetadated {
    *
    */
   protected _description: string;
-
   get description(): string { return this._description }
 
   /**
@@ -61,7 +57,6 @@ export class Variable implements IMetadated {
    *
    */
   protected _key: string | undefined;
-
   get key(): string | undefined { return this._key }
 
   /**

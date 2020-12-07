@@ -1,4 +1,4 @@
-import { Grid, Coordinate, ZoomLevel } from "libcell";
+import { Grid as GridL, Coordinate, ZoomLevel } from "@malkab/libcell";
 
 import { PgOrm } from "@malkab/rxpg";
 
@@ -11,13 +11,13 @@ import * as rx from "rxjs";
  * Grid, backend version.
  *
  */
-export class GridBackend extends Grid implements PgOrm.IPgOrm<GridBackend> {
+export class Grid extends GridL implements PgOrm.IPgOrm<Grid> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<GridBackend> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<GridBackend> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<GridBackend> = (pg) => rx.of();
+  public pgDelete$: (pg: RxPg) => rx.Observable<Grid> = (pg) => rx.of();
+  public pgInsert$: (pg: RxPg) => rx.Observable<Grid> = (pg) => rx.of();
+  public pgUpdate$: (pg: RxPg) => rx.Observable<Grid> = (pg) => rx.of();
 
   /**
    *
@@ -55,10 +55,10 @@ export class GridBackend extends Grid implements PgOrm.IPgOrm<GridBackend> {
       {
 
         pgInsert$: {
-          sql: `insert into cell_meta.grid values($1, $2, $3, $4, $5, $6, $7)`,
-          params: () => [ this.gridId, this.name, this.description,
+          sql: () => `insert into cell_meta.grid values($1, $2, $3, $4, $5, $6, $7)`,
+          params$: () => rx.of([ this.gridId, this.name, this.description,
             this.origin.epsg, this.origin.x, this.origin.y,
-            this.zoomLevels.map((o: ZoomLevel) => o.apiSafeSerial) ]
+            this.zoomLevels.map((o: ZoomLevel) => o.apiSafeSerial) ])
         }
 
       })

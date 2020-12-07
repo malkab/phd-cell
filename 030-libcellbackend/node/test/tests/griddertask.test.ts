@@ -19,9 +19,31 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+    assertions: [
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
+
+    ],
+
+    verbose: false
 
   })
 
@@ -43,12 +65,14 @@ describe("Create PgConnection", function() {
 
     testCaseName: "ORM pgInsert$",
 
-    observable: cellRawData.pgInsert$(cellPgConn),
+    observables: [ cellRawData.pgInsert$(cellPgConn) ],
 
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 
@@ -65,7 +89,7 @@ describe("municipioDiscretePolyTopAreaGridderTask ORM", function() {
 
     testCaseName: "pgInsert$()",
 
-    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
+    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
@@ -74,7 +98,9 @@ describe("municipioDiscretePolyTopAreaGridderTask ORM", function() {
 
     ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 
@@ -86,7 +112,7 @@ describe("municipioDiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
 
     testCaseName: "pgInsert$()",
 
-    observable: municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn),
+    observables: [ municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
@@ -95,7 +121,9 @@ describe("municipioDiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
 
     ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 

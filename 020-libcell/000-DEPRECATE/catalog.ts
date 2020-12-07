@@ -13,18 +13,15 @@ export class Catalog implements IMetadated {
    *
    */
   get catalogId(): string { return this._catalogId; }
-
   set catalogId(catalogId: string) { this._catalogId = catalogId; }
-
-  private _catalogId: string;
+  protected _catalogId: string;
 
   /**
    *
    * Name.
    *
    */
-  private _name: string;
-
+  protected _name: string;
   get name(): string { return this._name }
 
   /**
@@ -32,8 +29,7 @@ export class Catalog implements IMetadated {
    * Description.
    *
    */
-  private _description: string;
-
+  protected _description: string;
   get description(): string { return this._description }
 
   /**
@@ -41,8 +37,7 @@ export class Catalog implements IMetadated {
    * The ID of the PgConnection.
    *
    */
-  private _pgConnectionId: string;
-
+  protected _pgConnectionId: string;
   get pgConnectionId(): string { return this._pgConnectionId }
 
   /**
@@ -50,8 +45,7 @@ export class Catalog implements IMetadated {
    * The source table.
    *
    */
-  private _sourceTable: string;
-
+  protected _sourceTable: string;
   get sourceTable(): string { return this._sourceTable }
 
   /**
@@ -59,8 +53,7 @@ export class Catalog implements IMetadated {
    * The source field.
    *
    */
-  private _sourceField: string;
-
+  protected _sourceField: string;
   get sourceField(): string { return this._sourceField }
 
   /**
@@ -69,8 +62,7 @@ export class Catalog implements IMetadated {
    *
    */
   get forward(): { [ item: string ]: string } { return this._forward; }
-
-  private _forward: { [ item: string ]: string } = {};
+  protected _forward: { [ item: string ]: string } = {};
 
   /**
    *
@@ -78,8 +70,7 @@ export class Catalog implements IMetadated {
    *
    */
   get backward(): { [ item: string ]: string } { return this._backward; }
-
-  private _backward: { [ hash: string ]: string } = {};
+  protected _backward: { [ hash: string ]: string } = {};
 
   /**
    *

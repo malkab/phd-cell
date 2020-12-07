@@ -27,17 +27,16 @@ export class Cell {
    * The cell zoom, x, and y.
    *
    */
-  private _zoom: number;
-  private _x: number;
-  private _y: number;
+  protected _zoom: number;
+  protected _x: number;
+  protected _y: number;
 
   /**
    *
    * EPSG.
    *
    */
-  private _epsg: string;
-
+  protected _epsg: string;
   get epsg(): string { return this._epsg }
 
   /**
@@ -45,14 +44,14 @@ export class Cell {
    * Cell data.
    *
    */
-  private _data: any;
+  protected _data: any;
 
   /**
    *
    * Cell offset.
    *
    */
-  private _offset: number;
+  protected _offset: number;
 
   /**
    *
@@ -68,8 +67,7 @@ export class Cell {
    * The cell's grid.
    *
    */
-  private _grid: Grid | undefined;
-
+  protected _grid: Grid | undefined;
   get grid(): Grid | undefined {
 
     if (this._grid) {
@@ -331,8 +329,7 @@ export class Cell {
    * Grid ID.
    *
    */
-  private _gridId: string;
-
+  protected _gridId: string;
   get gridId(): string { return this._gridId }
 
   /**
@@ -539,7 +536,7 @@ export class Cell {
    * @returns {Bbox}
    *
    */
-  private _getBbox(): Bbox {
+  protected _getBbox(): Bbox {
 
     if(this._grid) {
 

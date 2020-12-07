@@ -4,7 +4,7 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { CatalogBackend, PgConnection, GridderTasks as gt, VariableBackend } from "../../src/index";
+import { Catalog, PgConnection, GridderTasks as gt, Variable } from "../../src/index";
 
 import { cellRawData, cellPgConn, clearDatabase$, municipioDiscretePolyTopAreaGridderTask, variable, catalog } from "./common";
 
@@ -23,9 +23,31 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+    assertions: [
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
+
+    ],
+
+    verbose: false
 
   })
 
@@ -47,7 +69,7 @@ describe("PgConnection pgInsert$", function() {
 
     testCaseName: "PgConnection pgInsert$",
 
-    observable: cellRawData.pgInsert$(cellPgConn),
+    observables: [ cellRawData.pgInsert$(cellPgConn) ],
 
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
@@ -69,11 +91,11 @@ describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
 
     testCaseName: "pgInsert$()",
 
-    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
+    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTaskBackend) => {
+      (o: gt.DiscretePolyTopAreaGridderTask) => {
 
         expect(o.gridderTaskId, "GridderTask pgInsert$()").to.be.equal("municipioDiscretePolyTopArea")
 
@@ -98,11 +120,11 @@ describe("Create variable", function() {
 
     testCaseName: "Create variable",
 
-    observable: variable.pgInsert$(cellPgConn),
+    observables: [ variable.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: VariableBackend) => {
+      (o: Variable) => {
 
         expect(o.name).to.be.equal("Var name");
 
@@ -127,11 +149,11 @@ describe("Create catalog and load catalog data", function() {
 
     testCaseName: "Create catalog and load catalog data",
 
-    observable: catalog.dbLoadForwardBackward$(cellPgConn),
+    observables: [ catalog.dbLoadForwardBackward$(cellPgConn) ],
 
     assertions: [
 
-      (o: CatalogBackend) => {
+      (o: Catalog) => {
 
         expect(o.variableId).to.be.equal("var");
         expect(o.forward.keys.length).to.be.equal(0);
@@ -157,20 +179,20 @@ describe("Insert one key on empty catalog", function() {
 
     testCaseName: "Insert one key on empty catalog",
 
-    observable: catalog.dbLoadForwardBackward$(cellPgConn)
+    observables: [ catalog.dbLoadForwardBackward$(cellPgConn)
       .pipe(
 
-        rxo.concatMap((o: CatalogBackend) => {
+        rxo.concatMap((o: Catalog) => {
 
           return o.dbAddEntries$(cellPgConn, [ "value" ]);
 
         })
 
-      ),
+      ) ],
 
     assertions: [
 
-      (o: CatalogBackend) => {
+      (o: Catalog) => {
 
         expect(o.variableId).to.be.equal("var");
         expect(o.forward.size).to.be.equal(1);
@@ -196,14 +218,14 @@ describe("Load Catalog and add more entries", function() {
 
     testCaseName: "Load Catalog and add more entries",
 
-    observable: rx.concat(
+    observables: [ rx.concat(
 
       catalog.dbLoadForwardBackward$(cellPgConn),
 
       catalog.dbLoadForwardBackward$(cellPgConn)
       .pipe(
 
-        rxo.concatMap((o: CatalogBackend) => {
+        rxo.concatMap((o: Catalog) => {
 
           return o.dbAddEntries$(cellPgConn, [ "value0", "value1", "value2" ])
 
@@ -211,11 +233,11 @@ describe("Load Catalog and add more entries", function() {
 
       )
 
-     ),
+     ) ],
 
     assertions: [
 
-      (o: CatalogBackend) => {
+      (o: Catalog) => {
 
         expect(o.forward.size, "Number of existing keys in catalog")
         .to.be.equal(1);
@@ -228,7 +250,7 @@ describe("Load Catalog and add more entries", function() {
 
       },
 
-      (o: CatalogBackend) => {
+      (o: Catalog) => {
 
         expect(o.forward.size, "Number of existing keys in catalog after addind 3 new")
           .to.be.equal(4);
@@ -269,12 +291,12 @@ describe("get$ catalog and load data", function() {
 
     testCaseName: "get$ catalog and load data",
 
-    observable: CatalogBackend.get$(cellPgConn, "municipioDiscretePolyTopArea",
-      "var"),
+    observables: [ Catalog.get$(cellPgConn, "municipioDiscretePolyTopArea",
+      "var") ],
 
     assertions: [
 
-      (o: CatalogBackend) => {
+      (o: Catalog) => {
 
         expect(o.forward.size).to.be.equal(4);
 

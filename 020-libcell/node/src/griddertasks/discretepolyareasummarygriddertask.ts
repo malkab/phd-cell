@@ -18,8 +18,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask {
    * Discrete field.
    *
    */
-  private _discreteFields: string[];
-
+  protected _discreteFields: string[];
   get discreteFields(): string[] { return this._discreteFields }
 
   /**
@@ -27,8 +26,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask {
    * The name of the only variable that will be created by this Gridder Task.
    *
    */
-  private _variableNameTemplate: string;
-
+  protected _variableNameTemplate: string;
   get variableNameTemplate(): string { return this._variableNameTemplate }
 
   /**
@@ -37,8 +35,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask {
    * Task.
    *
    */
-  private _variableDescriptionTemplate: string;
-
+  protected _variableDescriptionTemplate: string;
   get variableDescriptionTemplate(): string { return this._variableDescriptionTemplate }
 
   /**

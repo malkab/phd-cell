@@ -1,11 +1,9 @@
-export * from "./discretepolyareasummarygriddertaskbackend";
+export * from "./discretepolyareasummarygriddertask";
 
-export * from "./discretepolytopareagriddertaskbackend";
+export * from "./discretepolytopareagriddertask";
 
-export * from "./griddertaskbackend";
+export * from "./griddertask";
 
 export * from "./griddertaskfactory";
 
 export * from "./gridderjob";
-
-export * from "./griddercell";

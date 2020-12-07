@@ -1,4 +1,4 @@
-import { CellBackend, CatalogBackend, PgConnection, VariableBackend, GridderTasks as gt, GridBackend } from "../../src/index";
+import { Cell, Catalog, PgConnection, Variable, GridderTasks as gt, Grid } from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -76,25 +76,20 @@ export const cellRawDataExternalConn: RxPg = cellRawDataExternal.open();
  * Clear the database.
  *
  */
-export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeQuery$(`
-delete from cell_data.data;
-delete from cell_meta.gridder_cell;
-delete from cell_meta.gridder_job;
-delete from cell_meta.gridder_task;
-delete from cell_meta.variable;
-delete from cell_meta.catalog;
-delete from cell_meta.grid;
-delete from cell_meta.pg_connection;
-delete from cell_meta.cell_version;
+export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeParamQuery$(`
+  delete from cell_data.data;
+  delete from cell_meta.gridder_cell;
+  delete from cell_meta.gridder_job;
+  delete from cell_meta.catalog;
+  delete from cell_meta.variable;
+  delete from cell_meta.gridder_task;
+  delete from cell_meta.grid;
+  delete from cell_meta.pg_connection;
+  delete from cell_meta.cell_version;
 `)
 .pipe(
 
-  rxo.map((o: QueryResult): boolean => {
-
-    const commands = uniq(o.map((o: any) => o.command)).sort();
-    return isEqual(commands, [ "DELETE" ]) ? true : false;
-
-  })
+  rxo.map((o: QueryResult): boolean => o.command === "DELETE" ? true : false)
 
 )
 
@@ -103,8 +98,8 @@ delete from cell_meta.cell_version;
  * DiscretePolygonTopAreaGridderTask.
  *
  */
-export const municipioDiscretePolyTopAreaGridderTask: gt.DiscretePolyTopAreaGridderTaskBackend =
-new gt.DiscretePolyTopAreaGridderTaskBackend({
+export const municipioDiscretePolyTopAreaGridderTask: gt.DiscretePolyTopAreaGridderTask =
+new gt.DiscretePolyTopAreaGridderTask({
   gridderTaskId: "municipioDiscretePolyTopArea",
   name: "Municipio máxima área",
   description: "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
@@ -116,8 +111,8 @@ new gt.DiscretePolyTopAreaGridderTaskBackend({
   categoryTemplate: "{{{municipio}}} ({{{provincia}}})"
 });
 
-export const municipioDiscretePolyAreaSummaryGridderTask: gt.DiscretePolyAreaSummaryGridderTaskBackend =
-new gt.DiscretePolyAreaSummaryGridderTaskBackend({
+export const municipioDiscretePolyAreaSummaryGridderTask: gt.DiscretePolyAreaSummaryGridderTask =
+new gt.DiscretePolyAreaSummaryGridderTask({
   gridderTaskId: "municipioDiscreteAreaSummary",
   name: "Desglose de área de municipios",
   description: "Área de cada municipio en la celda, incluyendo su provincia",
@@ -133,7 +128,7 @@ new gt.DiscretePolyAreaSummaryGridderTaskBackend({
  * Variable.
  *
  */
-export const variable: VariableBackend = new VariableBackend({
+export const variable: Variable = new Variable({
   gridderTaskId: "municipioDiscretePolyTopArea",
   variableId: "var",
   name: "Var name",
@@ -146,7 +141,7 @@ export const variable: VariableBackend = new VariableBackend({
  * Catalog.
  *
  */
-export const catalog: CatalogBackend = new CatalogBackend({
+export const catalog: Catalog = new Catalog({
   gridderTaskId: "municipioDiscretePolyTopArea",
   variableId: "var",
   variable: variable
@@ -157,7 +152,7 @@ export const catalog: CatalogBackend = new CatalogBackend({
  * Grid.
  *
  */
-export const gridBackend: GridBackend = new GridBackend({
+export const gridBackend: Grid = new Grid({
   description: "A grid based on the official EU one",
   gridId: "eu-grid",
   name: "eu-grid",
@@ -183,7 +178,7 @@ export const gridBackend: GridBackend = new GridBackend({
  * Cells.
  *
  */
-export const cellBackends: CellBackend[] = [];
+export const cells: Cell[] = [];
 
 for (let z = 0; z<1; z++) {
 
@@ -191,7 +186,7 @@ for (let z = 0; z<1; z++) {
 
     for (let y = 0; y<4; y++) {
 
-      cellBackends.push(new CellBackend({
+      cells.push(new Cell({
         epsg: "3035",
         gridId: "eu-grid",
         x: x,
@@ -206,7 +201,7 @@ for (let z = 0; z<1; z++) {
 
 }
 
-export const testCell_0_2_2: CellBackend = new CellBackend({
+export const testCell_0_2_2: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -215,7 +210,7 @@ export const testCell_0_2_2: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell_0_2_3: CellBackend = new CellBackend({
+export const testCell_0_2_3: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -224,7 +219,7 @@ export const testCell_0_2_3: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell_0_3_2: CellBackend = new CellBackend({
+export const testCell_0_3_2: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -233,7 +228,7 @@ export const testCell_0_3_2: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell_0_2_1: CellBackend = new CellBackend({
+export const testCell_0_2_1: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -242,7 +237,7 @@ export const testCell_0_2_1: CellBackend = new CellBackend({
   grid: gridBackend
 })
 
-export const testCell_0_3_1: CellBackend = new CellBackend({
+export const testCell_0_3_1: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
@@ -252,7 +247,7 @@ export const testCell_0_3_1: CellBackend = new CellBackend({
 })
 
 // This is a full coverage for municipios with a single municipio
-export const testCell_2_27_32: CellBackend = new CellBackend({
+export const testCell_2_27_32: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
@@ -262,7 +257,7 @@ export const testCell_2_27_32: CellBackend = new CellBackend({
 })
 
 // This is a partial coverage for municipios
-export const testCell_2_24_31: CellBackend = new CellBackend({
+export const testCell_2_24_31: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
@@ -272,7 +267,7 @@ export const testCell_2_24_31: CellBackend = new CellBackend({
 })
 
 // This is a full coverage with several municipios
-export const testCell_2_28_30: CellBackend = new CellBackend({
+export const testCell_2_28_30: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
@@ -282,7 +277,7 @@ export const testCell_2_28_30: CellBackend = new CellBackend({
 })
 
 // No coverage of municipios at all
-export const testCell_2_25_32: CellBackend = new CellBackend({
+export const testCell_2_25_32: Cell = new Cell({
   epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
@@ -302,19 +297,4 @@ export const gridderJobHuelva: gt.GridderJob = new gt.GridderJob({
   maxZoomLevel: 0,
   minZoomLevel: 2,
   sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
-})
-
-/**
- *
- * GridderCell.
- *
- */
-export const gridderCellA: gt.GridderCell = new gt.GridderCell({
-  gridderCellId: "gridderCellA",
-  gridderJobId: "gridderJobHuelva",
-  epsg: "3035",
-  gridId: "eu-grid",
-  x: 0,
-  y: 0,
-  zoom: 0
 })

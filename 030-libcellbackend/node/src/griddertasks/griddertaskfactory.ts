@@ -1,8 +1,8 @@
-import { DiscretePolyAreaSummaryGridderTaskBackend } from './discretepolyareasummarygriddertaskbackend';
+import { DiscretePolyAreaSummaryGridderTask } from './discretepolyareasummarygriddertask';
 
-import { DiscretePolyTopAreaGridderTaskBackend } from './discretepolytopareagriddertaskbackend';
+import { DiscretePolyTopAreaGridderTask } from './discretepolytopareagriddertask';
 
-import { GridderTasks as gt } from 'libcell';
+import { GridderTasks as gt } from '@malkab/libcell';
 
 import { RxPg, PgOrm } from '@malkab/rxpg';
 
@@ -18,8 +18,8 @@ import { PgConnection } from '../core/pgconnection';
  *
  */
 export function gridderTaskFactory(pg: RxPg, params: any): rx.Observable<
-DiscretePolyAreaSummaryGridderTaskBackend |
-DiscretePolyTopAreaGridderTaskBackend> {
+  DiscretePolyAreaSummaryGridderTask |
+  DiscretePolyTopAreaGridderTask> {
 
   if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
 
@@ -28,7 +28,7 @@ DiscretePolyTopAreaGridderTaskBackend> {
 
       rxo.map((pg: PgConnection) => {
 
-        return new DiscretePolyAreaSummaryGridderTaskBackend({
+        return new DiscretePolyAreaSummaryGridderTask({
           ...params,
           pgConnection: pg
         });
@@ -46,7 +46,7 @@ DiscretePolyTopAreaGridderTaskBackend> {
 
       rxo.map((pg: PgConnection) => {
 
-        return new DiscretePolyTopAreaGridderTaskBackend({
+        return new DiscretePolyTopAreaGridderTask({
           ...params,
           pgConnection: pg
         });
@@ -61,6 +61,11 @@ DiscretePolyTopAreaGridderTaskBackend> {
 
 }
 
+/**
+ *
+ * Gets a GridderTask by ID.
+ *
+ */
 export function gridderTaskGet$(pg: RxPg, id: string): rx.Observable<any> {
 
   return PgOrm.select$<gt.GridderTask>({

@@ -1,11 +1,11 @@
-export * from "./core/catalogbackend";
+export * from "./core/catalog";
 
 export * from "./core/pgconnection";
 
-export * from "./core/variablebackend";
+export * from "./core/variable";
 
-export * from "./core/gridbackend";
+export * from "./core/grid";
 
-export * from "./core/cellbackend";
+export * from "./core/cell";
 
 export * as GridderTasks from "./griddertasks/index";

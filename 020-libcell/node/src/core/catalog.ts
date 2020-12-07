@@ -13,7 +13,6 @@ export class Catalog {
    *
    */
   protected _gridderTaskId: string;
-
   get gridderTaskId(): string { return this._gridderTaskId }
 
   /**
@@ -22,7 +21,6 @@ export class Catalog {
    *
    */
   protected _variableId: string;
-
   get variableId(): string { return this._variableId }
 
   /**
@@ -31,8 +29,8 @@ export class Catalog {
    *
    */
   protected _variable: Variable | undefined;
-
   get variable(): Variable | undefined { return this._variable }
+  set variable(variable: Variable | undefined) { this._variable = variable }
 
   /**
    *
@@ -40,7 +38,6 @@ export class Catalog {
    *
    */
   protected _forward: Map<string, string>;
-
   get forward(): Map<string, string> { return this._forward }
 
   /**
@@ -49,7 +46,6 @@ export class Catalog {
    *
    */
   protected _backward: Map<string, string>;
-
   get backward(): Map<string, string> { return this._backward }
 
   /**

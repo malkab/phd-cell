@@ -1,12 +1,10 @@
 import { PgOrm } from '@malkab/rxpg';
 
-import { RxPg, QueryResult } from "@malkab/rxpg";
+import { RxPg } from "@malkab/rxpg";
 
-import { IMetadated } from 'libcell';
+import { IMetadated } from '@malkab/libcell';
 
 import * as rx from "rxjs";
-
-import * as rxo from "rxjs/operators";
 
 /**
  *
@@ -27,7 +25,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _conn: RxPg | undefined;
-
   get conn(): RxPg | undefined { return this._conn }
 
   /**
@@ -36,7 +33,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _pgConnectionId: string;
-
   get pgConnectionId(): string { return this._pgConnectionId }
 
   /**
@@ -45,7 +41,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _applicationName: string;
-
   get applicationName(): string { return this._applicationName }
 
   /**
@@ -54,9 +49,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _db: string;
-
   get db(): string { return this._db }
-
   set db(db: string) { this._db = db }
 
   /**
@@ -65,7 +58,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _host: string;
-
   get host(): string { return this._host }
 
   /**
@@ -74,7 +66,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _maxPoolSize: number;
-
   get maxPoolSize(): number { return this._maxPoolSize }
 
   /**
@@ -92,7 +83,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _timeout: number;
-
   get timeout(): number { return this._timeout }
 
   /**
@@ -101,7 +91,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _pass: string;
-
   get pass(): string { return this._pass }
 
   /**
@@ -110,7 +99,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _port: number;
-
   get port(): number { return this._port }
 
   /**
@@ -119,7 +107,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _dbUser: string;
-
   get dbUser(): string { return this._dbUser }
 
   /**
@@ -128,7 +115,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _name: string;
-
   get name(): string { return this._name }
 
   /**
@@ -137,7 +123,6 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _description: string;
-
   get description(): string { return this._description }
 
   /**
@@ -191,12 +176,12 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
 
         pgInsert$: {
 
-          sql: `insert into cell_meta.pg_connection
+          sql: () => `insert into cell_meta.pg_connection
             values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-          params: () => [ this.pgConnectionId, this.name, this.description,
+          params$: () => rx.of([ this.pgConnectionId, this.name, this.description,
             this.applicationName, this.db, this.host, this.maxPoolSize,
             this.minPoolSize, this.pass, this.port,
-            this.dbUser ]
+            this.dbUser ])
 
         }
 
@@ -236,7 +221,7 @@ export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
    */
   public close(): boolean {
 
-    this._conn?.close();
+    this._conn?.close$().subscribe();
     this._conn = undefined;
     return true;
 

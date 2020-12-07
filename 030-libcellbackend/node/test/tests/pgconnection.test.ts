@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { PgConnection } from "../../src/index";
 
-import { cellPgConn, cellRawData, cellPg, cellRawDataConn, clearDatabase$ } from "./common";
+import { cellPgConn, cellRawData, clearDatabase$ } from "./common";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -25,7 +25,29 @@ describe("Initial database clearance", function() {
 
     observables: [ clearDatabase$ ],
 
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
+    assertions: [
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
+
+    ],
+
+    verbose: false
 
   })
 
@@ -52,7 +74,9 @@ describe("pgInsert$", function() {
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 
@@ -74,7 +98,9 @@ describe("get$", function() {
     assertions: [
       (o: PgConnection) => expect(o.name).to.be.equal(cellRawData.name) ],
 
-    verbose: false
+    verbose: false,
+
+    active: true
 
   })
 
@@ -96,7 +122,7 @@ describe("open()", function() {
 
       rxo.map((o: PgConnection) => o.open()),
 
-      rxo.concatMap((o: RxPg) => o.executeQuery$(
+      rxo.concatMap((o: RxPg) => o.executeParamQuery$(
         "select postgis_full_version() as x"
       ))
 
@@ -108,7 +134,9 @@ describe("open()", function() {
 
     ],
 
-    verbose: true
+    verbose: false,
+
+    active: true
 
   })
 

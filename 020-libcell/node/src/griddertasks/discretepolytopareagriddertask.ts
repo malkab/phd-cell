@@ -21,8 +21,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
    * Discrete fields.
    *
    */
-  private _discreteFields: string[];
-
+  protected _discreteFields: string[];
   get discreteFields(): string[] { return this._discreteFields }
 
   /**
@@ -30,8 +29,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
    * The name of the only variable that will be created by this Gridder Task.
    *
    */
-  private _variableName: string;
-
+  protected _variableName: string;
   get variableName(): string { return this._variableName }
 
   /**
@@ -40,8 +38,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
    * Task.
    *
    */
-  private _variableDescription: string;
-
+  protected _variableDescription: string;
   get variableDescription(): string { return this._variableDescription }
 
   /**
@@ -50,8 +47,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask {
    * to create the name of each category value for the catalog.
    *
    */
-  private _categoryTemplate: string;
-
+  protected _categoryTemplate: string;
   get categoryTemplate(): string { return this._categoryTemplate }
 
   /**

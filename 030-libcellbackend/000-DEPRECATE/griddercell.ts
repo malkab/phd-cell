@@ -1,4 +1,4 @@
-import { CellBackend } from '../core/cellbackend';
+import { Cell } from '../node/src/core/cell';
 
 import { RxPg, PgOrm } from '@malkab/rxpg';
 
@@ -6,13 +6,11 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
-import { GridderJob } from './gridderjob';
+import { GridderJob } from '../node/src/griddertasks/gridderjob';
 
-import { gridderTaskFactory, gridderTaskGet$ } from './griddertaskfactory';
+import { gridderTaskGet$ } from '../node/src/griddertasks/griddertaskfactory';
 
-import { gt } from 'lodash';
-
-import { GridderTaskBackend } from './griddertaskbackend';
+import { GridderTask } from '../node/src/griddertasks/griddertask';
 
 /**
  *
@@ -70,9 +68,9 @@ export class GridderCell implements PgOrm.IPgOrm<GridderCell> {
    * Cell.
    *
    */
-  private _cell: CellBackend;
+  private _cell: Cell;
 
-  get cell(): CellBackend { return this._cell }
+  get cell(): Cell { return this._cell }
 
   /**
    *
@@ -102,7 +100,7 @@ export class GridderCell implements PgOrm.IPgOrm<GridderCell> {
     this._gridderCellId = gridderCellId;
     this._gridderJobId = gridderJobId;
     this._gridderJob = gridderJob;
-    this._cell = new CellBackend({
+    this._cell = new Cell({
       epsg: epsg,
       gridId: gridId,
       x: x,
@@ -124,7 +122,7 @@ export class GridderCell implements PgOrm.IPgOrm<GridderCell> {
       values ($1, $2, ${this.cell.sqlInsertRepresentation});`;
 
     return pg.executeParamQuery$(sql,
-        [ this._gridderCellId, this._gridderJobId ])
+        { params: [ this._gridderCellId, this._gridderJobId ] })
     .pipe(rxo.map((o: any) => this))
 
   }
@@ -182,7 +180,7 @@ export class GridderCell implements PgOrm.IPgOrm<GridderCell> {
 
       }),
 
-      rxo.map((o: GridderTaskBackend) => {
+      rxo.map((o: GridderTask) => {
 
         console.log("D: kkkkkk", o);
 

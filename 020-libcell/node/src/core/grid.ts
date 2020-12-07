@@ -18,8 +18,7 @@ export class Grid {
    * Grid ID.
    *
    */
-  private _gridId: string;
-
+  protected _gridId: string;
   get gridId(): string { return this._gridId }
 
   /**
@@ -28,8 +27,7 @@ export class Grid {
    *
    */
   get epsg(): string { return this._epsg; }
-
-  private _epsg: string;
+  protected _epsg: string;
 
   /**
    *
@@ -37,8 +35,7 @@ export class Grid {
    *
    */
   get zoomLevels(): ZoomLevel[] { return this._zoomLevels; }
-
-  private _zoomLevels: ZoomLevel[];
+  protected _zoomLevels: ZoomLevel[];
 
   /**
    *
@@ -46,8 +43,7 @@ export class Grid {
    *
    */
   get origin(): Coordinate { return this._origin; }
-
-  private _origin: Coordinate;
+  protected _origin: Coordinate;
 
   /**
    *
@@ -56,8 +52,7 @@ export class Grid {
    */
 
   get name(): string { return this._name; }
-
-  private _name: string;
+  protected _name: string;
 
   /**
    *
@@ -65,8 +60,7 @@ export class Grid {
    *
    */
   get description(): string { return this._description; }
-
-  private _description: string;
+  protected _description: string;
 
   /*
 

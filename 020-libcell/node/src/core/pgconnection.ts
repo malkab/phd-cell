@@ -12,7 +12,7 @@ export class PgConnection implements IMetadated {
    * pgConnectionId.
    *
    */
-  private _pgConnectionId: string;
+  protected _pgConnectionId: string;
 
   get pgConnectionId(): string { return this._pgConnectionId }
 
@@ -21,7 +21,7 @@ export class PgConnection implements IMetadated {
    * applicationName.
    *
    */
-  private _applicationName: string;
+  protected _applicationName: string;
 
   get applicationName(): string { return this._applicationName }
 
@@ -30,7 +30,7 @@ export class PgConnection implements IMetadated {
    * db.
    *
    */
-  private _db: string;
+  protected _db: string;
 
   get db(): string { return this._db }
 
@@ -41,7 +41,7 @@ export class PgConnection implements IMetadated {
    * host.
    *
    */
-  private _host: string;
+  protected _host: string;
 
   get host(): string { return this._host }
 
@@ -50,7 +50,7 @@ export class PgConnection implements IMetadated {
    * maxPoolSize.
    *
    */
-  private _maxPoolSize: number;
+  protected _maxPoolSize: number;
 
   get maxPoolSize(): number { return this._maxPoolSize }
 
@@ -59,7 +59,7 @@ export class PgConnection implements IMetadated {
    * minPoolSize.
    *
    */
-  private _minPoolSize: number;
+  protected _minPoolSize: number;
 
   get minPoolSize(): number { return this._minPoolSize }
 
@@ -68,7 +68,7 @@ export class PgConnection implements IMetadated {
    * pass.
    *
    */
-  private _pass: string;
+  protected _pass: string;
 
   get pass(): string { return this._pass }
 
@@ -77,7 +77,7 @@ export class PgConnection implements IMetadated {
    * port.
    *
    */
-  private _port: number;
+  protected _port: number;
 
   get port(): number { return this._port }
 
@@ -86,7 +86,7 @@ export class PgConnection implements IMetadated {
    * DB user.
    *
    */
-  private _dbUser: string;
+  protected _dbUser: string;
 
   get dbUser(): string { return this._dbUser }
 
@@ -95,7 +95,7 @@ export class PgConnection implements IMetadated {
    * Name.
    *
    */
-  private _name: string;
+  protected _name: string;
 
   get name(): string { return this._name }
 
@@ -104,7 +104,7 @@ export class PgConnection implements IMetadated {
    * Description.
    *
    */
-  private _description: string;
+  protected _description: string;
 
   get description(): string { return this._description }
 
