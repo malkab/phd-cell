@@ -4,9 +4,11 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
-import { PgConnection } from 'src/core/pgconnection';
+import { PgConnection } from '../core/pgconnection';
 
 import { gridderTaskGet$ } from "./griddertaskfactory";
+
+import { Cell } from "../core/cell";
 
 /**
  *
@@ -188,6 +190,17 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
   //   const cellPg: RxPg = cellPgConnection.open();
 
   //   return
+
+  // }
+
+  /**
+   *
+   * Get the cells covering the area in a given zoom.
+   *
+   */
+  // public getCoveringCells(zoom: number): Cell[] {
+
+
 
   // }
 

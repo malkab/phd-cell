@@ -14,7 +14,7 @@
 # -----------------------------------------------------------------
 
 # Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=common
+MATCH_MLKCONTEXT=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost". Also the
 # host network can be connected using just "host".

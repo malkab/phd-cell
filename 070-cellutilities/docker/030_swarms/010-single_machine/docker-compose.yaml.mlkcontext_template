@@ -1,0 +1,93 @@
+version: '3.5'
+
+networks:
+  sunnsaas_v1:
+    name: sunnsaas_v1
+    external: false
+    attachable: true
+
+volumes:
+  sunnsaas_v1-postgis:
+    name: sunnsaas_v1-postgis
+  sunnsaas_v1-redis:
+    name: sunnsaas_v1-redis
+  sunnsaas_v1-fee:
+    name: sunnsaas_v1-fee
+  sunnsaas_v1-uploads:
+    name: sunnsaas_v1-uploads
+  sunnsaas_v1-logs:
+    name: sunnsaas_v1-logs
+  sunnsaas_v1-logs-workers:
+    name: sunnsaas_v1-logs_workers
+  sunnsaas_v1-temp:
+    name: sunnsaas_v1-temp
+  sunnsaas_v1-fortran:
+    name: sunnsaas_v1-test_fortran
+
+services:
+  postgis:
+    image: registry.gitlab.com/sunnsaas/sunnsaas_v1/pg:latest
+
+    environment:
+      - PASSWORD={{{MLKC_SUNNSAAS_DB_PASSWORD}}}
+
+    networks:
+      - sunnsaas_v1
+
+    ports:
+      - "5850:5432"
+
+    volumes:
+      - sunnsaas_v1-postgis:/data
+
+  redis:
+    image: registry.gitlab.com/sunnsaas/sunnsaas_v1/redis:latest
+
+    networks:
+      - sunnsaas_v1
+
+    ports:
+      - "6800:6379"
+
+    volumes:
+      - sunnsaas_v1-redis:/data
+
+  api:
+    image: registry.gitlab.com/sunnsaas/sunnsaas_v1/api:latest
+    depends_on:
+      - postgis
+      - redis
+
+    networks:
+      - sunnsaas_v1
+
+    ports:
+      - "{{{MLKC_SUNNSAAS_API_OUTER_PORT}}}:8080"
+
+    volumes:
+      - sunnsaas_v1-fee:/fee
+      - sunnsaas_v1-uploads:/uploads
+      - sunnsaas_v1-logs:/logs
+      - sunnsaas_v1-temp:/temp
+      - sunnsaas_v1-logs-workers:/worker_logs
+
+    environment:
+      - MLKC_SUNNSAAS_NODE_ENV="production"
+      - MLKC_SUNNSAAS_VERSION={{{MLKC_SUNNSAAS_VERSION}}}
+      - MLKC_SUNNSAAS_BUILD={{{MLKC_SUNNSAAS_BUILD}}}
+      - MLKC_SUNNSAAS_NODE_MEMORY={{{MLKC_SUNNSAAS_NODE_MEMORY}}}
+      - MLKC_SUNNSAAS_DB_HOST={{{MLKC_SUNNSAAS_DB_HOST}}}
+      - MLKC_SUNNSAAS_DB_INNER_PORT=5432
+      - MLKC_SUNNSAAS_DB_USER={{{MLKC_SUNNSAAS_DB_USER}}}
+      - MLKC_SUNNSAAS_DB_PASSWORD={{{MLKC_SUNNSAAS_DB_PASSWORD}}}
+      - MLKC_SUNNSAAS_DB_DB={{{MLKC_SUNNSAAS_DB_DB}}}
+      - MLKC_SUNNSAAS_DB_MAXPOOLSIZE={{{MLKC_SUNNSAAS_DB_MAXPOOLSIZE}}}
+      - MLKC_SUNNSAAS_DB_MINPOOLSIZE={{{MLKC_SUNNSAAS_DB_MINPOOLSIZE}}}
+      - MLKC_SUNNSAAS_REDIS_URL={{{MLKC_SUNNSAAS_REDIS_URL}}}
+      - MLKC_SUNNSAAS_REDIS_PASSWORD={{{MLKC_SUNNSAAS_REDIS_PASSWORD}}}
+      - MLKC_SUNNSAAS_JWT_ACCESS_TOKEN_SECRET={{{MLKC_SUNNSAAS_JWT_ACCESS_TOKEN_SECRET}}}
+      - MLKC_SUNNSAAS_JWT_REFRESH_TOKEN_SECRET={{{MLKC_SUNNSAAS_JWT_REFRESH_TOKEN_SECRET}}}
+      - MLKC_SUNNSAAS_JWT_ACCESS_TOKEN_LIFESPAN={{{MLKC_SUNNSAAS_JWT_ACCESS_TOKEN_LIFESPAN}}}
+      - MLKC_SUNNSAAS_JWT_REFRESH_TOKEN_LIFESPAN={{{MLKC_SUNNSAAS_JWT_REFRESH_TOKEN_LIFESPAN}}}
+      - MLKC_SUNNSAAS_SYSTEM_STATUS_INTERVAL={{{MLKC_SUNNSAAS_SYSTEM_STATUS_INTERVAL}}}
+      - MLKC_SUNNSAAS_DELETE_CONFIG_FILE={{{MLKC_SUNNSAAS_DELETE_CONFIG_FILE}}}

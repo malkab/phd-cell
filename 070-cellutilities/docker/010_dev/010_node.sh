@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2020-10-11
+# Version: 2020-11-28
 
 # -----------------------------------------------------------------
 #
@@ -12,7 +12,6 @@
 # Express programs, and also for Angular frontend development.
 #
 # -----------------------------------------------------------------
-
 # Check mlk-context to check. If void, no check will be performed.
 MATCH_MLKCONTEXT=
 # Node image version.
@@ -20,21 +19,21 @@ NODE_VERSION=12.16.3
 # Env mode: production / development.
 NODE_ENV=development
 # Node memory.
-NODE_MEMORY=8GB
+NODE_MEMORY=2GB
 # Null for an interactive shell session, the EXEC is passed to /bin/bash with
 # the -c option. Can be used to run Node scripts with "node whatever" or run npm
-# targets with "npm run whatever".
+# targets with "yarn whatever".
 EXEC=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost".
-NETWORK=host
+NETWORK=
 # Jupyter mode: runs a Jupyter server with Javascript support if a version with
 # this capability is used. Jupyter exports automatically the 8888 port.
 JUPYTER=false
 # Container name.
-CONTAINER_NAME=cell-libcellbackend_dev
+CONTAINER_NAME=cell-utilities-node-dev
 # Container host name. Incompatible with NETWORK=container:XXX.
-CONTAINER_HOST_NAME=cell-libcellbackend_dev
+CONTAINER_HOST_NAME=cell-utilities-node-dev
 # A set of volumes in the form ("source:destination" "source:destination"). Most
 # of the times the src folder of the Node source code base is replicated inside
 # the container with the same path so build systems works as expected (see
@@ -57,7 +56,7 @@ PORTS=()
 # Custom entrypoint.
 ENTRYPOINT=/bin/bash
 # Custom workdir.
-WORKDIR=$(pwd)/../node/
+WORKDIR=$(pwd)/../../node/
 # Use display for X11 host server?
 X11=false
 
@@ -67,18 +66,23 @@ X11=false
 
 # ---
 
-echo -------------
-echo WORKING AT $(mlkcontext)
-echo -------------
+# Check mlkcontext is present at the system
+if command -v mlkcontext &> /dev/null
+then
 
-# Check mlkcontext
-if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
+  echo -------------
+  echo WORKING AT $(mlkcontext)
+  echo -------------
 
-  if [ ! "$(mlkcontext)" = "$MATCH_MLKCONTEXT" ] ; then
+  # Check mlkcontext
+  if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
 
-    echo Please initialise context $MATCH_MLKCONTEXT
+    if [ ! "$(mlkcontext)" = "$MATCH_MLKCONTEXT" ] ; then
 
-    exit 1
+      echo Please initialise context $MATCH_MLKCONTEXT
+      exit 1
+
+    fi
 
   fi
 
@@ -173,10 +177,6 @@ fi
 eval  $DOCKER_COMMAND \
         -e "NODE_ENV=${NODE_ENV}" \
         -e "NODE_MEMORY=${NODE_MEMORY}" \
-        -e "MLKC_CELL_DB_HOST=${MLKC_SYSTEM_37NORTH_HOST}" \
-        -e "MLKC_CELL_DB_USER=${MLKC_SYSTEM_37NORTH_PG_USER}" \
-        -e "MLKC_CELL_DB_PORT=${MLKC_SYSTEM_37NORTH_PG_PORT}" \
-        -e "MLKC_CELL_DB_PASS=${MLKC_SYSTEM_37NORTH_PG_PASS}" \
         $NETWORK \
         $CONTAINER_NAME \
         $CONTAINER_HOST_NAME \

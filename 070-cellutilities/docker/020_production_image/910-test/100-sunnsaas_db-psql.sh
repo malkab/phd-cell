@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2020-09-29
+# Version 2020-10-13
 
 # -----------------------------------------------------------------
 #
@@ -14,42 +14,42 @@
 # -----------------------------------------------------------------
 
 # Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=
-# The network to connect to. Remember that when attaching to the network
-# of an existing container (using container:name) the HOST is
-# "localhost"
-NETWORK=$MLKC_CELL_NETWORK
-# These two options are mutually excluyent. Use null at both for
-# an interactive psql session. In case of passing a script, files
-# must exist at a mounted volume at the VOLUMES section.
+MATCH_MLKCONTEXT=production_image
+# The network to connect to. Remember that when attaching to the network of an
+# existing container (using container:name) the HOST is "localhost". Also the
+# host network can be connected using just "host".
+NETWORK=sunnsaas_v1_production_test
+# These two options are mutually excluyent. Use null at both for an interactive
+# psql session. In case of passing a script, files must exist at a mounted
+# volume at the VOLUMES section.
 SCRIPT=
 COMMAND=
 # Container name
-CONTAINER_NAME=pg_sql_cell_db
+CONTAINER_NAME=production_image_test_psql
 # Container host name
-CONTAINER_HOST_NAME=pg_sql_cell_db
+CONTAINER_HOST_NAME=production_image_test_psql
 # Work dir
-WORKDIR=$(pwd)/../../010-cell-db/src
+WORKDIR=$(pwd)
 # The version of Docker PG image to use
 POSTGIS_DOCKER_TAG=gargantuan_giraffe
 # The host
-HOST=$MLKC_CELL_DB_HOST
+HOST=postgis
 # The port
-PORT=$MLKC_CELL_DB_PORT
+PORT=5432
 # The user
-USER=$MLKC_CELL_DB_USER
+USER=postgres
 # The pass
-PASS=$MLKC_CELL_DB_PASSWORD
+PASS=$MLKC_SUNNSAAS_DB_PASSWORD
 # The DB
 DB=postgres
-# Declare volumes, a line per volume, complete in source:destination
-# form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
+# Declare volumes, a line per volume, complete in source:destination form. No
+# strings needed, $(pwd)/../data/:/ext_src/ works perfectly
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
 )
-# Output to files. This will run the script silently and
-# output results and errors to out.txt and error.txt. Use only
-# if running a script or command (-f -c SCRIPT parameter).
+# Output to files. This will run the script silently and output results and
+# errors to out.txt and error.txt. Use only if running a script or command (-f
+# -c SCRIPT parameter).
 OUTPUT_FILES=false
 
 

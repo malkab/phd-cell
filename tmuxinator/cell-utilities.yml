@@ -1,0 +1,8 @@
+name: cell-utilities
+root: /home/git/malkab-phd/cell
+
+windows:
+  - node: >
+      clear ;
+      sleep 0.5 ;
+      cd 070-cellutilities/docker/010_dev
