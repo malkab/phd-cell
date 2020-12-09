@@ -14,7 +14,7 @@
 # -----------------------------------------------------------------
 
 # Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=common
+MATCH_MLKCONTEXT=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost". Also the
 # host network can be connected using just "host".
@@ -33,13 +33,13 @@ WORKDIR=$(pwd)
 # The version of Docker PG image to use
 POSTGIS_DOCKER_TAG=gargantuan_giraffe
 # The host
-HOST=$MLKC_CELL_DB_HOST
+HOST=$MLKC_CELL_RAW_DATA_DB_HOST
 # The port
-PORT=$MLKC_CELL_DB_PORT
+PORT=$MLKC_CELL_RAW_DATA_DB_PORT
 # The user
-USER=$MLKC_CELL_DB_USER
+USER=$MLKC_CELL_RAW_DATA_DB_USER
 # The pass
-PASS=$MLKC_CELL_DB_PASSWORD
+PASS=$MLKC_CELL_RAW_DATA_DB_PASSWORD
 # The DB
 DB=postgres
 # Declare volumes, a line per volume, complete in source:destination form. No

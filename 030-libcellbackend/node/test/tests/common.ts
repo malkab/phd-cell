@@ -48,26 +48,26 @@ export const cellRawData: PgConnection = new PgConnection({
 
 export const cellRawDataConn: RxPg = cellRawData.open();
 
-/**
- *
- * PgConnection to kepler, external.
- *
- */
-export const cellRawDataExternal: PgConnection = new PgConnection({
-  pgConnectionId: "cellRawDataConn",
-  applicationName: "libcellbackend_quick_test",
-  db: "cell_raw_data",
-  host: "XXX",
-  maxPoolSize: 200,
-  minPoolSize: 50,
-  pass: "XXX",
-  port: 5432,
-  dbUser: "postgres",
-  description: "Connection to Cell Raw Data database to consume original data vectors.",
-  name: "Cell Raw Data"
-});
+// /**
+//  *
+//  * PgConnection to kepler, external.
+//  *
+//  */
+// export const cellRawData: PgConnection = new PgConnection({
+//   pgConnectionId: "cellRawDataConn",
+//   applicationName: "libcellbackend_quick_test",
+//   db: "cell_raw_data",
+//   host: "XXX",
+//   maxPoolSize: 200,
+//   minPoolSize: 50,
+//   pass: "XXX",
+//   port: 5432,
+//   dbUser: "postgres",
+//   description: "Connection to Cell Raw Data database to consume original data vectors.",
+//   name: "Cell Raw Data"
+// });
 
-export const cellRawDataExternalConn: RxPg = cellRawDataExternal.open();
+// export const cellRawDataConn: RxPg = cellRawData.open();
 
 /**
  *

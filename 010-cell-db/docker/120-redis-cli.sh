@@ -16,15 +16,14 @@
 MATCH_MLKCONTEXT=common
 # The version of Redis to run.
 REDIS_VERSION=5.0
-# Network to connect to. Remember that when attaching to the network
-# of an existing container (using container:name) the HOST is
-# "localhost". Keep in mind that linking to a container and using the -p
-# option for debugging results in a conflict. Use an external network if
-# both features are needed.
+# Network to connect to. Remember that when attaching to the network of an
+# existing container (using container:name) the HOST is "localhost". Keep in
+# mind that linking to a container and using the -p option for debugging results
+# in a conflict. Use an external network if both features are needed.
 NETWORK=$MLKC_CELL_NETWORK
-# Redis host - REMEMBER: here do not use the redis:// protocol, use
-# directly the host name. And if container: was used as network,
-# remember that the host will be localhost.
+# Redis host - REMEMBER: here do not use the redis:// protocol, use directly the
+# host name. And if container: was used as network, remember that the host will
+# be localhost.
 HOST=$MLKC_CELL_REDIS_URL
 # Redis port.
 PORT=6379

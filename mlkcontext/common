@@ -55,9 +55,9 @@ export MLKC_CELL_PG_MAX_PARALLEL_WORKERS=8
 export MLKC_CELL_PG_MAX_PARALLEL_MAINTENANCE_WORKERS=4
 
 # -----
-# PG persistence config
+# PG persistence config, some items at mlkcontext/system
 # -----
-export MLKC_CELL_DB_PASSWORD=postgres
+export MLKC_CELL_DB_PASSWORD=$MLKC_CELL_DB_PASS
 export MLKC_CELL_DB_HOST=cell-postgis
 export MLKC_CELL_DB_USER=postgres
 export MLKC_CELL_DB_PORT=5432
@@ -67,8 +67,10 @@ export MLKC_CELL_DB_MINPOOLSIZE=5
 export MLKC_CELL_DB_IDLETIMEOUTMILLIS=60000
 
 # -----
-# Redis persistence config
+# Redis persistence config, some items at mlkcontext/system
 # -----
+# Remember that for RxRedis clients this must be used as redis://whatever, but
+# not here
 export MLKC_CELL_REDIS_URL=cell-redis
-export MLKC_CELL_REDIS_PASSWORD=redis
+export MLKC_CELL_REDIS_PASSWORD=$MLKC_CELL_REDIS_PASS
 export MLKC_CELL_REDIS_OUTER_PORT=6700

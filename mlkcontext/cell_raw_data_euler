@@ -18,7 +18,7 @@ export MLKC_CELL_NETWORK=cell_raw_data
 # -----
 # Persistence config
 # -----
-export MLKC_CELL_DB_PASSWORD=postgres
-export MLKC_CELL_DB_HOST=cell_raw_data
-export MLKC_CELL_DB_USER=postgres
-export MLKC_CELL_DB_PORT=5432
+export MLKC_CELL_RAW_DATA_DB_PASSWORD=postgres
+export MLKC_CELL_RAW_DATA_DB_HOST=cell_raw_data
+export MLKC_CELL_RAW_DATA_DB_USER=postgres
+export MLKC_CELL_RAW_DATA_DB_PORT=5432
