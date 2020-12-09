@@ -4,9 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { GridderTasks as gt, PgConnection, GridBackend } from "../../src/index";
+import { GridderTasks as gt, PgConnection, Grid } from "../../src/index";
 
-import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataExternal, cellRawDataConn, gridBackend, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
+import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataExternal, cellRawDataConn, eugrid, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
 
 import * as rx from "rxjs";
 
@@ -23,7 +23,7 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
+    observables: [ clearDatabase$ ],
 
     assertions: [ (o: boolean) => expect(o).to.be.true ]
 
@@ -42,9 +42,9 @@ describe("GridBackend pgInsert$", function() {
 
     testCaseName: "GridBackend pgInsert$",
 
-    observable: gridBackend.pgInsert$(cellPgConn),
+    observables: [ eugrid.pgInsert$(cellPgConn) ],
 
-    assertions: [ (o: GridBackend) => expect(o.name).to.be.equal("eu-grid") ],
+    assertions: [ (o: Grid) => expect(o.name).to.be.equal("eu-grid") ],
 
     verbose: false
 
@@ -68,10 +68,10 @@ describe("Create PgConnections", function() {
 
     testCaseName: "Create PgConnection",
 
-    observable: rx.zip(
+    observables: [ rx.zip(
       cellRawData.pgInsert$(cellPgConn),
       cellPg.pgInsert$(cellPgConn)
-    ),
+    ) ],
 
     assertions: [
       (o: PgConnection[]) => expect(o.map((o: PgConnection) => o.name))
@@ -94,11 +94,11 @@ describe("DiscretePolyTopAreaGridderTaskBackend pgInsert$", function() {
 
     testCaseName: "DiscretePolyTopAreaGridderTaskBackend pgInsert$",
 
-    observable: municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn),
+    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTaskBackend) => expect(o.name).to.be.equal("Municipio máxima área")
+      (o: gt.DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
 
     ],
 
@@ -119,7 +119,7 @@ describe("gridderJobHuelva pgInsert$", function() {
 
     testCaseName: "gridderJobHuelva pgInsert$",
 
-    observable: gridderJobHuelva.pgInsert$(cellPgConn),
+    observables: [ gridderJobHuelva.pgInsert$(cellPgConn) ],
 
     assertions: [
 
@@ -144,13 +144,17 @@ describe("gridderJobHuelva get and area retrieval", function() {
 
     testCaseName: "gridderJobHuelva get and area retrieval",
 
-    observable: gt.GridderJob.get$(cellPgConn, "gridderJobHuelva")
+    observables: [
+
+      gt.GridderJob.get$(cellPgConn, "gridderJobHuelva")
       .pipe(
 
         rxo.concatMap((o: gt.GridderJob) =>
-          o.getArea$(cellRawDataExternal, cellPg))
+          o.getArea$(cellRawData, cellPg))
 
-      ),
+      )
+
+    ],
 
     assertions: [
 

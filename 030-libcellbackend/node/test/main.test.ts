@@ -33,14 +33,10 @@ describe("libcellbackend", () => {
   describe("\n\n  --- cell.test ---\n",
     () => require("./tests/cell.test"));
 
-  describe.only("\n\n  --- discretepolytopareagridder.test ---\n",
+  describe("\n\n  --- discretepolytopareagridder.test ---\n",
     () => require("./tests/discretepolytopareagridder.test"));
 
-  // describe("\n\n  --- gridderjob.test ---\n",
-  //   () => require("./tests/gridderjob.test"));
-
-  // describe("\n\n  --- griddercell.test ---\n",
-  //   () => require("./tests/griddercell.test"));
-
+  describe("\n\n  --- gridderjob.test ---\n",
+    () => require("./tests/gridderjob.test"));
 
 });

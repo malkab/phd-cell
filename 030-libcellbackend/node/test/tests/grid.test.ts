@@ -4,9 +4,9 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { GridBackend } from "../../src/index";
+import { Grid } from "../../src/index";
 
-import { gridBackend, clearDatabase$, cellPgConn } from "./common";
+import { eugrid, clearDatabase$, cellPgConn } from "./common";
 
 /**
  *
@@ -60,10 +60,10 @@ describe("GridBackend pgInsert$", function() {
 
     testCaseName: "GridBackend pgInsert$",
 
-    observables: [ gridBackend.pgInsert$(cellPgConn) ],
+    observables: [ eugrid.pgInsert$(cellPgConn) ],
 
     assertions: [
-      (o: GridBackend) => expect(o.name).to.be.equal("eu-grid") ],
+      (o: Grid) => expect(o.name).to.be.equal("eu-grid") ],
 
     verbose: false
 

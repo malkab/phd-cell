@@ -32,7 +32,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   private _gridderJobId: string;
-
   get gridderJobId(): string { return this._gridderJobId }
 
   /**
@@ -41,7 +40,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   private _gridderTaskId: string;
-
   get gridderTaskId(): string { return this._gridderTaskId }
 
   /**
@@ -50,7 +48,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   private _maxZoomLevel: number;
-
   get maxZoomLevel(): number { return this._maxZoomLevel }
 
   /**
@@ -59,7 +56,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   private _minZoomLevel: number;
-
   get minZoomLevel(): number { return this._minZoomLevel }
 
   /**
@@ -68,7 +64,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   private _sqlAreaRetrieval: string;
-
   get sqlAreaRetrieval(): any { return this._sqlAreaRetrieval }
 
   /**
@@ -77,7 +72,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   private _area: any;
-
   get area(): any { return this._area }
 
   /**

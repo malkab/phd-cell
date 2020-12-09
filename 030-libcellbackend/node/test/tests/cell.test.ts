@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { Grid, Cell } from "../../src/index";
 
-import { gridBackend, clearDatabase$, cellPgConn, cells, testCell_0_2_3 } from "./common";
+import { eugrid, clearDatabase$, cellPgConn, cells, testCell_0_2_3 } from "./common";
 
 import * as rx from "rxjs";
 
@@ -66,7 +66,7 @@ describe("CellBackend pgInsert$", function() {
 
     observables: [ rx.concat(
 
-      gridBackend.pgInsert$(cellPgConn),
+      eugrid.pgInsert$(cellPgConn),
 
       rx.zip(...cells.map((o: Cell) => o.pgInsert$(cellPgConn)))
 
@@ -103,7 +103,7 @@ describe("Get child cells and pgInsert$ them", function() {
 
     testCaseName: "Get child cells and pgInsert$ them",
 
-    observables: [ rx.of(testCell_0_2_3.getSubCellBackends(2))
+    observables: [ rx.of(testCell_0_2_3.getSubCells(2))
       .pipe(
 
         rxo.concatMap((o: Cell[]) => {

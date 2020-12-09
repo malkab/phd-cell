@@ -1,0 +1,82 @@
+{
+  "name": "@malkab/cellapi",
+  "version": "1.0.0",
+  "description": "Cell platform API",
+  "scope": "@malkab",
+  "author": {
+    "name": "Juan Pedro Perez Alcantara",
+    "email": "jp.perez.alcantara@gmail.com",
+    "url": "http://me.com"
+  },
+  "main": "dist/main.js",
+  "types": "dist/lib/index.d.ts",
+  "keywords": [
+    "cell",
+    "api"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/owner/project#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/malkab/code-samples.git"
+  },
+  "private": false,
+  "scripts": {
+    "package-json-version": "echo 2020-10-22",
+    "clean": "rm -Rf build ; rm -Rf dist",
+    "quick-test": "npm-run-all --parallel service:watch:quick-test:server service:build",
+    "start": "npm-run-all --parallel service:watch:main:server service:build",
+    "mocha": "npm-run-all --parallel service:watch:mocha:server service:build",
+    "build-with-docs": "yarn clean ; yarn service:build-lib ; yarn build-docs ; rm -Rf docs ; cp -R typedoc/build/html docs",
+    "build-docs": "cd typedoc ; ./html ; cd ..",
+    "service:build-lib": "webpack --config webpack-production.config.js --progress",
+    "service:build": "webpack --progress --watch",
+    "service:watch:quick-test:server": "nodemon --inspect=0.0.0.0:9329 \"./build/quicktest.js\" --watch \"./build/quicktest.js\"",
+    "service:watch:mocha:server": "nodemon --ext js --watch ./build/ --exec 'mocha --timeout 20000 ./build/mocha.js || true'",
+    "service:watch:main:server": "nodemon --inspect=0.0.0.0:9229 \"./build/main.js\" --watch \"./build/main.js\""
+  },
+  "engines": {
+    "node": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/body-parser": "^1.17.1",
+    "@types/chai": "^4.1.7",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.1",
+    "@types/lodash": "^4.14.165",
+    "@types/mocha": "^7.0.0",
+    "@types/morgan": "^1.7.37",
+    "@types/node": "^14.0.0",
+    "axios": "^0.21.0",
+    "chai": "^4.2.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "mocha": "^7.0.0",
+    "nodemon": "^2.0.0",
+    "npm-run-all": "^4.1.5",
+    "terser": "^5.0.0",
+    "terser-webpack-plugin": "^4.0.0",
+    "ts-loader": "^8.0.0",
+    "tslint": "^6.0.0",
+    "typedoc": "^0.19.0",
+    "typescript": "^4.0.0",
+    "webpack": "^4.0.0",
+    "webpack-cli": "^4.0.0",
+    "webpack-filter-warnings-plugin": "^1.2.1",
+    "webpack-node-externals": "^2.0.0"
+  },
+  "dependencies": {
+    "@malkab/appian": "^3.7.10",
+    "@malkab/node-logger": "^1.1.4",
+    "@malkab/node-utils": "^1.5.19",
+    "@malkab/rxpg": "^4.1.23",
+    "@malkab/rxredis": "^2.3.9",
+    "@malkab/ts-utils": "^4.1.13",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "http": "^0.0.1-security",
+    "lodash": "^4.17.20",
+    "morgan": "^1.9.1",
+    "winston": "^3.2.1"
+  }
+}

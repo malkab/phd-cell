@@ -154,8 +154,6 @@ export class GridderCell implements PgOrm.IPgOrm<GridderCell> {
 
       rxo.concatMap((o: GridderCell) => {
 
-        console.log("D: kkkee", o);
-
         return rx.of(o);
 
       })

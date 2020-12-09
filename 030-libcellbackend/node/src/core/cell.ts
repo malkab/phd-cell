@@ -102,7 +102,7 @@ export class Cell extends CellL implements PgOrm.IPgOrm<Cell> {
    * Get subcells as .
    *
    */
-  public getSubCellBackends(zoom: number): Cell[] {
+  public getSubCells(zoom: number): Cell[] {
 
     const cells: CellL[] = super.getSubCells(zoom);
 

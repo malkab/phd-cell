@@ -28,6 +28,12 @@ export MLKC_CELL_SSH_HOST=
 export MLKC_CELL_SSH_USER=
 
 # -----
+# Node params
+# -----
+export NODE_MEMORY=4GB
+export MLKC_CELL_NODE_ENV=development
+
+# -----
 # PG Config for 64GB RAM, 8 CPU, SSD
 # This is for PG configuration file, not for the pool
 # -----
@@ -49,12 +55,20 @@ export MLKC_CELL_PG_MAX_PARALLEL_WORKERS=8
 export MLKC_CELL_PG_MAX_PARALLEL_MAINTENANCE_WORKERS=4
 
 # -----
-# Persistence config
+# PG persistence config
 # -----
-export MLKC_CELL_REDIS_PASSWORD=redis
-export MLKC_CELL_REDIS_OUTER_PORT=6700
 export MLKC_CELL_DB_PASSWORD=postgres
 export MLKC_CELL_DB_HOST=cell-postgis
 export MLKC_CELL_DB_USER=postgres
 export MLKC_CELL_DB_PORT=5432
 export MLKC_CELL_DB_OUTER_PORT=5600
+export MLKC_CELL_DB_MAXPOOLSIZE=100
+export MLKC_CELL_DB_MINPOOLSIZE=5
+export MLKC_CELL_DB_IDLETIMEOUTMILLIS=60000
+
+# -----
+# Redis persistence config
+# -----
+export MLKC_CELL_REDIS_URL=cell-redis
+export MLKC_CELL_REDIS_PASSWORD=redis
+export MLKC_CELL_REDIS_OUTER_PORT=6700

@@ -6,8 +6,6 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
-import { uniq, isEqual } from "lodash";
-
 /**
  *
  * PG connection to the cellPg.
@@ -152,7 +150,7 @@ export const catalog: Catalog = new Catalog({
  * Grid.
  *
  */
-export const gridBackend: Grid = new Grid({
+export const eugrid: Grid = new Grid({
   description: "A grid based on the official EU one",
   gridId: "eu-grid",
   name: "eu-grid",
@@ -160,16 +158,16 @@ export const gridBackend: Grid = new Grid({
   originX: 2700000,
   originY: 1500000,
   zoomLevels: [
-    {"name": "100 km", "size": 100000},
-    {"name": "50 km", "size": 50000},
-    {"name": "10 km", "size": 10000},
-    {"name": "5 km", "size": 5000},
-    {"name": "1 km", "size": 1000},
-    {"name": "500 m", "size": 500},
-    {"name": "250 m", "size": 250},
-    {"name": "125 m", "size": 125},
-    {"name": "25 m", "size": 25},
-    {"name": "5 m", "size": 5}
+    {"name": "100 km", "size": 100000}, // 0
+    {"name": "50 km", "size": 50000},   // 1
+    {"name": "10 km", "size": 10000},   // 2
+    {"name": "5 km", "size": 5000},     // 3
+    {"name": "1 km", "size": 1000},     // 4
+    {"name": "500 m", "size": 500},     // 5
+    {"name": "250 m", "size": 250},     // 6
+    {"name": "125 m", "size": 125},     // 7
+    {"name": "25 m", "size": 25},       // 8
+    {"name": "5 m", "size": 5}          // 9
   ]
 })
 
@@ -192,7 +190,7 @@ for (let z = 0; z<1; z++) {
         x: x,
         y: y,
         zoom: z,
-        grid: gridBackend
+        grid: eugrid
       }))
 
     }
@@ -207,7 +205,7 @@ export const testCell_0_2_2: Cell = new Cell({
   zoom: 0,
   x: 2,
   y: 2,
-  grid: gridBackend
+  grid: eugrid
 })
 
 export const testCell_0_2_3: Cell = new Cell({
@@ -216,7 +214,7 @@ export const testCell_0_2_3: Cell = new Cell({
   zoom: 0,
   x: 2,
   y: 3,
-  grid: gridBackend
+  grid: eugrid
 })
 
 export const testCell_0_3_2: Cell = new Cell({
@@ -225,7 +223,7 @@ export const testCell_0_3_2: Cell = new Cell({
   zoom: 0,
   x: 3,
   y: 2,
-  grid: gridBackend
+  grid: eugrid
 })
 
 export const testCell_0_2_1: Cell = new Cell({
@@ -234,7 +232,7 @@ export const testCell_0_2_1: Cell = new Cell({
   zoom: 0,
   x: 2,
   y: 1,
-  grid: gridBackend
+  grid: eugrid
 })
 
 export const testCell_0_3_1: Cell = new Cell({
@@ -243,7 +241,7 @@ export const testCell_0_3_1: Cell = new Cell({
   zoom: 0,
   x: 3,
   y: 1,
-  grid: gridBackend
+  grid: eugrid
 })
 
 // This is a full coverage for municipios with a single municipio
@@ -253,7 +251,7 @@ export const testCell_2_27_32: Cell = new Cell({
   zoom: 2,
   x: 27,
   y: 32,
-  grid: gridBackend
+  grid: eugrid
 })
 
 // This is a partial coverage for municipios
@@ -263,7 +261,7 @@ export const testCell_2_24_31: Cell = new Cell({
   zoom: 2,
   x: 24,
   y: 31,
-  grid: gridBackend
+  grid: eugrid
 })
 
 // This is a full coverage with several municipios
@@ -273,7 +271,7 @@ export const testCell_2_28_30: Cell = new Cell({
   zoom: 2,
   x: 28,
   y: 30,
-  grid: gridBackend
+  grid: eugrid
 })
 
 // No coverage of municipios at all
@@ -283,7 +281,27 @@ export const testCell_2_25_32: Cell = new Cell({
   zoom: 2,
   x: 25,
   y: 32,
-  grid: gridBackend
+  grid: eugrid
+})
+
+// Full coverage of a municipio, level 3
+export const testCell_3_54_65: Cell = new Cell({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 3,
+  x: 54,
+  y: 65,
+  grid: eugrid
+})
+
+// Full coverage of a municipio, level 4 (1000 m)
+export const testCell_4_270_329: Cell = new Cell({
+  epsg: "3035",
+  gridId: "eu-grid",
+  zoom: 4,
+  x: 270,
+  y: 329,
+  grid: eugrid
 })
 
 /**

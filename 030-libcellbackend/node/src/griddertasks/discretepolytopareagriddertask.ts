@@ -102,23 +102,27 @@ export class DiscretePolyTopAreaGridderTask extends GT.DiscretePolyTopAreaGridde
    * next level on. Min zoom is the lowest zoom level to reach.
    *
    */
-  public computeCell$(sourcePg: RxPg, cellPg: RxPg, cell: Cell, minZoom: number):
-  rx.Observable<any> { //CellBackend[]> {
-
-    // To store the analysis result row
-    let resultRow: any;
-
-    // To store the templated category value
-    let category: string;
+  public computeCell$(sourcePg: RxPg, cellPg: RxPg, cell: Cell, targetZoom: number):
+  rx.Observable<Cell[]> {
 
     // Flag that the category got 100% of coverage
     let fullCoverage: boolean = false;
+
+    // A flag for void cell
+    let voidCell: boolean = false;
 
     // To store the variable
     let variable: Variable;
 
     // To store the catalog
     let catalog: Catalog;
+
+    // This is an array to get all cell-setting SQL, there can be more than one
+    // in cases of full coverage
+    let sqlSubcells: string[] = [];
+
+    // To hold the key in the catalog in case there are full coverage subcells
+    let key: string | undefined;
 
     // Get the variable and the catalog from the DB
     return Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)
@@ -140,115 +144,123 @@ export class DiscretePolyTopAreaGridderTask extends GT.DiscretePolyTopAreaGridde
 
         // Analysis SQL: returns the percentage of the area of the cell covered
         // by each category
-        let sql: string = `
-          with a as (
-            select
-              ${this.discreteFields.join(",")},
-              ${this.geomField} as geom,
-              st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}')) as geom_inter,
-              st_area(st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))) as a
-            from ${this.sourceTable}
-            where st_intersects(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))
+        const sql: string = `
+        with a as (
+          select
+          ${this.discreteFields.join(",")},
+          ${this.geomField} as geom,
+          st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}')) as geom_inter,
+          st_area(st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))) as a
+          from ${this.sourceTable}
+          where st_intersects(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))
           )
           select
-            ${this.discreteFields.join(",")},
-            sum(a)::float / st_area(st_geomfromewkt('${cell.ewkt}')) as a
+          ${this.discreteFields.join(",")},
+          sum(a)::float / st_area(st_geomfromewkt('${cell.ewkt}')) as a
           from a
           group by ${this.discreteFields.join(",")}
           order by a desc;`;
 
-        return sourcePg.executeParamQuery$(sql)
+          return sourcePg.executeParamQuery$(sql);
+
+        }),
+
+        rxo.concatMap((o: QueryResult) => {
+
+          // Check for results (void cell)
+          if (o.rows.length > 0) {
+
+            // Check for full coverage
+            if (o.rows[0].a === 1) fullCoverage = true;
+
+            // Get key from the catalog
+            key = catalog.backward
+            .get(processTemplate(this.categoryTemplate, o.rows[0]));
+
+            let sql: string = `select cell__setcell((
+              '${cell.gridId}', ${cell.epsg}, ${cell.zoom}, ${cell.x},
+              ${cell.y}, '{ "${variable.key}": "${key}" }'::jsonb)::cell__cell
+              );`;
+
+            // Insert cell
+            return cellPg.executeParamQuery$(sql);
+
+          } else {
+
+            // Signal void cell
+            voidCell = true;
+            return rx.of(undefined);
+
+          }
+
+        }),
+
+        // Evaluate full coverage
+        rxo.concatMap((o: any) => {
+
+          // Check full coverage and that the process is still above the target
+          // zoom
+          if (fullCoverage && cell.zoom < targetZoom) {
+
+            // Get child cells for the current cell
+            let childCells: Cell[] = cell.getSubCells(cell.zoom+1);
+
+            // Iterate though available cells
+            while (childCells.length > 0) {
+
+              const c: Cell | undefined = childCells.shift();
+
+              if (c) {
+
+                sqlSubcells.push(`select cell__setcell((
+                  '${c.gridId}', ${c.epsg}, ${c.zoom}, ${c.x},
+                  ${c.y}, '{ "${variable.key}": "${key}" }'::jsonb)::cell__cell
+                  );`);
+
+                // Add more subcells
+                if (c.zoom < targetZoom) {
+
+                  childCells = childCells.concat(c.getSubCells(c.zoom+1));
+
+                }
+
+              }
+
+            }
+
+          }
+
+          // Write all drilled down cells, if any
+          if (sqlSubcells.length > 0) {
+
+            return rx.zip(
+              ...sqlSubcells.map((sql: string) => cellPg.executeParamQuery$(sql))
+            );
+
+          } else {
+
+            return rx.of([]);
+
+          }
 
       }),
 
-      rxo.concatMap((o: QueryResult) => {
+      // Return the child cells, if needed, if not fullCoverage
+      rxo.map((o: any) => {
 
-        console.log("D: jej33", o.rows)
+        if(!fullCoverage && cell.zoom < targetZoom && !voidCell) {
 
-        // Check for full coverage
-        if (o.rows[0].a === 1) fullCoverage = true;
+          return cell.getSubCells(cell.zoom+1);
 
-        console.log("D: 32kkk ", fullCoverage);
+        } else {
 
-        // Get key from the catalog
-        const key: string | undefined =
-          catalog.backward.get(processTemplate(this.categoryTemplate, o.rows[0]));
+          return []
 
-        let sql: string = `select cell__setcell((
-          '${cell.gridId}', ${cell.epsg}, ${cell.zoom}, ${cell.x},
-          ${cell.y}, '{ "${variable.key}": "${key}" }'::jsonb)::cell__cell
-          );`;
+        }
 
-        // console.log("D: 33342", sql);
-
-        // Insert cell
-        return cellPg.executeParamQuery$(sql);
-
-      }),
-
-      rxo.map((o: any) => 3) // console.log("D: 3333", o))
-
-
+      })
 
     )
-
-    //       rxo.concatMap((o: CatalogBackend) => {
-
-
-
-    //         // Check fullCoverage and not yet at the lowest zoom level
-    //         if (fullCoverage && cell.zoom < minZoom) {
-
-    //           // An array for storing child cells
-    //           let childCells: CellBackend[] =
-    //             cell.getSubCellBackends(cell.zoom+1);
-
-    //           while (childCells.length > 0) {
-
-    //             const c: CellBackend | undefined = childCells.shift();
-
-    //             if (c) {
-
-    //               sql = `${sql}select cell__setcell((
-    //                 '${c.gridId}', ${c.epsg}, ${c.zoom}, ${c.x},
-    //                 ${c.y}, '{ "${variable.key}": "${o.backward.get(category)}" }'::jsonb)::cell__cell
-    //               );`;
-
-    //               if (c.zoom < minZoom) {
-
-    //                 childCells = childCells.concat(c.getSubCellBackends(c.zoom+1));
-
-    //               }
-
-    //             }
-
-    //           }
-
-    //         }
-
-
-
-    //       }),
-
-    //       rxo.map((o: any) => {
-
-    //         if (cell.zoom < minZoom && !fullCoverage) {
-
-    //           return cell.getSubCellBackends(cell.zoom+1)
-
-    //         } else {
-
-    //           return [];
-
-    //         }
-
-    //       })
-
-    //     )
-
-    //   })
-
-    // )
 
   }
 

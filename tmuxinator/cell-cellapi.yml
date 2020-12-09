@@ -1,0 +1,10 @@
+name: cell-cellapi
+root: /home/git/malkab-phd/cell
+
+windows:
+  - node: >
+      clear ;
+      sleep 2 ;
+      cd 040-cellapi/docker ;
+      . mlkcontext common ;
+      ./010-node-api.sh
