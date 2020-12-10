@@ -97,6 +97,18 @@ export function process(params: any): void {
    */
   const gridderJob: gt.GridderJob = new gt.GridderJob(params.gridderJob);
 
-  console.log("D: jej3", gridderJob);
+  // Insert the grid into the DB
+  grid.pgInsert$()
+
+
+
+  /** */
+
+  /**
+   *
+   * Insert the cells.
+   *
+   */
+  gridderJob.getCoveringCells$()
 
 }
