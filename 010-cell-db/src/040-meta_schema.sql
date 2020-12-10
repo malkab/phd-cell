@@ -89,7 +89,8 @@ cell_meta.variable(gridder_task_id, variable_id);
 /**
 
   GridderJob: the application of GridderTask to an area and between two zoom
-  levels.
+  levels. The area geom column allows for any EPSG because areas here will be
+  transformed to the EPSG of a given grid.
 
 */
 create table cell_meta.gridder_job(
@@ -98,7 +99,7 @@ create table cell_meta.gridder_job(
   max_zoom_level integer,
   min_zoom_level integer,
   sql_area_retrieval text,
-  area geometry(polygon, 4326)
+  area geometry(polygon)
 );
 
 /**

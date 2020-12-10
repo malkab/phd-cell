@@ -39,7 +39,7 @@ PORT=$MLKC_CELL_DB_PORT
 # The user
 USER=$MLKC_CELL_DB_USER
 # The pass
-PASS=$MLKC_CELL_DB_PASSWORD
+PASS=$MLKC_CELL_DB_PASS
 # The DB
 DB=postgres
 # Declare volumes, a line per volume, complete in source:destination

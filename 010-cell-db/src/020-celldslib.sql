@@ -325,7 +325,7 @@ language sql;
 
 /*
 
-    Sets a cell, with optional overwriting of data branches
+    Sets a cell, without overwritting data. New data will be added to the cell.
 
 */
 create or replace function public.cell__setcell(

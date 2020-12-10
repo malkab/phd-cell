@@ -12,6 +12,6 @@ windows:
   - psql-cell: >
       clear ;
       sleep 0.5 ;
-      cd 010-cell-db/docker ;
+      cd 030-libcellbackend/docker ;
       . mlkcontext common ;
-      ./110-pg-psql.sh
+      ./100-pg-psql.sh

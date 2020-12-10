@@ -10,6 +10,8 @@ import { gridderTaskGet$ } from "./griddertaskfactory";
 
 import { Cell } from "../core/cell";
 
+import { Grid } from "../core/grid";
+
 /**
  *
  * This class defines a GridderJob, that is, the application of a GridderTask on
@@ -144,17 +146,21 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
   /**
    *
-   * Get area geometry and store it.
+   * Get area geometry and store it, transforming it to the CRS of the given
+   * grid.
    *
    */
-  public getArea$(areaSourcePgConnection: PgConnection, cellPgConnection: PgConnection):
-  rx.Observable<any> {
+  public getArea$(
+    areaSourcePgConnection: PgConnection,
+    cellPgConnection: PgConnection,
+    grid: Grid
+  ): rx.Observable<any> {
 
     const sourcePg: RxPg = areaSourcePgConnection.open();
     const cellPg: RxPg = cellPgConnection.open();
 
     return sourcePg.executeParamQuery$(
-      `select st_asewkt(st_transform(st_union(geom), 4326)) as area from (${this._sqlAreaRetrieval}) a`)
+      `select st_asewkt(st_transform(st_union(geom), ${grid.epsg})) as area from (${this._sqlAreaRetrieval}) a`)
     .pipe(
 
       rxo.concatMap((o: QueryResult) => {
@@ -195,13 +201,28 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
   /**
    *
-   * Get the cells covering the area in a given zoom.
+   * Inserts the cells covering the area in a given zoom. Returns the number of
+   * cells generated.
    *
    */
-  // public getCoveringCells(zoom: number): Cell[] {
+  public getCoveringCells$(pg: RxPg, grid: Grid, zoom: number): rx.Observable<number> {
 
+    const sql: string = `
+      with a as (
+        select st_transform(area, ${grid.epsg}) as area
+        from cell_meta.gridder_job
+        where gridder_job_id = '${this.gridderJobId}'
+      )
+      select
+        cell__setcell(cell__getcoverage('${grid.gridId}', ${zoom}, area)) as cell
+      from a;`;
 
+    return pg.executeParamQuery$(sql).pipe(
 
-  // }
+      rxo.map((o: any) => o.rowCount)
+
+    )
+
+  }
 
 }

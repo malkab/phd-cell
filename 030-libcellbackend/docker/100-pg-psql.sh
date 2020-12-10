@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2020-11-10
+# Version 2020-09-29
 
 # -----------------------------------------------------------------
 #
@@ -15,19 +15,19 @@
 
 # Check mlkcontext to check. If void, no check will be performed
 MATCH_MLKCONTEXT=
-# The network to connect to. Remember that when attaching to the network of an
-# existing container (using container:name) the HOST is "localhost". Also the
-# host network can be connected using just "host".
+# The network to connect to. Remember that when attaching to the network
+# of an existing container (using container:name) the HOST is
+# "localhost"
 NETWORK=$MLKC_CELL_NETWORK
-# These two options are mutually excluyent. Use null at both for an interactive
-# psql session. In case of passing a script, files must exist at a mounted
-# volume at the VOLUMES section.
+# These two options are mutually excluyent. Use null at both for
+# an interactive psql session. In case of passing a script, files
+# must exist at a mounted volume at the VOLUMES section.
 SCRIPT=
 COMMAND=
 # Container name
-CONTAINER_NAME=cell-psql
+CONTAINER_NAME=libcellbackend-cell-psql
 # Container host name
-CONTAINER_HOST_NAME=cell-psql
+CONTAINER_HOST_NAME=libcellbackend-cell-psql
 # Work dir
 WORKDIR=$(pwd)/../../010-cell-db/src
 # The version of Docker PG image to use
@@ -42,18 +42,18 @@ USER=$MLKC_CELL_DB_USER
 PASS=$MLKC_CELL_DB_PASS
 # The DB
 DB=postgres
-# Declare volumes, a line per volume, complete in source:destination form. No
-# strings needed, $(pwd)/../data/:/ext_src/ works perfectly.
+# Declare volumes, a line per volume, complete in source:destination
+# form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
 )
-# Output to files. This will run the script silently and output results and
-# errors to out.txt and error.txt. Use only if running a script or command (-f
-# -c SCRIPT parameter).
+# Output to files. This will run the script silently and
+# output results and errors to out.txt and error.txt. Use only
+# if running a script or command (-f -c SCRIPT parameter).
 OUTPUT_FILES=false
 
 
-echo kkk33 ${PASS}
+
 
 
 # ---

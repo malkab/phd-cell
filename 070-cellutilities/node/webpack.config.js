@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     mocha: "./test/main.test.ts",
     quicktest: "./test/00_quick_test.ts",
-    main: "./src/main.ts",
+    basegeomgridding: "./src/basegeomgridding.ts",
   },
   mode: "development",
   watch: true,

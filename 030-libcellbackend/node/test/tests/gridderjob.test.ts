@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { GridderTasks as gt, PgConnection, Grid } from "../../src/index";
 
-import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataExternal, cellRawDataConn, eugrid, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
+import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataConn, eugrid, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
 
 import * as rx from "rxjs";
 
@@ -150,7 +150,7 @@ describe("gridderJobHuelva get and area retrieval", function() {
       .pipe(
 
         rxo.concatMap((o: gt.GridderJob) =>
-          o.getArea$(cellRawData, cellPg))
+          o.getArea$(cellRawData, cellPg, eugrid))
 
       )
 
@@ -160,6 +160,42 @@ describe("gridderJobHuelva get and area retrieval", function() {
 
       (o: gt.GridderJob) =>
         expect(o.gridderJobId).to.be.equal("gridderJobHuelva")
+
+    ],
+
+    verbose: true
+
+  })
+
+})
+
+/**
+ *
+ * Get coverage of target area at zoom 1.
+ *
+ */
+describe("Get coverage of target area at zoom 1", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Get coverage of target area at zoom 1",
+
+    observables: [
+
+      gt.GridderJob.get$(cellPgConn, "gridderJobHuelva")
+      .pipe(
+
+        rxo.concatMap((o: gt.GridderJob) =>
+          o.getCoveringCells$(cellPgConn, eugrid, 1))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: gt.GridderJob) =>
+        expect(o).to.be.equal(12)
 
     ],
 

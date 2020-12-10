@@ -8,6 +8,17 @@ import * as rxo from "rxjs/operators";
 
 /**
  *
+ * Configure here the DB connections to the test server.
+ *
+ */
+const pgParams: any = {
+  host: "37north.io",
+  pass: "3j329fjvkd2345-:k342ju",
+  port: 5632
+}
+
+/**
+ *
  * PG connection to the cellPg.
  *
  */
@@ -15,11 +26,11 @@ export const cellPg: PgConnection = new PgConnection({
   pgConnectionId: "cellPg",
   applicationName: "libcellbackend_quick_test",
   db: "cell",
-  host: "localhost",
+  host: pgParams.host,
   maxPoolSize: 200,
   minPoolSize: 200,
-  pass: "postgres",
-  port: 5600,
+  pass: pgParams.pass,
+  port: pgParams.port,
   dbUser: "postgres",
   description: "Cell DB",
   name: "Cell DB"
@@ -29,45 +40,24 @@ export const cellPgConn: RxPg = cellPg.open();
 
 /**
  *
- * PgConnection to kepler, internal.
+ * PgConnection to kepler, external.
  *
  */
 export const cellRawData: PgConnection = new PgConnection({
   pgConnectionId: "cellRawDataConn",
   applicationName: "libcellbackend_quick_test",
   db: "cell_raw_data",
-  host: "localhost",
+  host: pgParams.host,
   maxPoolSize: 200,
   minPoolSize: 50,
-  pass: "postgres",
-  port: 5432,
+  pass: pgParams.pass,
+  port: pgParams.port,
   dbUser: "postgres",
   description: "Connection to Cell Raw Data database to consume original data vectors.",
   name: "Cell Raw Data"
 });
 
 export const cellRawDataConn: RxPg = cellRawData.open();
-
-// /**
-//  *
-//  * PgConnection to kepler, external.
-//  *
-//  */
-// export const cellRawData: PgConnection = new PgConnection({
-//   pgConnectionId: "cellRawDataConn",
-//   applicationName: "libcellbackend_quick_test",
-//   db: "cell_raw_data",
-//   host: "XXX",
-//   maxPoolSize: 200,
-//   minPoolSize: 50,
-//   pass: "XXX",
-//   port: 5432,
-//   dbUser: "postgres",
-//   description: "Connection to Cell Raw Data database to consume original data vectors.",
-//   name: "Cell Raw Data"
-// });
-
-// export const cellRawDataConn: RxPg = cellRawData.open();
 
 /**
  *

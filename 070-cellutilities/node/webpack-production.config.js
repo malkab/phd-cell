@@ -8,8 +8,7 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 module.exports = {
   entry: {
-    scriptA: './src/scriptA.ts',
-    scriptB: './src/scriptB.ts'
+    basegeomgridding: './src/basegeomgridding.ts'
   },
 
   mode: "production",

@@ -42,6 +42,7 @@ CONTAINER_HOST_NAME=cell-utilities-node-dev
 # repos are shared with the container.
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
+  $(pwd)/../../assets/:/config
   ~/.npmrc:/root/.npmrc
   ~/.npmrc:/home/node/.npmrc
 )
