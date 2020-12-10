@@ -12,13 +12,13 @@ services:
     shm_size: '2gb'
 
     environment:
-      - PASSWORD=${MLKC_CELL_DB_PASSWORD}
+      - PASSWORD=${MLKC_CELL_DB_PASS}
 
     networks:
       - cell
 
     ports:
-      - "${MLKC_CELL_DB_OUTER_PORT}:5432"
+      - "${MLKC_CELL_DB_PORT}:5432"
 
     volumes:
       - ./000-localhost-volumes/cell-postgis:/data

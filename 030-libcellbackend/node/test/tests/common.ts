@@ -10,10 +10,25 @@ import * as rxo from "rxjs/operators";
  *
  * Configure here the DB connections to the test server.
  *
+ * DON'T USE THE PRODUCTION SERVER HERE.
+ *
  */
-const pgParams: any = {
-  host: "37north.io",
-  pass: "3j329fjvkd2345-:k342ju",
+const pgCellParams: any = {
+  host: "localhost",
+  pass: "postgres",
+  port: 5600
+}
+
+/**
+ *
+ * Configure here the DB connections to the test server.
+ *
+ * Read only, can use production server here.
+ *
+ */
+const pgSourceParams: any = {
+  host: "xxx",
+  pass: "xxx",
   port: 5632
 }
 
@@ -26,11 +41,11 @@ export const cellPg: PgConnection = new PgConnection({
   pgConnectionId: "cellPg",
   applicationName: "libcellbackend_quick_test",
   db: "cell",
-  host: pgParams.host,
+  host: pgCellParams.host,
   maxPoolSize: 200,
   minPoolSize: 200,
-  pass: pgParams.pass,
-  port: pgParams.port,
+  pass: pgCellParams.pass,
+  port: pgCellParams.port,
   dbUser: "postgres",
   description: "Cell DB",
   name: "Cell DB"
@@ -47,11 +62,11 @@ export const cellRawData: PgConnection = new PgConnection({
   pgConnectionId: "cellRawDataConn",
   applicationName: "libcellbackend_quick_test",
   db: "cell_raw_data",
-  host: pgParams.host,
+  host: pgSourceParams.host,
   maxPoolSize: 200,
   minPoolSize: 50,
-  pass: pgParams.pass,
-  port: pgParams.port,
+  pass: pgSourceParams.pass,
+  port: pgSourceParams.port,
   dbUser: "postgres",
   description: "Connection to Cell Raw Data database to consume original data vectors.",
   name: "Cell Raw Data"

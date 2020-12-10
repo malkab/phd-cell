@@ -4,12 +4,16 @@ import { RxPg } from "@malkab/rxpg";
 
 import { exit } from "process";
 
+import * as rx from "rxjs";
+
+import * as rxo from "rxjs/operators";
+
 /**
  *
  * Library for command line utility basegeomgridding.
  *
  */
-export function process(params: any): void {
+export function process$(params: any): rx.Observable<any> {
 
   /**
    *
@@ -97,18 +101,30 @@ export function process(params: any): void {
    */
   const gridderJob: gt.GridderJob = new gt.GridderJob(params.gridderJob);
 
-  // Insert the grid into the DB
-  grid.pgInsert$()
+  // Insert objects into the Cell DB
+  return rx.zip(
+    cellRawData.pgInsert$(cellPgConn)
+      .pipe(
+        rxo.catchError((e: Error) => rx.of("duplicated connection"))),
+    grid.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => rx.of("duplicated grid"))),
+    gridderJob.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder job")))
+  )
+  .pipe(
 
+    rxo.concatMap((o: any) => {
 
+      return gridderJob.getArea$(cellRawData, cellPg, grid);
 
-  /** */
+    }),
 
-  /**
-   *
-   * Insert the cells.
-   *
-   */
-  gridderJob.getCoveringCells$()
+    rxo.concatMap((o: any) => {
+
+      return gridderJob.getCoveringCells$(cellPgConn, grid, params.zoom);
+
+    })
+
+  )
 
 }

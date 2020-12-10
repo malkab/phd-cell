@@ -99,7 +99,7 @@ create table cell_meta.gridder_job(
   max_zoom_level integer,
   min_zoom_level integer,
   sql_area_retrieval text,
-  area geometry(polygon)
+  area geometry(multipolygon)
 );
 
 /**

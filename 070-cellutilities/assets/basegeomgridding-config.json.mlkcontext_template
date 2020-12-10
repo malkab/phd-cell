@@ -8,7 +8,7 @@
   },
 
   "sourcePg": {
-    "db": "",
+    "db": "cell_raw_data",
     "host": "{{{MLKC_CELL_DB_HOST}}}",
     "pass": "{{{MLKC_CELL_DB_PASS}}}",
     "port": "{{{MLKC_CELL_DB_PORT}}}",
@@ -42,6 +42,8 @@
     "maxZoomLevel": 0,
     "minZoomLevel": 2,
     "sqlAreaRetrieval": "select geom from context.provincia where provincia = 'Huelva'"
-  }
+  },
+
+  "zoom": 1
 
 }

@@ -53,7 +53,7 @@ VOLUMES=(
 OUTPUT_FILES=false
 
 
-echo kkk33 ${PASS}
+
 
 
 # ---

@@ -169,7 +169,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
         return cellPg.executeParamQuery$(`
           update cell_meta.gridder_job
-          set area = st_geomfromewkt('${this.area}'::text)
+          set area = st_multi(st_geomfromewkt('${this.area}'::text))
           where gridder_job_id = $1`,
           { params: [ this.gridderJobId ] }
         );
