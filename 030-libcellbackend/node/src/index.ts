@@ -8,4 +8,12 @@ export * from "./core/grid";
 
 export * from "./core/cell";
 
-export * as GridderTasks from "./griddertasks/index";
+export * from "./griddertasks/discretepolyareasummarygriddertask";
+
+export * from "./griddertasks/discretepolytopareagriddertask";
+
+export * from "./griddertasks/griddertask";
+
+export * from "./griddertasks/griddertaskfactory";
+
+export * from "./griddertasks/gridderjob";

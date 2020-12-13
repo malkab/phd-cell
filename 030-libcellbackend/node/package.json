@@ -1,6 +1,6 @@
 {
   "name": "@malkab/libcellbackend",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Backend library for Cell to use at API, Controller, and Worker",
   "scope": "@malkab",
   "author": {
@@ -65,8 +65,11 @@
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
-    "@malkab/libcell": "^1.0.50",
+    "@malkab/node-logger": "^1.1.4",
     "@malkab/node-utils": "^1.5.19",
-    "@malkab/rxpg": "^4.1.23"
+    "@malkab/rxpg": "^4.1.23",
+    "@turf/turf": "^5.1.6",
+    "@types/proj4": "^2.5.0",
+    "proj4": "^2.6.3"
   }
 }

@@ -4,9 +4,14 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { VariableBackend, GridderTasks as gt, PgConnection } from "../../src/index";
+import {
+  Variable, PgConnection, DiscretePolyTopAreaGridderTask, Grid
+} from "../../src/index";
 
-import { clearDatabase$, variable, cellRawData, cellPgConn, municipioDiscretePolyTopAreaGridderTask } from "./common";
+import {
+  clearDatabase$, variable, cellRawData, cellPgConn, eugrid,
+  municipioDiscretePolyTopAreaGridderTask
+} from "./common";
 
 import * as rx from "rxjs";
 
@@ -24,8 +29,6 @@ describe("Initial database clearance", function() {
     observables: [ clearDatabase$ ],
 
     assertions: [
-
-      (o: boolean) => expect(o).to.be.true,
 
       (o: boolean) => expect(o).to.be.true,
 
@@ -83,6 +86,29 @@ describe("Insert PgConnection", function() {
 
 /**
  *
+ * Grid eugrid pgInsert$.
+ *
+ */
+describe("Grid eugrid pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Grid eugrid pgInsert$",
+
+    observables: [ eugrid.pgInsert$(cellPgConn) ],
+
+    assertions: [
+
+      (o: Grid) => expect(o.gridId).to.be.equal("eu-grid")
+
+    ]
+
+  })
+
+})
+
+/**
+ *
  * Insert DiscretePolyTopAreaGridderTaskBackend.
  *
  */
@@ -90,15 +116,15 @@ describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
 
   rxMochaTests({
 
-    testCaseName: "pgInsert$()",
+    testCaseName: "Insert municipioDiscretePolyTopAreaGridderTask",
 
     observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTaskBackend) => {
+      (o: DiscretePolyTopAreaGridderTask) => {
 
-        expect(o.gridderTaskId, "GridderTask pgInsert$()").to.be.equal("municipioDiscretePolyTopArea")
+        expect(o.gridderTaskId).to.be.equal("municipioDiscretePolyTopArea")
 
       }
 
@@ -125,17 +151,15 @@ describe("Variable pgInsert$", function() {
 
     observables: [ rx.concat(
 
+      variable.pgInsert$(cellPgConn),
       variable.pgInsert$(cellPgConn)
 
     ) ],
 
     assertions: [
 
-      (o: VariableBackend) => {
-
-        expect(o.name).to.be.equal("Var name");
-
-      }
+      (o: Variable) => { expect(o.name).to.be.equal("Var name") },
+      (o: Error) => { expect(o.message).to.be.equal('duplicate key value violates unique constraint "variable_pkey"') }
 
     ],
 

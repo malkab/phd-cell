@@ -1,5 +1,3 @@
-import { Catalog as CatalogL, Variable as VariableL } from "@malkab/libcell";
-
 import { PgOrm } from "@malkab/rxpg";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
@@ -10,10 +8,6 @@ import * as rxo from "rxjs/operators";
 
 import { miniHash } from '@malkab/node-utils';
 
-import { PgConnection } from "./pgconnection";
-
-import { conformsTo } from 'lodash';
-
 import { Variable } from "./variable";
 
 /**
@@ -23,7 +17,7 @@ import { Variable } from "./variable";
  * A catalog contains the domain of discrete values for a variable.
  *
  */
-export class Catalog extends CatalogL implements PgOrm.IPgOrm<Catalog> {
+export class Catalog implements PgOrm.IPgOrm<Catalog> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
@@ -33,30 +27,85 @@ export class Catalog extends CatalogL implements PgOrm.IPgOrm<Catalog> {
 
   /**
    *
+   * GridderTaskId ID this catalog belongs to.
+   *
+   */
+  private _gridderTaskId: string;
+  get gridderTaskId(): string { return this._gridderTaskId }
+
+  /**
+   *
+   * Variable ID this catalog belongs to.
+   *
+   */
+  private _variableKey: string;
+  get variableKey(): string { return this._variableKey }
+
+  /**
+   *
+   * Variable this catalog belongs to, if available.
+   *
+   */
+  private _variable: Variable | undefined;
+  get variable(): Variable | undefined { return this._variable }
+  set variable(variable: Variable | undefined) { this._variable = variable }
+
+  /**
+   *
+   * Forward: the key > value mapping for the catalog.
+   *
+   */
+  private _forward: Map<string, string>;
+  get forward(): Map<string, string> { return this._forward }
+
+  /**
+   *
+   * Backward: the value > key mapping for the catalog.
+   *
+   */
+  private _backward: Map<string, string>;
+  get backward(): Map<string, string> { return this._backward }
+
+  /**
+   *
+   * Returns number of items in catalog.
+   *
+   */
+  get nItems(): number {
+
+    const forwardN: number = Array.from(this._forward.keys()).length;
+    const backwardN: number = Array.from(this._backward.keys()).length;
+
+    if (forwardN !== backwardN) throw new Error("catalog error: forward and backward entries does not match");
+
+    return forwardN;
+
+  }
+
+  /**
+   *
    * Constructor.
    *
    */
   constructor({
       gridderTaskId,
-      variableId,
+      variableKey,
       variable = undefined,
-      forward = undefined,
-      backward = undefined
+      forward = new Map<string, string>(),
+      backward = new Map<string, string>()
     }: {
       gridderTaskId: string;
-      variableId: string;
+      variableKey: string;
       variable?: Variable;
-      forward?: any;
-      backward?: any;
+      forward?: Map<string, string>;
+      backward?: Map<string, string>;
   }) {
 
-    super({
-      gridderTaskId: gridderTaskId,
-      variableId: variableId,
-      variable: variable,
-      forward: forward,
-      backward: backward
-    });
+    this._gridderTaskId = gridderTaskId;
+    this._variableKey = variableKey;
+    this._variable = variable;
+    this._forward = forward;
+    this._backward = backward;
 
   }
 
@@ -72,18 +121,18 @@ export class Catalog extends CatalogL implements PgOrm.IPgOrm<Catalog> {
       from cell_meta.catalog
       where
         gridder_task_id = $1 and
-        variable_id = $2;`;
+        variable_key = $2;`;
 
     return pg.executeParamQuery$(sql,
-      { params: [ this.gridderTaskId, this.variableId ] })
+      { params: [ this.gridderTaskId, this.variableKey ] })
     .pipe(
 
       rxo.map((o: QueryResult) => {
 
-        o.rows.map((o: any) => {
+        o.rows.map((x: any) => {
 
-          this._forward.set(o.key, o.value);
-          this._backward.set(o.value, o.key);
+          this._forward.set(x.key, x.value);
+          this._backward.set(x.value, x.key);
 
         })
 
@@ -108,41 +157,30 @@ export class Catalog extends CatalogL implements PgOrm.IPgOrm<Catalog> {
       existingMiniHashes: Array.from(this.forward.keys())
     });
 
-    // SQL to insert at DB
-    let sql: string = "";
+    // An array to gather insert values into the catalog
+    const obs: rx.Observable<any>[] = [];
 
     // Add new mini hashes to catalogs and compose SQL to set them at the DB
     for(let i = 0; i < newMiniHashes.length; i++) {
 
-      this.forward.set(newMiniHashes[i], entries[i]);
-      this.backward.set(entries[i], newMiniHashes[i]);
-
-      sql = `${sql}
+      obs.push(pg.executeParamQuery$(`
         insert into cell_meta.catalog values(
           '${this.gridderTaskId}',
-          '${this._variableId}',
+          '${this._variableKey}',
           '${newMiniHashes[i]}',
-          '${entries[i]}');`;
+          '${entries[i]}');`))
 
     }
 
     // Write to the DB
-    return pg.executeParamQuery$(sql)
-    .pipe( rxo.map((o: QueryResult) => this) )
+    return rx.zip(...obs)
+    .pipe(
 
-  }
+      rxo.catchError((e: Error) => { return rx.of(e.message); }),
 
-  /**
-   *
-   * Gets a catalog from the DB and loads its forward and backward.
-   *
-   */
-  public static get$(pg: RxPg, gridderTaskId: string, variableId: string): rx.Observable<Catalog> {
+      rxo.map((o: any) => this)
 
-    return new Catalog({
-      gridderTaskId: gridderTaskId,
-      variableId: variableId
-    }).dbLoadForwardBackward$(pg);
+    )
 
   }
 

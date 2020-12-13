@@ -2,9 +2,9 @@ import "mocha";
 
 import { expect } from "chai";
 
-import { basegeomgriddingConfig } from "./common";
+import { gridderConfig } from "./common";
 
-import { process$ } from "../../src/lib/basegeomgridding";
+import { process$ } from "../../src/lib/gridder";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
@@ -17,12 +17,14 @@ describe("Read parameters from config file", function() {
 
   it("Read parameters from config file", function() {
 
-    expect(Object.keys(basegeomgriddingConfig)).to.deep.equal([
+    expect(Object.keys(gridderConfig)).to.deep.equal([
       "cellPg",
       "sourcePg",
       "grid",
-      "gridderJob",
-      "zoom"
+      "cell",
+      "maxZoom",
+      "drillDown",
+      "gridderTask"
     ]);
 
   });
@@ -40,7 +42,7 @@ describe("Run script", function() {
 
     testCaseName: "Run script",
 
-    observables: [ process$(basegeomgriddingConfig) ],
+    observables: [ process$(gridderConfig) ],
 
     assertions: [ (o: number) => expect(o).to.be.equal(12) ],
 

@@ -27,7 +27,7 @@ NODE_MEMORY=8GB
 EXEC=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost".
-NETWORK=host
+NETWORK=$MLKC_CELL_NETWORK
 # Jupyter mode: runs a Jupyter server with Javascript support if a version with
 # this capability is used. Jupyter exports automatically the 8888 port.
 JUPYTER=false
@@ -43,6 +43,7 @@ CONTAINER_HOST_NAME=cell-libcellbackend_dev
 # repos are shared with the container.
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
+  $(pwd)/docker_logs/:/logs/
   ~/.npmrc:/root/.npmrc
   ~/.npmrc:/home/node/.npmrc
 )

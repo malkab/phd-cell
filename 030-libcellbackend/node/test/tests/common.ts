@@ -1,10 +1,28 @@
-import { Cell, Catalog, PgConnection, Variable, GridderTasks as gt, Grid } from "../../src/index";
+import {
+  Cell, PgConnection, Variable, Grid, GridderJob,
+  DiscretePolyTopAreaGridderTask,
+  DiscretePolyAreaSummaryGridderTask
+} from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
+
+import { NodeLogger, ELOGLEVELS } from "@malkab/node-logger";
+
+/**
+ *
+ * The logger, for the gridders.
+ *
+ */
+export const logger: NodeLogger = new NodeLogger({
+  appName: "libcellbackend",
+  consoleOut: true,
+  logFilePath: "/logs/",
+  minLogLevel: ELOGLEVELS.DEBUG
+})
 
 /**
  *
@@ -14,9 +32,9 @@ import * as rxo from "rxjs/operators";
  *
  */
 const pgCellParams: any = {
-  host: "localhost",
+  host: "cell-db-postgis-dev",
   pass: "postgres",
-  port: 5600
+  port: 5432
 }
 
 /**
@@ -27,8 +45,8 @@ const pgCellParams: any = {
  *
  */
 const pgSourceParams: any = {
-  host: "xxx",
-  pass: "xxx",
+  host: "37north.io",
+  pass: "3j329fjvkd2345-:k342ju",
   port: 5632
 }
 
@@ -81,7 +99,6 @@ export const cellRawDataConn: RxPg = cellRawData.open();
  */
 export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeParamQuery$(`
   delete from cell_data.data;
-  delete from cell_meta.gridder_cell;
   delete from cell_meta.gridder_job;
   delete from cell_meta.catalog;
   delete from cell_meta.variable;
@@ -95,60 +112,6 @@ export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeParamQue
   rxo.map((o: QueryResult): boolean => o.command === "DELETE" ? true : false)
 
 )
-
-/**
- *
- * DiscretePolygonTopAreaGridderTask.
- *
- */
-export const municipioDiscretePolyTopAreaGridderTask: gt.DiscretePolyTopAreaGridderTask =
-new gt.DiscretePolyTopAreaGridderTask({
-  gridderTaskId: "municipioDiscretePolyTopArea",
-  name: "Municipio máxima área",
-  description: "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
-  sourceTable: "context.municipio",
-  geomField: "geom",
-  discreteFields: [ "provincia", "municipio" ],
-  variableName: "Municipio: máxima área",
-  variableDescription: "Nombre del municipio y su provincia del municipio que ocupa la mayor área de la celda.",
-  categoryTemplate: "{{{municipio}}} ({{{provincia}}})"
-});
-
-export const municipioDiscretePolyAreaSummaryGridderTask: gt.DiscretePolyAreaSummaryGridderTask =
-new gt.DiscretePolyAreaSummaryGridderTask({
-  gridderTaskId: "municipioDiscreteAreaSummary",
-  name: "Desglose de área de municipios",
-  description: "Área de cada municipio en la celda, incluyendo su provincia",
-  sourceTable: "context.municipio",
-  geomField: "geom",
-  discreteFields: [ "provincia", "municipio" ],
-  variableNameTemplate: "{{{municipio}}} ({{{provincia}}})",
-  variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
-})
-
-/**
- *
- * Variable.
- *
- */
-export const variable: Variable = new Variable({
-  gridderTaskId: "municipioDiscretePolyTopArea",
-  variableId: "var",
-  name: "Var name",
-  description: "Var description",
-  gridderTask: municipioDiscretePolyTopAreaGridderTask
-});
-
-/**
- *
- * Catalog.
- *
- */
-export const catalog: Catalog = new Catalog({
-  gridderTaskId: "municipioDiscretePolyTopArea",
-  variableId: "var",
-  variable: variable
-})
 
 /**
  *
@@ -178,6 +141,52 @@ export const eugrid: Grid = new Grid({
 
 /**
  *
+ * DiscretePolygonTopAreaGridderTask.
+ *
+ */
+export const municipioDiscretePolyTopAreaGridderTask: DiscretePolyTopAreaGridderTask =
+new DiscretePolyTopAreaGridderTask({
+  gridderTaskId: "municipioDiscretePolyTopArea",
+  gridId: "eu-grid",
+  grid: eugrid,
+  name: "Municipio máxima área",
+  description: "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
+  sourceTable: "context.municipio",
+  geomField: "geom",
+  discreteFields: [ "provincia", "municipio" ],
+  variableName: "Municipio: máxima área",
+  variableDescription: "Nombre del municipio y su provincia del municipio que ocupa la mayor área de la celda.",
+  categoryTemplate: "{{{municipio}}} ({{{provincia}}})"
+});
+
+export const municipioDiscretePolyAreaSummaryGridderTask: DiscretePolyAreaSummaryGridderTask =
+new DiscretePolyAreaSummaryGridderTask({
+  gridderTaskId: "municipioDiscreteAreaSummary",
+  gridId: "eu-grid",
+  grid: eugrid,
+  name: "Desglose de área de municipios",
+  description: "Área de cada municipio en la celda, incluyendo su provincia",
+  sourceTable: "context.municipio",
+  geomField: "geom",
+  discreteFields: [ "provincia", "municipio" ],
+  variableNameTemplate: "{{{municipio}}} ({{{provincia}}})",
+  variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
+})
+
+/**
+ *
+ * Variable.
+ *
+ */
+export const variable: Variable = new Variable({
+  gridderTaskId: "municipioDiscretePolyTopArea",
+  name: "Var name",
+  description: "Var description",
+  gridderTask: municipioDiscretePolyTopAreaGridderTask
+});
+
+/**
+ *
  * Cells.
  *
  */
@@ -190,7 +199,6 @@ for (let z = 0; z<1; z++) {
     for (let y = 0; y<4; y++) {
 
       cells.push(new Cell({
-        epsg: "3035",
         gridId: "eu-grid",
         x: x,
         y: y,
@@ -205,7 +213,6 @@ for (let z = 0; z<1; z++) {
 }
 
 export const testCell_0_2_2: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
   x: 2,
@@ -214,7 +221,6 @@ export const testCell_0_2_2: Cell = new Cell({
 })
 
 export const testCell_0_2_3: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
   x: 2,
@@ -223,7 +229,6 @@ export const testCell_0_2_3: Cell = new Cell({
 })
 
 export const testCell_0_3_2: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
   x: 3,
@@ -232,7 +237,6 @@ export const testCell_0_3_2: Cell = new Cell({
 })
 
 export const testCell_0_2_1: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
   x: 2,
@@ -241,7 +245,6 @@ export const testCell_0_2_1: Cell = new Cell({
 })
 
 export const testCell_0_3_1: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 0,
   x: 3,
@@ -251,7 +254,6 @@ export const testCell_0_3_1: Cell = new Cell({
 
 // This is a full coverage for municipios with a single municipio
 export const testCell_2_27_32: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
   x: 27,
@@ -261,7 +263,6 @@ export const testCell_2_27_32: Cell = new Cell({
 
 // This is a partial coverage for municipios
 export const testCell_2_24_31: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
   x: 24,
@@ -271,7 +272,6 @@ export const testCell_2_24_31: Cell = new Cell({
 
 // This is a full coverage with several municipios
 export const testCell_2_28_30: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
   x: 28,
@@ -281,7 +281,6 @@ export const testCell_2_28_30: Cell = new Cell({
 
 // No coverage of municipios at all
 export const testCell_2_25_32: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 2,
   x: 25,
@@ -291,7 +290,6 @@ export const testCell_2_25_32: Cell = new Cell({
 
 // Full coverage of a municipio, level 3
 export const testCell_3_54_65: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 3,
   x: 54,
@@ -301,7 +299,6 @@ export const testCell_3_54_65: Cell = new Cell({
 
 // Full coverage of a municipio, level 4 (1000 m)
 export const testCell_4_270_329: Cell = new Cell({
-  epsg: "3035",
   gridId: "eu-grid",
   zoom: 4,
   x: 270,
@@ -314,7 +311,7 @@ export const testCell_4_270_329: Cell = new Cell({
  * Gridder Job for top area for Huelva.
  *
  */
-export const gridderJobHuelva: gt.GridderJob = new gt.GridderJob({
+export const gridderJobHuelva: GridderJob = new GridderJob({
   gridderJobId: "gridderJobHuelva",
   gridderTaskId: "municipioDiscretePolyTopArea",
   maxZoomLevel: 0,

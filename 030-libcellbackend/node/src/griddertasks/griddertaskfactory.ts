@@ -2,58 +2,37 @@ import { DiscretePolyAreaSummaryGridderTask } from './discretepolyareasummarygri
 
 import { DiscretePolyTopAreaGridderTask } from './discretepolytopareagriddertask';
 
-import { GridderTasks as gt } from '@malkab/libcell';
-
 import { RxPg, PgOrm } from '@malkab/rxpg';
 
+import { EGRIDDERTASKTYPE } from "./egriddertasktype";
+
+import { GridderTask } from "./griddertask";
+
 import * as rx from "rxjs";
-
-import * as rxo from "rxjs/operators";
-
-import { PgConnection } from '../core/pgconnection';
 
 /**
  *
  * Factory for creating GridderTasks specialized classes.
  *
  */
-export function gridderTaskFactory(pg: RxPg, params: any): rx.Observable<
+function gridderTaskFactory$(pg: RxPg, params: any): rx.Observable<
   DiscretePolyAreaSummaryGridderTask |
-  DiscretePolyTopAreaGridderTask> {
+  DiscretePolyTopAreaGridderTask
+> {
 
-  if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
 
-    return PgConnection.get$(pg, params.pgConnectionId)
-    .pipe(
-
-      rxo.map((pg: PgConnection) => {
-
-        return new DiscretePolyAreaSummaryGridderTask({
-          ...params,
-          pgConnection: pg
-        });
-
-      })
-
-    )
+    return rx.of(new DiscretePolyAreaSummaryGridderTask({
+      ...params
+    }));
 
   };
 
-  if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
 
-    return PgConnection.get$(pg, params.pgConnectionId)
-    .pipe(
-
-      rxo.map((pg: PgConnection) => {
-
-        return new DiscretePolyTopAreaGridderTask({
-          ...params,
-          pgConnection: pg
-        });
-
-      })
-
-    )
+    return rx.of(new DiscretePolyTopAreaGridderTask({
+      ...params
+    }));
 
   }
 
@@ -66,27 +45,25 @@ export function gridderTaskFactory(pg: RxPg, params: any): rx.Observable<
  * Gets a GridderTask by ID.
  *
  */
-export function gridderTaskGet$(pg: RxPg, id: string): rx.Observable<any> {
+export function gridderTaskGet$(pg: RxPg, gridderTaskId: string): rx.Observable<any> {
 
-  return PgOrm.select$<gt.GridderTask>({
+  return PgOrm.select$<GridderTask>({
     pg: pg,
     sql: `
       select
         gridder_task_id as "gridderTaskId",
         gridder_task_type as "gridderTaskType",
+        grid_id as "gridId",
         name,
         description,
-        pg_connection_id as "pgConnectionId",
         source_table as "sourceTable",
-        name_template as "nameTemplate",
-        description_template as "descriptionTemplate",
         geom_field as "geomField",
         additional_params as "additionalParams"
       from cell_meta.gridder_task where gridder_task_id = $1;`,
-    params: () => [ id ],
-    type: gt.GridderTask,
-    newFunction: (params: any) =>
-      gridderTaskFactory(pg, {
+    params: () => [ gridderTaskId ],
+    type: GridderTask,
+    newFunction$: (params: any) =>
+      gridderTaskFactory$(pg, {
         ...params,
         ...params.additionalParams
       })

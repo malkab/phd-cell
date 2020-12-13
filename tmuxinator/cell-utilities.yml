@@ -8,3 +8,10 @@ windows:
       cd 070-cellutilities/docker/010_dev ;
       . mlkcontext common ;
       ./010_node.sh
+
+  - psql: >
+      clear ;
+      sleep 2 ;
+      cd 070-cellutilities/docker/010_dev ;
+      . mlkcontext common ;
+      ./100_psql.sh

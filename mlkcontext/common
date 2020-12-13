@@ -55,15 +55,32 @@ export MLKC_CELL_PG_MAX_PARALLEL_WORKERS=8
 export MLKC_CELL_PG_MAX_PARALLEL_MAINTENANCE_WORKERS=4
 
 # -----
-# PG persistence config, some items at mlkcontext/system
+# PG persistence config for celldb, some items at mlkcontext/system
 # -----
-export MLKC_CELL_DB_HOST=cell-postgis
-export MLKC_CELL_DB_PASS=postgres
+export MLKC_CELL_DB_NETWORK=$MLKC_CELL_NETWORK
+export MLKC_CELL_DB_HOST=cell-db-postgis-dev
 export MLKC_CELL_DB_USER=postgres
-export MLKC_CELL_DB_PORT=5600
+export MLKC_CELL_DB_PORT=5432
+export MLKC_CELL_DB_PASS=postgres
+export MLKC_CELL_DB_DB=cell
+export MLKC_CELL_DB_DOCKER_EXTERNAL_PORT=5600
 export MLKC_CELL_DB_MAXPOOLSIZE=100
 export MLKC_CELL_DB_MINPOOLSIZE=5
 export MLKC_CELL_DB_IDLETIMEOUTMILLIS=60000
+
+# -----
+# PG persistence config for cell_raw_data, some items at mlkcontext/system
+# -----
+export MLKC_CELL_RAW_DATA_NETWORK=
+export MLKC_CELL_RAW_DATA_HOST=$MLKC_SYSTEM_37NORTH_HOST
+export MLKC_CELL_RAW_DATA_USER=$MLKC_SYSTEM_37NORTH_PG_USER
+export MLKC_CELL_RAW_DATA_PORT=$MLKC_SYSTEM_37NORTH_PG_PORT
+export MLKC_CELL_RAW_DATA_PASS=$MLKC_SYSTEM_37NORTH_PG_PASS
+export MLKC_CELL_RAW_DATA_DB=cell_raw_data
+export MLKC_CELL_RAW_DATA_DOCKER_EXTERNAL_PORT=5700
+export MLKC_CELL_RAW_DATA_MAXPOOLSIZE=100
+export MLKC_CELL_RAW_DATA_MINPOOLSIZE=5
+export MLKC_CELL_RAW_DATA_IDLETIMEOUTMILLIS=60000
 
 # -----
 # Redis persistence config, some items at mlkcontext/system
@@ -72,4 +89,5 @@ export MLKC_CELL_DB_IDLETIMEOUTMILLIS=60000
 # not here
 export MLKC_CELL_REDIS_URL=cell-redis
 export MLKC_CELL_REDIS_PASSWORD=$MLKC_SYSTEM_CELL_REDIS_PASS
-export MLKC_CELL_REDIS_OUTER_PORT=6700
+export MLKC_CELL_REDIS_DOCKER_EXTERNAL_PORT=6700
+export MLKC_CELL_REDIS_PORT=6379

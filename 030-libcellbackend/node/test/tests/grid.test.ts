@@ -37,8 +37,6 @@ describe("Initial database clearance", function() {
 
       (o: boolean) => expect(o).to.be.true,
 
-      (o: boolean) => expect(o).to.be.true,
-
       (o: boolean) => expect(o).to.be.true
 
     ],
@@ -51,16 +49,38 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Insert GridBackend.
+ * Grid pgInsert$.
  *
  */
-describe("GridBackend pgInsert$", function() {
+describe("Grid pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "GridBackend pgInsert$",
+    testCaseName: "Grid pgInsert$",
 
     observables: [ eugrid.pgInsert$(cellPgConn) ],
+
+    assertions: [
+      (o: Grid) => expect(o.name).to.be.equal("eu-grid") ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Grid get$.
+ *
+ */
+describe("Grid get$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Grid get$",
+
+    observables: [ Grid.get$(cellPgConn, "eu-grid") ],
 
     assertions: [
       (o: Grid) => expect(o.name).to.be.equal("eu-grid") ],

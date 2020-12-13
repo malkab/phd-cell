@@ -9,8 +9,9 @@ import { readJsonSync } from "@malkab/node-utils";
 
 /**
  *
- * Read config for basegeomgridding, mounted at
- * /config/basegeomgridding-config.json.
+ * Read config for scripts, mounted at /config/basegeomgridding-config.json.
  *
  */
 export const basegeomgriddingConfig: any = readJsonSync([ "/config/basegeomgridding-config.json" ]);
+
+export const gridderConfig: any = readJsonSync([ "/config/gridder-config.json" ]);

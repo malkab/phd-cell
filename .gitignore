@@ -2,6 +2,7 @@
 # -------------------
 010-cell-db/src/050-add_metadata.sql
 070-cellutilities/assets/basegeomgridding-config.json
+070-cellutilities/assets/gridder-config.json
 070-cellutilities/docker/020_production_image/Dockerfile
 070-cellutilities/docker/030_swarms/010-single_machine/910-volumes_drop.sh
 070-cellutilities/docker/030_swarms/010-single_machine/005_docker_gitlab_images_pull.sh

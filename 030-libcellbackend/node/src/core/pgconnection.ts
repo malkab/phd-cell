@@ -2,8 +2,6 @@ import { PgOrm } from '@malkab/rxpg';
 
 import { RxPg } from "@malkab/rxpg";
 
-import { IMetadated } from '@malkab/libcell';
-
 import * as rx from "rxjs";
 
 /**
@@ -11,7 +9,7 @@ import * as rx from "rxjs";
  * A PG connection to connect to raw data.
  *
  */
-export class PgConnection implements IMetadated, PgOrm.IPgOrm<PgConnection> {
+export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
 
   // Dummy PgOrm
   // TODO: implement pgDelete$ and pgUpdate$

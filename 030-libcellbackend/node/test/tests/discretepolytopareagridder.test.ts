@@ -4,9 +4,16 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { GridderTasks as gt, PgConnection, Grid } from "../../src/index";
+import {
+  PgConnection, Grid, DiscretePolyTopAreaGridderTask, gridderTaskGet$
+} from "../../src/index";
 
-import { cellPgConn, cellRawData, cellRawDataConn, eugrid, testCell_4_270_329, testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$, cellRawDataExternalConn } from "./common";
+import {
+  cellPgConn, cellRawData, cellRawDataConn, eugrid, testCell_4_270_329,
+  testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
+  testCell_2_28_30,
+  municipioDiscretePolyTopAreaGridderTask, clearDatabase$, logger
+} from "./common";
 
 /**
  *
@@ -37,13 +44,11 @@ describe("Initial database clearance", function() {
 
       (o: boolean) => expect(o).to.be.true,
 
-      (o: boolean) => expect(o).to.be.true,
-
       (o: boolean) => expect(o).to.be.true
 
     ],
 
-    verbose: true
+    verbose: false
 
   })
 
@@ -116,7 +121,42 @@ describe("DiscretePolyTopAreaGridderTask pgInsert$", function() {
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
+      (o: DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * DiscretePolyTopAreaGridderTask get$.
+ *
+ */
+describe("DiscretePolyTopAreaGridderTask get$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "DiscretePolyTopAreaGridderTask get$",
+
+    observables: [ gridderTaskGet$(cellPgConn, "municipioDiscretePolyTopArea") ],
+
+    assertions: [
+
+      (o: DiscretePolyTopAreaGridderTask) => {
+
+        expect(o.name).to.be.equal("Municipio máxima área");
+
+        expect(o.gridId, "gridId").to.be.equal("eu-grid");
+
+        expect(o.grid).to.be.undefined;
+
+      }
 
     ],
 
@@ -143,7 +183,7 @@ describe("DiscretePolyTopAreaGridderTaskBackend setup$", function() {
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
+      (o: DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
 
     ],
 
@@ -171,17 +211,17 @@ describe("DiscretePolyTopAreaGridderTaskBackend computeCell$", function() {
     observables: [
 
       // Full coverage, single municipio
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_27_32, 4),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_27_32, 4, logger),
       // Partial coverage, several municipios
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_24_31, 3),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_24_31, 3, logger),
       // Full coverage, several municipios
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_28_30, 3),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_28_30, 3, logger),
       // Void cell
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_25_32, 3),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_25_32, 3, logger),
       // Full coverage, single municipio
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_3_54_65, 6),
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_3_54_65, 6, logger),
       // Full coverage, single municipio
-      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_4_270_329, 7)
+      municipioDiscretePolyTopAreaGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_4_270_329, 7, logger)
 
     ],
 

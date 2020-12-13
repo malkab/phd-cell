@@ -4,13 +4,15 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
-import { PgConnection } from '../core/pgconnection';
+import { NodeLogger } from '@malkab/node-logger';
 
 import { gridderTaskGet$ } from "./griddertaskfactory";
 
 import { Cell } from "../core/cell";
 
 import { Grid } from "../core/grid";
+
+import { GridderTask } from './griddertask';
 
 /**
  *
@@ -45,6 +47,16 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    */
   private _gridderTaskId: string;
   get gridderTaskId(): string { return this._gridderTaskId }
+
+  /**
+   *
+   * GridderTask.
+   *
+   */
+  private _gridderTask: GridderTask | undefined;
+  get gridderTask(): GridderTask | undefined { return this._gridderTask }
+  set gridderTask(gridderTask: GridderTask | undefined) {
+    this._gridderTask = gridderTask }
 
   /**
    *
@@ -86,6 +98,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
   constructor({
       gridderJobId,
       gridderTaskId,
+      gridderTask = undefined,
       maxZoomLevel,
       minZoomLevel,
       sqlAreaRetrieval,
@@ -93,6 +106,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
     }: {
       gridderJobId: string;
       gridderTaskId: string;
+      gridderTask?: GridderTask;
       maxZoomLevel: number;
       minZoomLevel: number;
       sqlAreaRetrieval: string;
@@ -101,6 +115,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
     this._gridderJobId = gridderJobId;
     this._gridderTaskId = gridderTaskId;
+    this._gridderTask = gridderTask;
     this._maxZoomLevel = maxZoomLevel;
     this._minZoomLevel = minZoomLevel;
     this._sqlAreaRetrieval = sqlAreaRetrieval;
@@ -151,13 +166,10 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    *
    */
   public getArea$(
-    areaSourcePgConnection: PgConnection,
-    cellPgConnection: PgConnection,
+    sourcePg: RxPg,
+    cellPg: RxPg,
     grid: Grid
   ): rx.Observable<any> {
-
-    const sourcePg: RxPg = areaSourcePgConnection.open();
-    const cellPg: RxPg = cellPgConnection.open();
 
     return sourcePg.executeParamQuery$(
       `select st_asewkt(st_transform(st_union(geom), ${grid.epsg})) as area from (${this._sqlAreaRetrieval}) a`)
@@ -188,16 +200,56 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
   /**
    *
-   * Start the job.
+   * Starts the job on a gicen cell, without resorting to the workers,
+   * command-line local mode.
    *
+   * @param cellPg
+   * The cell PG DB connection.
+   *
+   * @param sourcePg
+   * The source data PG connection.
+   *
+   * @param cell
+   * The cell to process.
+   *
+   * @param targetZoom
+   * The zoom to drill down to.
+   *
+   * @param fullCoverageDrillDown
+   * The zoom where the full coverage drill down must take place.
    */
-  // public eventStart$(cellPgConnection: PgConnection): rx.Observable<any> {
+  public startOnCellLocalMode$(
+    cellPg: RxPg,
+    sourcePg: RxPg,
+    cells: Cell[],
+    targetZoom: number,
+    log?: NodeLogger
+  ): rx.Observable<any> {
 
-  //   const cellPg: RxPg = cellPgConnection.open();
+    cells.map((o: Cell) => {
 
-  //   return
+      this.gridderTask?.computeCell$(sourcePg, cellPg, o, targetZoom, log)
+      .subscribe(
 
-  // }
+        (o: any) => {
+
+          const c: Cell[] = o.filter((x: Cell) => x.zoom <= targetZoom);
+
+          this.startOnCellLocalMode$(cellPg, sourcePg, c, targetZoom, log);
+
+        },
+
+        (e: Error) => console.log("D: error", e.message),
+
+        () => console.log("D: complete")
+
+      );
+
+    })
+
+    return rx.of(0);
+
+  }
 
   /**
    *
@@ -220,6 +272,29 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
     return pg.executeParamQuery$(sql).pipe(
 
       rxo.map((o: any) => o.rowCount)
+
+    )
+
+  }
+
+  /**
+   *
+   * Gets the GridderTask from the DB and assign it to this GridderJob.
+   *
+   */
+  public getGridderTask$(pg: RxPg): rx.Observable<GridderJob> {
+
+    return gridderTaskGet$(pg, this.gridderTaskId)
+    .pipe(
+
+      rxo.concatMap((o: GridderTask) => {
+
+        this._gridderTask = o;
+        return o.getGrid$(pg);
+
+      }),
+
+      rxo.map((o: GridderTask) => this)
 
     )
 

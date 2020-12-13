@@ -178,13 +178,7 @@ export class GridderCell implements PgOrm.IPgOrm<GridderCell> {
 
       }),
 
-      rxo.map((o: GridderTask) => {
-
-        console.log("D: kkkkkk", o);
-
-        return this;
-
-      })
+      rxo.map((o: GridderTask) => this)
 
     )
 

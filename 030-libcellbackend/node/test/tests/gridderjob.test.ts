@@ -4,9 +4,15 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { GridderTasks as gt, PgConnection, Grid } from "../../src/index";
+import {
+  DiscretePolyTopAreaGridderTask, GridderJob,
+  PgConnection, Grid, Cell, gridderTaskGet$, GridderTask
+} from "../../src/index";
 
-import { gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataConn, eugrid, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31, testCell_2_28_30, testCell_0_2_1, testCell_0_3_1, testCell_0_2_2, testCell_0_3_2, municipioDiscretePolyTopAreaGridderTask, clearDatabase$ } from "./common";
+import {
+  gridderJobHuelva, cellPg, cellPgConn, cellRawData, cellRawDataConn, eugrid,
+  municipioDiscretePolyTopAreaGridderTask, clearDatabase$, logger
+} from "./common";
 
 import * as rx from "rxjs";
 
@@ -33,14 +39,14 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Insert GridBackend.
+ * Insert Grid.
  *
  */
-describe("GridBackend pgInsert$", function() {
+describe("Grid pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "GridBackend pgInsert$",
+    testCaseName: "Grid pgInsert$",
 
     observables: [ eugrid.pgInsert$(cellPgConn) ],
 
@@ -85,20 +91,20 @@ describe("Create PgConnections", function() {
 
 /**
  *
- * DiscretePolyTopAreaGridderTaskBackend pgInsert$.
+ * DiscretePolyTopAreaGridderTask pgInsert$.
  *
  */
-describe("DiscretePolyTopAreaGridderTaskBackend pgInsert$", function() {
+describe("DiscretePolyTopAreaGridderTask pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolyTopAreaGridderTaskBackend pgInsert$",
+    testCaseName: "DiscretePolyTopAreaGridderTask pgInsert$",
 
     observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
+      (o: DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
 
     ],
 
@@ -123,7 +129,7 @@ describe("gridderJobHuelva pgInsert$", function() {
 
     assertions: [
 
-      (o: gt.GridderJob) => expect(o.gridderJobId).to.be.equal("gridderJobHuelva")
+      (o: GridderJob) => expect(o.gridderJobId).to.be.equal("gridderJobHuelva")
 
     ],
 
@@ -146,11 +152,11 @@ describe("gridderJobHuelva get and area retrieval", function() {
 
     observables: [
 
-      gt.GridderJob.get$(cellPgConn, "gridderJobHuelva")
+      GridderJob.get$(cellPgConn, "gridderJobHuelva")
       .pipe(
 
-        rxo.concatMap((o: gt.GridderJob) =>
-          o.getArea$(cellRawData, cellPg, eugrid))
+        rxo.concatMap((o: GridderJob) =>
+          o.getArea$(cellRawDataConn, cellPgConn, eugrid))
 
       )
 
@@ -158,12 +164,48 @@ describe("gridderJobHuelva get and area retrieval", function() {
 
     assertions: [
 
-      (o: gt.GridderJob) =>
+      (o: GridderJob) =>
         expect(o.gridderJobId).to.be.equal("gridderJobHuelva")
 
     ],
 
-    verbose: true
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Get coverage of target area at zoom 0.
+ *
+ */
+describe("Get coverage of target area at zoom 0", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Get coverage of target area at zoom 0",
+
+    observables: [
+
+      GridderJob.get$(cellPgConn, "gridderJobHuelva")
+      .pipe(
+
+        rxo.concatMap((o: GridderJob) =>
+          o.getCoveringCells$(cellPgConn, eugrid, 0))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o).to.be.equal(7)
+
+    ],
+
+    verbose: false
 
   })
 
@@ -182,10 +224,10 @@ describe("Get coverage of target area at zoom 1", function() {
 
     observables: [
 
-      gt.GridderJob.get$(cellPgConn, "gridderJobHuelva")
+      GridderJob.get$(cellPgConn, "gridderJobHuelva")
       .pipe(
 
-        rxo.concatMap((o: gt.GridderJob) =>
+        rxo.concatMap((o: GridderJob) =>
           o.getCoveringCells$(cellPgConn, eugrid, 1))
 
       )
@@ -194,12 +236,68 @@ describe("Get coverage of target area at zoom 1", function() {
 
     assertions: [
 
-      (o: gt.GridderJob) =>
+      (o: GridderJob) =>
         expect(o).to.be.equal(12)
 
     ],
 
     verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Perform a local gridding of a cell.
+ *
+ */
+describe("Perform a local gridding of a cell", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Perform a local gridding of a cell",
+
+    observables: [
+
+      gridderTaskGet$(cellPgConn, "municipioDiscretePolyTopArea")
+      .pipe(
+
+        rxo.concatMap((o: GridderTask) =>
+          o.setup$(cellRawDataConn, cellPgConn, logger)),
+
+      ),
+
+      GridderJob.get$(cellPgConn, "gridderJobHuelva")
+      .pipe(
+
+        rxo.concatMap((o: GridderJob) => o.getGridderTask$(cellPgConn)),
+
+        rxo.concatMap((o: GridderJob) => o.startOnCellLocalMode$(
+          cellPgConn,
+          cellRawDataConn,
+          [ new Cell({
+            gridId: "eu-grid",
+            zoom: 0,
+            x: 2,
+            y: 2,
+          }) ], 7, logger)
+        )
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: GridderTask) => expect(o.name).to.be.equal("Municipio máxima área"),
+
+      (o: GridderJob) =>
+        expect(o).to.be.equal(12)
+
+    ],
+
+    verbose: true
 
   })
 

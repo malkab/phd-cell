@@ -43,6 +43,7 @@ create table cell_meta.cell_version(
 create table cell_meta.gridder_task(
   gridder_task_id varchar(64) primary key,
   gridder_task_type varchar(64),
+  grid_id varchar(64) references cell_meta.grid(grid_id),
   -- This is the name of the specific GridderTask
   name varchar(150),
   -- This is the description of the specific GridderTask
@@ -60,11 +61,10 @@ create table cell_meta.gridder_task(
 */
 create table cell_meta.variable(
   gridder_task_id varchar(64) references cell_meta.gridder_task(gridder_task_id),
-  variable_id varchar(64),
-  key varchar(64) unique,
+  variable_key varchar(64) unique,
   name varchar(150),
   description text,
-  primary key (gridder_task_id, variable_id)
+  primary key (gridder_task_id, variable_key)
 );
 
 /**
@@ -75,16 +75,19 @@ create table cell_meta.variable(
 */
 create table cell_meta.catalog(
   gridder_task_id varchar(64),
-  variable_id varchar(64),
+  variable_key varchar(64),
   key varchar(64),
   value varchar(500),
-  primary key (gridder_task_id, variable_id, key)
+  primary key (gridder_task_id, variable_key, key)
 );
 
 alter table cell_meta.catalog
 add constraint catalog_variable_fkey
-foreign key (gridder_task_id, variable_id) references
-cell_meta.variable(gridder_task_id, variable_id);
+foreign key (gridder_task_id, variable_key) references
+cell_meta.variable(gridder_task_id, variable_key);
+
+alter table cell_meta.catalog
+add unique(variable_key, value);
 
 /**
 
@@ -100,17 +103,6 @@ create table cell_meta.gridder_job(
   min_zoom_level integer,
   sql_area_retrieval text,
   area geometry(multipolygon)
-);
-
-/**
-
-  GridderCell: a job from a GridderJob on a given cell.
-
-*/
-create table cell_meta.gridder_cell(
-  gridder_cell_id varchar(64) primary key,
-  gridder_job_id varchar(64) references cell_meta.gridder_job(gridder_job_id),
-  cell cell__cell
 );
 
 commit;

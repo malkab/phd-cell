@@ -4,18 +4,18 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
-import { Variable as VariableL } from "@malkab/libcell";
-
 import { GridderTask } from "../griddertasks/griddertask";
 
 import { miniHash } from "@malkab/node-utils";
+
+import { Catalog } from "./catalog";
 
 /**
  *
  * Variable, backend version.
  *
  */
-export class Variable extends VariableL implements PgOrm.IPgOrm<Variable> {
+export class Variable implements PgOrm.IPgOrm<Variable> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
@@ -24,9 +24,44 @@ export class Variable extends VariableL implements PgOrm.IPgOrm<Variable> {
 
   /**
    *
-   * The GridderTask.
+   * The Gridder Task ID.
    *
    */
+  private _gridderTaskId: string;
+  get gridderTaskId(): string { return this._gridderTaskId }
+
+  /**
+   *
+   * The Gridder Task.
+   *
+   */
+  private _gridderTask: GridderTask | undefined;
+  get gridderTask(): GridderTask | undefined { return this._gridderTask }
+  set gridderTask(gridderTask: GridderTask | undefined) { this._gridderTask = gridderTask }
+
+  /**
+   *
+   * Name.
+   *
+   */
+  private _name: string;
+  get name(): string { return this._name }
+
+  /**
+   *
+   * Description.
+   *
+   */
+  private _description: string;
+  get description(): string { return this._description }
+
+  /**
+   *
+   * Key. This is the key used at the data vector to refer to the variable.
+   *
+   */
+  private _variableKey: string | undefined;
+  get variableKey(): string | undefined { return this._variableKey }
 
   /**
    *
@@ -34,29 +69,24 @@ export class Variable extends VariableL implements PgOrm.IPgOrm<Variable> {
    *
    */
   constructor({
-      variableId,
       gridderTaskId,
       gridderTask = undefined,
-      key = undefined,
+      variableKey = undefined,
       name,
       description
     }: {
-      variableId: string;
       gridderTaskId: string;
       gridderTask?: GridderTask;
-      key?: string;
+      variableKey?: string;
       name: string;
       description: string;
   }) {
 
-    super({
-      variableId: variableId,
-      gridderTaskId: gridderTaskId,
-      gridderTask: gridderTask,
-      key: key,
-      name: name,
-      description: description
-    });
+    this._gridderTaskId = gridderTaskId;
+    this._gridderTask = gridderTask;
+    this._variableKey = variableKey;
+    this._name = name;
+    this._description = description;
 
   }
 
@@ -72,7 +102,7 @@ export class Variable extends VariableL implements PgOrm.IPgOrm<Variable> {
 
     // Get existing minihashes to generate a new minihash from the VariableId
     const sql: string = `
-      select key from cell_meta.variable`;
+      select variable_key from cell_meta.variable`;
 
     return pg.executeParamQuery$(sql)
     .pipe(
@@ -82,16 +112,16 @@ export class Variable extends VariableL implements PgOrm.IPgOrm<Variable> {
         const existingMiniHashes: string[] = o.rows.map((o: any) => o.key);
 
         // Get new minihash
-        this._key = miniHash({
-          values: [ `${this.gridderTaskId}${this.variableId}` ],
+        this._variableKey = miniHash({
+          values: [ `${this.gridderTaskId}${this.name}` ],
           existingMiniHashes: existingMiniHashes
         })[0];
 
         const sql: string = `
-          insert into cell_meta.variable values($1, $2, $3, $4, $5);`;
+          insert into cell_meta.variable values($1, $2, $3, $4);`;
 
         return pg.executeParamQuery$(sql,
-          { params: [ this.gridderTaskId, this.variableId, this.key, this.name,
+          { params: [ this.gridderTaskId, this.variableKey, this.name,
             this.description ] });
 
       }),
@@ -114,12 +144,26 @@ export class Variable extends VariableL implements PgOrm.IPgOrm<Variable> {
       sql: `
         select
           gridder_task_id as "gridderTaskId",
-          variable_id as "variableId",
+          variable_key as "variableKey",
           *
         from cell_meta.variable
         where gridder_task_id = $1`,
       params: () => [ gridderTaskId ],
       type: Variable
+    })
+
+  }
+
+  /**
+   *
+   * Returns a catalog for a discrete variable.
+   *
+   */
+  public getCatalog$(): Catalog {
+
+    return new Catalog({
+      gridderTaskId: this.gridderTaskId,
+      variableKey: <string>this.variableKey
     })
 
   }
