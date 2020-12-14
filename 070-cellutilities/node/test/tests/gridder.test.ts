@@ -21,10 +21,10 @@ describe("Read parameters from config file", function() {
       "cellPg",
       "sourcePg",
       "grid",
+      "gridderTask",
+      "gridderJob",
       "cell",
-      "maxZoom",
-      "drillDown",
-      "gridderTask"
+      "targetZoom"
     ]);
 
   });
@@ -46,7 +46,7 @@ describe("Run script", function() {
 
     assertions: [ (o: number) => expect(o).to.be.equal(12) ],
 
-    verbose: false
+    verbose: true
 
   })
 

@@ -2,9 +2,9 @@ import "mocha";
 
 import { expect } from "chai";
 
-import { basegeomgriddingConfig } from "./common";
+import { coveringCellsConfig } from "./common";
 
-import { process$ } from "../../src/lib/basegeomgridding";
+import { process$ } from "../../src/lib/coveringcells";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
@@ -17,7 +17,7 @@ describe("Read parameters from config file", function() {
 
   it("Read parameters from config file", function() {
 
-    expect(Object.keys(basegeomgriddingConfig)).to.deep.equal([
+    expect(Object.keys(coveringCellsConfig)).to.deep.equal([
       "cellPg",
       "sourcePg",
       "grid",
@@ -40,9 +40,9 @@ describe("Run script", function() {
 
     testCaseName: "Run script",
 
-    observables: [ process$(basegeomgriddingConfig) ],
+    observables: [ process$(coveringCellsConfig) ],
 
-    assertions: [ (o: number) => expect(o).to.be.equal(12) ],
+    assertions: [ (o: number) => expect(o).to.be.equal(20) ],
 
     verbose: false
 

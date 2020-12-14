@@ -9,9 +9,16 @@ windows:
       . mlkcontext common ;
       ./010_node.sh
 
-  - psql: >
+  - cell-db-psql: >
       clear ;
       sleep 2 ;
-      cd 070-cellutilities/docker/010_dev ;
       . mlkcontext common ;
-      ./100_psql.sh
+      cd docker/010-dev ;
+      ./100-pg-psql-celldb.sh
+
+  - cell-raw-data-psql: >
+      clear ;
+      sleep 4 ;
+      . mlkcontext common ;
+      cd docker/010-dev ;
+      ./110-pg-psql-cell_raw_data.sh

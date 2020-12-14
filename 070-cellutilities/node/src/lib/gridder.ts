@@ -1,4 +1,7 @@
-import { Cell, Grid, GridderTasks as gt, PgConnection } from "@malkab/libcellbackend";
+import {
+  Cell, Grid, PgConnection, GridderTask, GridderJob,
+  gridderTaskFactory$
+} from "@malkab/libcellbackend";
 
 import { RxPg } from "@malkab/rxpg";
 
@@ -8,12 +11,20 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
+import { ELOGLEVELS, NodeLogger } from "@malkab/node-logger";
+
 /**
  *
  * Library for command line utility gridder.
  *
  */
 export function process$(params: any): rx.Observable<any> {
+
+  const logger: NodeLogger = new NodeLogger({
+    appName: "gridder",
+    consoleOut: true,
+    minLogLevel: ELOGLEVELS.DEBUG
+  })
 
   console.log("D: 3j322", params);
 
@@ -111,51 +122,50 @@ export function process$(params: any): rx.Observable<any> {
 
   /**
    *
+   * GridderJob.
+   *
+   */
+  const gridderJob: any = new GridderJob(params.gridderJob);
+
+  /**
+   *
    * Create the GridderTask and execute computeCell$.
    *
    */
-  let gridderTask: gt.GridderTask;
+  let gridderTask: GridderTask;
 
-  return gt.gridderTaskFactory$(cellPgConn, params.gridderTask)
+  // Insert objects into the Cell DB
+  return gridderTaskFactory$(params.gridderTask)
   .pipe(
 
-    rxo.map((o: any) => gridderTask = o),
+    rxo.map((o: GridderTask) => {
+      gridderTask = o;
+      gridderTask.grid = grid;
+      gridderJob.gridderTask = gridderTask;
+      return gridderTask;
+    }),
 
-    // Insert objects into the Cell DB
-    rxo.concatMap((o: any) => rx.zip(
+    rxo.concatMap((o: GridderTask) => rx.zip(
       cellRawData.pgInsert$(cellPgConn)
-        .pipe(rxo.catchError((e: Error) => rx.of("duplicated connection"))),
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated source connection"))),
+      cellPg.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated cell connection"))),
       grid.pgInsert$(cellPgConn)
         .pipe(rxo.catchError((e: Error) => rx.of("duplicated grid"))),
       gridderTask.pgInsert$(cellPgConn)
-        .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder task")))
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder task"))),
+      gridderJob.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder job")))
     )),
 
     // Setup the gridder task
-    rxo.concatMap((o: any) => gridderTask.setup$(cellRawDataConn, cellPgConn)),
+    // rxo.concatMap((o: any) => gridderTask.setup$(cellRawDataConn, cellPgConn)),
 
     // Compute the cell
-    rxo.concatMap((o: any) => gridderTask.computeCell$(cellRawDataConn, cellPgConn, cell, 6)
+    rxo.concatMap((o: any) =>
+      gridderJob.startOnCellLocalMode(cellPgConn, cellRawDataConn,
+        [ cell ], params.targetZoom, logger))
 
   )
-
-
-
-
-  // .pipe(
-
-  //   rxo.concatMap((o: any) => {
-
-  //     return gridderJob.getArea$(cellRawData, cellPg, grid);
-
-  //   }),
-
-  //   rxo.concatMap((o: any) => {
-
-  //     return gridderJob.getCoveringCells$(cellPgConn, grid, params.zoom);
-
-  //   })
-
-  // )
 
 }

@@ -15,7 +15,7 @@ import * as rx from "rxjs";
  * Factory for creating GridderTasks specialized classes.
  *
  */
-function gridderTaskFactory$(pg: RxPg, params: any): rx.Observable<
+export function gridderTaskFactory$(params: any): rx.Observable<
   DiscretePolyAreaSummaryGridderTask |
   DiscretePolyTopAreaGridderTask
 > {
@@ -63,7 +63,7 @@ export function gridderTaskGet$(pg: RxPg, gridderTaskId: string): rx.Observable<
     params: () => [ gridderTaskId ],
     type: GridderTask,
     newFunction$: (params: any) =>
-      gridderTaskFactory$(pg, {
+      gridderTaskFactory$({
         ...params,
         ...params.additionalParams
       })

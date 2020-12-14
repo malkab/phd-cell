@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "@malkab/libcellbackend": "^1.0.2",
+    "@malkab/node-logger": "^1.1.4",
     "@malkab/node-utils": "^1.5.19",
     "@malkab/rxpg": "^4.1.23"
   }
