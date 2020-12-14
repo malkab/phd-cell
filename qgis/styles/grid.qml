@@ -1,26 +1,30 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis simplifyAlgorithm="0" minScale="100000000" styleCategories="AllStyleCategories" simplifyMaxScale="1" simplifyDrawingHints="1" version="3.14.1-Pi" maxScale="0" simplifyLocal="1" readOnly="0" simplifyDrawingTol="1" hasScaleBasedVisibilityFlag="0" labelsEnabled="0">
+<qgis hasScaleBasedVisibilityFlag="0" labelsEnabled="0" simplifyAlgorithm="0" simplifyLocal="1" readOnly="0" minScale="100000000" simplifyMaxScale="1" version="3.14.1-Pi" maxScale="0" simplifyDrawingHints="1" simplifyDrawingTol="1" styleCategories="AllStyleCategories">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <temporal accumulate="0" startField="" mode="0" enabled="0" endField="" endExpression="" durationField="" startExpression="" durationUnit="min" fixedDuration="0">
+  <temporal mode="0" endExpression="" fixedDuration="0" startExpression="" endField="" durationField="" accumulate="0" durationUnit="min" enabled="0" startField="">
     <fixedRange>
       <start></start>
       <end></end>
     </fixedRange>
   </temporal>
-  <renderer-v2 forceraster="0" attr="zoom" symbollevels="0" enableorderby="0" type="categorizedSymbol">
+  <renderer-v2 forceraster="0" enableorderby="0" type="categorizedSymbol" symbollevels="0" attr="zoom">
     <categories>
-      <category label="Zoom 0" value="0" render="true" symbol="0"/>
-      <category label="Zoom 1" value="1" render="true" symbol="1"/>
-      <category label="Zoom 2" value="2" render="true" symbol="2"/>
-      <category label="Zoom 4" value="4" render="true" symbol="3"/>
+      <category value="0" symbol="0" render="true" label="Zoom 0"/>
+      <category value="1" symbol="1" render="true" label="Zoom 1"/>
+      <category value="2" symbol="2" render="true" label="Zoom 2"/>
+      <category value="3" symbol="3" render="true" label="Zoom 3"/>
+      <category value="4" symbol="4" render="true" label="Zoom 4"/>
+      <category value="5" symbol="5" render="true" label="Zoom 5"/>
+      <category value="6" symbol="6" render="true" label="Zoom 6"/>
+      <category value="7" symbol="7" render="true" label="Zoom 7"/>
     </categories>
     <symbols>
-      <symbol force_rhr="0" name="0" clip_to_extent="1" alpha="1" type="fill">
-        <layer locked="0" enabled="1" pass="0" class="SimpleFill">
+      <symbol name="0" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
           <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
           <prop v="127,70,207,255" k="color"/>
           <prop v="bevel" k="joinstyle"/>
@@ -41,8 +45,8 @@
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol force_rhr="0" name="1" clip_to_extent="1" alpha="1" type="fill">
-        <layer locked="0" enabled="1" pass="0" class="SimpleFill">
+      <symbol name="1" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
           <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
           <prop v="206,175,34,255" k="color"/>
           <prop v="bevel" k="joinstyle"/>
@@ -63,8 +67,8 @@
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol force_rhr="0" name="2" clip_to_extent="1" alpha="1" type="fill">
-        <layer locked="0" enabled="1" pass="0" class="SimpleFill">
+      <symbol name="2" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
           <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
           <prop v="230,94,146,255" k="color"/>
           <prop v="bevel" k="joinstyle"/>
@@ -85,8 +89,96 @@
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol force_rhr="0" name="3" clip_to_extent="1" alpha="1" type="fill">
-        <layer locked="0" enabled="1" pass="0" class="SimpleFill">
+      <symbol name="3" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
+          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+          <prop v="68,212,70,255" k="color"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="0,0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="255,35,35,255" k="outline_color"/>
+          <prop v="solid" k="outline_style"/>
+          <prop v="0.26" k="outline_width"/>
+          <prop v="MM" k="outline_width_unit"/>
+          <prop v="no" k="style"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option value="" name="name" type="QString"/>
+              <Option name="properties"/>
+              <Option value="collection" name="type" type="QString"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+      <symbol name="4" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
+          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+          <prop v="68,212,70,255" k="color"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="0,0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="255,35,35,255" k="outline_color"/>
+          <prop v="solid" k="outline_style"/>
+          <prop v="0.26" k="outline_width"/>
+          <prop v="MM" k="outline_width_unit"/>
+          <prop v="no" k="style"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option value="" name="name" type="QString"/>
+              <Option name="properties"/>
+              <Option value="collection" name="type" type="QString"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+      <symbol name="5" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
+          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+          <prop v="68,212,70,255" k="color"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="0,0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="255,35,35,255" k="outline_color"/>
+          <prop v="solid" k="outline_style"/>
+          <prop v="0.26" k="outline_width"/>
+          <prop v="MM" k="outline_width_unit"/>
+          <prop v="no" k="style"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option value="" name="name" type="QString"/>
+              <Option name="properties"/>
+              <Option value="collection" name="type" type="QString"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+      <symbol name="6" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
+          <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+          <prop v="68,212,70,255" k="color"/>
+          <prop v="bevel" k="joinstyle"/>
+          <prop v="0,0" k="offset"/>
+          <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+          <prop v="MM" k="offset_unit"/>
+          <prop v="255,35,35,255" k="outline_color"/>
+          <prop v="solid" k="outline_style"/>
+          <prop v="0.26" k="outline_width"/>
+          <prop v="MM" k="outline_width_unit"/>
+          <prop v="no" k="style"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option value="" name="name" type="QString"/>
+              <Option name="properties"/>
+              <Option value="collection" name="type" type="QString"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+      <symbol name="7" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
           <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
           <prop v="68,212,70,255" k="color"/>
           <prop v="bevel" k="joinstyle"/>
@@ -109,8 +201,8 @@
       </symbol>
     </symbols>
     <source-symbol>
-      <symbol force_rhr="0" name="0" clip_to_extent="1" alpha="1" type="fill">
-        <layer locked="0" enabled="1" pass="0" class="SimpleFill">
+      <symbol name="0" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
+        <layer locked="0" pass="0" class="SimpleFill" enabled="1">
           <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
           <prop v="183,72,75,255" k="color"/>
           <prop v="bevel" k="joinstyle"/>
@@ -143,13 +235,13 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <SingleCategoryDiagramRenderer attributeLegend="1" diagramType="Histogram">
-    <DiagramCategory diagramOrientation="Up" direction="0" penColor="#000000" rotationOffset="270" opacity="1" spacingUnitScale="3x:0,0,0,0,0,0" barWidth="5" maxScaleDenominator="1e+08" lineSizeType="MM" lineSizeScale="3x:0,0,0,0,0,0" sizeType="MM" enabled="0" penWidth="0" backgroundAlpha="255" spacingUnit="MM" sizeScale="3x:0,0,0,0,0,0" backgroundColor="#ffffff" width="15" height="15" scaleDependency="Area" minimumSize="0" penAlpha="255" minScaleDenominator="0" labelPlacementMethod="XHeight" showAxis="1" spacing="5" scaleBasedVisibility="0">
+  <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
+    <DiagramCategory penWidth="0" minScaleDenominator="0" sizeType="MM" penColor="#000000" spacingUnitScale="3x:0,0,0,0,0,0" width="15" sizeScale="3x:0,0,0,0,0,0" scaleDependency="Area" diagramOrientation="Up" rotationOffset="270" backgroundAlpha="255" showAxis="1" backgroundColor="#ffffff" maxScaleDenominator="1e+08" labelPlacementMethod="XHeight" spacingUnit="MM" enabled="0" lineSizeScale="3x:0,0,0,0,0,0" spacing="5" height="15" direction="0" minimumSize="0" scaleBasedVisibility="0" opacity="1" barWidth="5" penAlpha="255" lineSizeType="MM">
       <fontProperties description="Ubuntu,11,-1,5,50,0,0,0,0,0" style=""/>
-      <attribute field="" label="" color="#000000"/>
+      <attribute field="" color="#000000" label=""/>
       <axisSymbol>
-        <symbol force_rhr="0" name="" clip_to_extent="1" alpha="1" type="line">
-          <layer locked="0" enabled="1" pass="0" class="SimpleLine">
+        <symbol name="" force_rhr="0" type="line" alpha="1" clip_to_extent="1">
+          <layer locked="0" pass="0" class="SimpleLine" enabled="1">
             <prop v="square" k="capstyle"/>
             <prop v="5;2" k="customdash"/>
             <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
@@ -178,7 +270,7 @@
       </axisSymbol>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings dist="0" linePlacementFlags="18" obstacle="0" priority="0" zIndex="0" showAll="1" placement="1">
+  <DiagramLayerSettings dist="0" priority="0" placement="1" linePlacementFlags="18" zIndex="0" obstacle="0" showAll="1">
     <properties>
       <Option type="Map">
         <Option value="" name="name" type="QString"/>
@@ -251,42 +343,42 @@
     </field>
   </fieldConfiguration>
   <aliases>
-    <alias field="grid_id" index="0" name=""/>
-    <alias field="epsg" index="1" name=""/>
-    <alias field="zoom" index="2" name=""/>
-    <alias field="x" index="3" name=""/>
-    <alias field="y" index="4" name=""/>
-    <alias field="data" index="5" name=""/>
-    <alias field="geom_4326" index="6" name=""/>
+    <alias name="" field="grid_id" index="0"/>
+    <alias name="" field="epsg" index="1"/>
+    <alias name="" field="zoom" index="2"/>
+    <alias name="" field="x" index="3"/>
+    <alias name="" field="y" index="4"/>
+    <alias name="" field="data" index="5"/>
+    <alias name="" field="geom_4326" index="6"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default field="grid_id" expression="" applyOnUpdate="0"/>
-    <default field="epsg" expression="" applyOnUpdate="0"/>
-    <default field="zoom" expression="" applyOnUpdate="0"/>
-    <default field="x" expression="" applyOnUpdate="0"/>
-    <default field="y" expression="" applyOnUpdate="0"/>
-    <default field="data" expression="" applyOnUpdate="0"/>
-    <default field="geom_4326" expression="" applyOnUpdate="0"/>
+    <default applyOnUpdate="0" expression="" field="grid_id"/>
+    <default applyOnUpdate="0" expression="" field="epsg"/>
+    <default applyOnUpdate="0" expression="" field="zoom"/>
+    <default applyOnUpdate="0" expression="" field="x"/>
+    <default applyOnUpdate="0" expression="" field="y"/>
+    <default applyOnUpdate="0" expression="" field="data"/>
+    <default applyOnUpdate="0" expression="" field="geom_4326"/>
   </defaults>
   <constraints>
-    <constraint field="grid_id" constraints="1" unique_strength="0" notnull_strength="1" exp_strength="0"/>
-    <constraint field="epsg" constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0"/>
-    <constraint field="zoom" constraints="1" unique_strength="0" notnull_strength="1" exp_strength="0"/>
-    <constraint field="x" constraints="1" unique_strength="0" notnull_strength="1" exp_strength="0"/>
-    <constraint field="y" constraints="1" unique_strength="0" notnull_strength="1" exp_strength="0"/>
-    <constraint field="data" constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0"/>
-    <constraint field="geom_4326" constraints="0" unique_strength="0" notnull_strength="0" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="1" constraints="1" field="grid_id" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="0" constraints="0" field="epsg" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="1" constraints="1" field="zoom" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="1" constraints="1" field="x" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="1" constraints="1" field="y" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="0" constraints="0" field="data" exp_strength="0"/>
+    <constraint unique_strength="0" notnull_strength="0" constraints="0" field="geom_4326" exp_strength="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint field="grid_id" exp="" desc=""/>
-    <constraint field="epsg" exp="" desc=""/>
-    <constraint field="zoom" exp="" desc=""/>
-    <constraint field="x" exp="" desc=""/>
-    <constraint field="y" exp="" desc=""/>
-    <constraint field="data" exp="" desc=""/>
-    <constraint field="geom_4326" exp="" desc=""/>
+    <constraint exp="" desc="" field="grid_id"/>
+    <constraint exp="" desc="" field="epsg"/>
+    <constraint exp="" desc="" field="zoom"/>
+    <constraint exp="" desc="" field="x"/>
+    <constraint exp="" desc="" field="y"/>
+    <constraint exp="" desc="" field="data"/>
+    <constraint exp="" desc="" field="geom_4326"/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions>
@@ -294,14 +386,14 @@
   </attributeactions>
   <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
     <columns>
-      <column name="grid_id" type="field" hidden="0" width="-1"/>
-      <column name="epsg" type="field" hidden="0" width="-1"/>
-      <column name="zoom" type="field" hidden="0" width="-1"/>
-      <column name="x" type="field" hidden="0" width="-1"/>
-      <column name="y" type="field" hidden="0" width="-1"/>
-      <column name="data" type="field" hidden="0" width="-1"/>
-      <column name="geom_4326" type="field" hidden="0" width="-1"/>
-      <column type="actions" hidden="1" width="-1"/>
+      <column name="grid_id" hidden="0" type="field" width="-1"/>
+      <column name="epsg" hidden="0" type="field" width="-1"/>
+      <column name="zoom" hidden="0" type="field" width="-1"/>
+      <column name="x" hidden="0" type="field" width="-1"/>
+      <column name="y" hidden="0" type="field" width="-1"/>
+      <column name="data" hidden="0" type="field" width="-1"/>
+      <column name="geom_4326" hidden="0" type="field" width="-1"/>
+      <column hidden="1" type="actions" width="-1"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>
@@ -342,13 +434,13 @@ def my_form_open(dialog, layer, feature):
     <field name="zoom" editable="1"/>
   </editable>
   <labelOnTop>
-    <field labelOnTop="0" name="data"/>
-    <field labelOnTop="0" name="epsg"/>
-    <field labelOnTop="0" name="geom_4326"/>
-    <field labelOnTop="0" name="grid_id"/>
-    <field labelOnTop="0" name="x"/>
-    <field labelOnTop="0" name="y"/>
-    <field labelOnTop="0" name="zoom"/>
+    <field name="data" labelOnTop="0"/>
+    <field name="epsg" labelOnTop="0"/>
+    <field name="geom_4326" labelOnTop="0"/>
+    <field name="grid_id" labelOnTop="0"/>
+    <field name="x" labelOnTop="0"/>
+    <field name="y" labelOnTop="0"/>
+    <field name="zoom" labelOnTop="0"/>
   </labelOnTop>
   <dataDefinedFieldProperties/>
   <widgets/>

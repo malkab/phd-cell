@@ -20,7 +20,7 @@ NODE_VERSION=12.16.3
 # Env mode: production / development.
 NODE_ENV=development
 # Node memory.
-NODE_MEMORY=8GB
+NODE_MEMORY=$NODE_MEMORY
 # Null for an interactive shell session, the EXEC is passed to /bin/bash with
 # the -c option. Can be used to run Node scripts with "node whatever" or run npm
 # targets with "npm run whatever".
