@@ -30,7 +30,7 @@ export MLKC_CELL_SSH_USER=
 # -----
 # Node params
 # -----
-export NODE_MEMORY=20GB
+export NODE_MEMORY=200GB
 export MLKC_CELL_NODE_ENV=development
 
 # -----

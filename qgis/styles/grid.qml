@@ -13,14 +13,14 @@
   </temporal>
   <renderer-v2 forceraster="0" enableorderby="0" type="categorizedSymbol" symbollevels="0" attr="zoom">
     <categories>
-      <category value="0" symbol="0" render="true" label="Zoom 0"/>
-      <category value="1" symbol="1" render="true" label="Zoom 1"/>
-      <category value="2" symbol="2" render="true" label="Zoom 2"/>
-      <category value="3" symbol="3" render="true" label="Zoom 3"/>
-      <category value="4" symbol="4" render="true" label="Zoom 4"/>
-      <category value="5" symbol="5" render="true" label="Zoom 5"/>
-      <category value="6" symbol="6" render="true" label="Zoom 6"/>
-      <category value="7" symbol="7" render="true" label="Zoom 7"/>
+      <category value="0" symbol="0" render="false" label="Zoom 0 - 100 km"/>
+      <category value="1" symbol="1" render="false" label="Zoom 1 - 50 km"/>
+      <category value="2" symbol="2" render="false" label="Zoom 2 - 10 km"/>
+      <category value="3" symbol="3" render="false" label="Zoom 3 - 5 km"/>
+      <category value="4" symbol="4" render="false" label="Zoom 4 - 1 km"/>
+      <category value="5" symbol="5" render="true" label="Zoom 5 - 500 m"/>
+      <category value="6" symbol="6" render="false" label="Zoom 6 - 250 m"/>
+      <category value="7" symbol="7" render="false" label="Zoom 7 - 125 m"/>
     </categories>
     <symbols>
       <symbol name="0" force_rhr="0" type="fill" alpha="1" clip_to_extent="1">
