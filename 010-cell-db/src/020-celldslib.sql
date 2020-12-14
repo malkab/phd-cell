@@ -506,5 +506,12 @@ returns numeric as $$
 $$ language sql
 returns null on null input;
 
+/**
+
+    Utility views.
+
+*/
+-- Zoms above 5 to speed up visulization in QGIS
+create view cell_data.zoom_0_4 as select * from cell_data.data where zoom < 5;
 
 commit;
