@@ -278,9 +278,9 @@ describe("Perform a local gridding of a cell", function() {
           cellRawDataConn,
           [ new Cell({
             gridId: "eu-grid",
-            zoom: 0,
-            x: 2,
-            y: 2,
+            zoom: 1,
+            x: 4,
+            y: 4,
           }) ], 7, logger)
         )
 
