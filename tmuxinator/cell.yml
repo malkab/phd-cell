@@ -6,7 +6,7 @@ startup_window: cell/full_backend
 # This shows a custom layout obtained with PREFIX : list-windows after configuring it with PREFIX : resize-pane
 # Predefined layouts are: even-horizontal, even-vertical, main-horizontal, main-vertical, and tiled.
 windows:
-  - cell/full_backend:
+  - full_backend:
       layout: 935c,317x73,0,0{210x73,0,0[210x36,0,0,0,210x36,0,37,4],106x73,211,0[106x18,211,0,1,106x17,211,19,5,106x18,211,37,2,106x17,211,56,3]}
       panes:
         - api: >
@@ -33,13 +33,19 @@ windows:
             clear ;
             sleep 12 ;
             . mlkcontext common
-  - sunnsaasds-psql: >
+  - cell-db-psql: >
       clear ;
       sleep 14 ;
       . mlkcontext common ;
       cd docker/010-dev ;
-      ./100-pg-psql.sh
-  - sunnsaasds: >
+      ./100-pg-psql-celldb.sh
+  - cell-raw-data-psql: >
+      clear ;
+      sleep 16 ;
+      . mlkcontext common ;
+      cd docker/010-dev ;
+      ./110-pg-psql-cell_raw_data.sh
+  - cell-persistence: >
       clear ;
       sleep 0.2 ;
       . mlkcontext common ;
@@ -47,6 +53,6 @@ windows:
       ./010-compose_up.sh
   - docker: >
       clear ;
-      sleep 16 ;
+      sleep 18 ;
       . mlkcontext common ;
       cd docker/010-dev

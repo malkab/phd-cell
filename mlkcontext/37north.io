@@ -11,6 +11,12 @@
 # ---------------------------
 
 # -----
+# Remote SSH
+# -----
+export MLKC_CELL_SSH_HOST=$MLKC_SYSTEM_37NORTH_HOST
+export MLKC_CELL_SSH_USER=$MLKC_SYSTEM_37NORTH_USER
+
+# -----
 # PostGIS for Cell DB
 # -----
 export MLKC_CELL_DB_NETWORK=
