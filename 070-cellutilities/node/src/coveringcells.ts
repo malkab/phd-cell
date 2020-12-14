@@ -1,4 +1,4 @@
-import { process$ } from "./lib/basegeomgridding";
+import { process$ } from "./lib/coveringcells";
 
 import { readJsonSync } from "@malkab/node-utils";
 
@@ -22,7 +22,7 @@ process$(vars)
 
   (o: any) => console.log("Inserting objects:", o),
 
-  (e: Error) => console.log("D: error", e),
+  (e: Error) => console.log("Error", e),
 
   () => processExit(0)
 

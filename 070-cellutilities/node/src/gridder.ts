@@ -1,4 +1,4 @@
-import { process$ } from "./lib/basegeomgridding";
+import { process$ } from "./lib/coveringcells";
 
 import { readJsonSync } from "@malkab/node-utils";
 

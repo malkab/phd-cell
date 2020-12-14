@@ -1,4 +1,4 @@
-import { Grid, GridderTasks as gt, PgConnection } from "@malkab/libcellbackend";
+import { Grid, PgConnection, GridderJob } from "@malkab/libcellbackend";
 
 import { RxPg } from "@malkab/rxpg";
 
@@ -99,7 +99,7 @@ export function process$(params: any): rx.Observable<any> {
    * Create the GridderJob. Here the target area is selected.
    *
    */
-  const gridderJob: gt.GridderJob = new gt.GridderJob(params.gridderJob);
+  const gridderJob: GridderJob = new GridderJob(params.gridderJob);
 
   // Insert objects into the Cell DB
   return rx.zip(
@@ -115,7 +115,7 @@ export function process$(params: any): rx.Observable<any> {
 
     rxo.concatMap((o: any) => {
 
-      return gridderJob.getArea$(cellRawData, cellPg, grid);
+      return gridderJob.getArea$(cellRawDataConn, cellPgConn, grid);
 
     }),
 

@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../tmuxinator"
+		},
+		{
+			"path": "../../../../malkab/Desktop"
 		}
 	],
 	"settings": {}

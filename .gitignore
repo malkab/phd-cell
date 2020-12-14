@@ -10,6 +10,6 @@ assets/redis_config/redis.conf
 070-cellutilities/docker/030_swarms/010-single_machine/900-docker-swarm-stack-rm.sh
 070-cellutilities/docker/030_swarms/010-single_machine/docker-compose.yaml
 070-cellutilities/docker/030_swarms/010-single_machine/910-volumes_drop.sh
-070-cellutilities/assets/basegeomgridding-config.json
+070-cellutilities/assets/coveringcells-config.json
 070-cellutilities/assets/gridder-config.json
 # -------------------
