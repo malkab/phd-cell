@@ -53,10 +53,8 @@
     "gridderJobId": "gridderJob",
     "gridderTaskId": "municipioDiscretePolyTopArea",
     "maxZoomLevel": 0,
-    "minZoomLevel": 0,
+    "minZoomLevel": 2,
     "sqlAreaRetrieval": "select geom from context.andalucia"
-  },
-
-  "zoom": 0
+  }
 
 }

@@ -1,4 +1,7 @@
-import { Grid, PgConnection, GridderJob } from "@malkab/libcellbackend";
+import {
+  Grid, PgConnection, GridderTask, GridderJob,
+  gridderTaskFactory$
+} from "@malkab/libcellbackend";
 
 import { RxPg } from "@malkab/rxpg";
 
@@ -8,12 +11,26 @@ import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
+import { NodeLogger, ELOGLEVELS } from "@malkab/node-logger";
+
 /**
  *
  * Library for command line utility basegeomgridding.
  *
  */
 export function process$(params: any): rx.Observable<any> {
+
+  const logger: NodeLogger = new NodeLogger({
+    appName: "gridder",
+    consoleOut: true,
+    minLogLevel: ELOGLEVELS.DEBUG
+  })
+
+  logger.logInfo({
+    message: `initilizing process`,
+    methodName: "process$",
+    moduleName: "coveringcells"
+  })
 
   /**
    *
@@ -39,11 +56,23 @@ export function process$(params: any): rx.Observable<any> {
   // Test cellPg connection
   cellPgConn.executeParamQuery$("select 0").subscribe(
 
-    (o: any) => console.log(`connected with Cell PG at ${cellPg.host}`),
+    (o: any) => {
+
+      logger.logInfo({
+        message: `connected with Cell PG at ${cellPg.host}`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      })
+
+    },
 
     (o: Error) => {
 
-      console.error(`error connecting with Cell PG at ${cellPg.host}`);
+      logger.logError({
+        message: `error connecting with Cell PG at ${cellPg.host}`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      })
 
       exit(-1);
 
@@ -73,13 +102,25 @@ export function process$(params: any): rx.Observable<any> {
   const cellRawDataConn: RxPg = cellRawData.open();
 
   // Test source PG connection
-  cellPgConn.executeParamQuery$("select 0").subscribe(
+  cellRawDataConn.executeParamQuery$("select 0").subscribe(
 
-    (o: any) => console.log(`connected with source PG at ${cellPg.host}`),
+    (o: any) => {
+
+      logger.logInfo({
+        message: `connected with source PG at ${cellRawData.host}`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      })
+
+    },
 
     (o: Error) => {
 
-      console.error(`error connecting with source PG at ${cellPg.host}`);
+      logger.logError({
+        message: `error connecting with source PG at ${cellRawData.host}`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      })
 
       exit(-1);
 
@@ -96,24 +137,105 @@ export function process$(params: any): rx.Observable<any> {
 
   /**
    *
-   * Create the GridderJob. Here the target area is selected.
+   * GridderJob.
    *
    */
-  const gridderJob: GridderJob = new GridderJob(params.gridderJob);
+  const gridderJob: any = new GridderJob(params.gridderJob);
+
+  /**
+   *
+   * GridderTask.
+   *
+   */
+  let gridderTask: GridderTask;
 
   // Insert objects into the Cell DB
-  return rx.zip(
-    cellRawData.pgInsert$(cellPgConn)
-      .pipe(
-        rxo.catchError((e: Error) => rx.of("duplicated connection"))),
-    grid.pgInsert$(cellPgConn)
-      .pipe(rxo.catchError((e: Error) => rx.of("duplicated grid"))),
-    gridderJob.pgInsert$(cellPgConn)
-      .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder job")))
-  )
+  return gridderTaskFactory$(params.gridderTask)
   .pipe(
 
+    rxo.map((o: GridderTask) => {
+      gridderTask = o;
+      gridderTask.grid = grid;
+      gridderJob.gridderTask = gridderTask;
+      return gridderTask;
+    }),
+
+    rxo.concatMap((o: GridderTask) => rx.zip(
+
+      cellRawData.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => {
+
+        logger.logError({
+          message: `error adding source connection: ${e.message}`,
+          methodName: "process$",
+          moduleName: "coveringcells"
+        });
+
+        return rx.of(`error adding source connection: ${e.message}`);
+
+      })),
+
+      cellPg.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => {
+
+        logger.logError({
+          message: `error adding cell connection: ${e.message}`,
+          methodName: "process$",
+          moduleName: "coveringcells"
+        });
+
+        return rx.of(`error adding cell connection: ${e.message}`);
+
+      })),
+
+      grid.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => {
+
+        logger.logError({
+          message: `error adding grid: ${e.message}`,
+          methodName: "process$",
+          moduleName: "coveringcells"
+        });
+
+        return rx.of(`error adding grid: ${e.message}`)
+
+      })),
+
+      gridderTask.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => {
+
+        logger.logError({
+          message: `error adding gridder task: ${e.message}`,
+          methodName: "process$",
+          moduleName: "coveringcells"
+        });
+
+        return rx.of(`error adding gridder task: ${e.message}`);
+
+      })),
+
+      gridderJob.pgInsert$(cellPgConn)
+      .pipe(rxo.catchError((e: Error) => {
+
+        logger.logError({
+          message: `error adding gridder job: ${e.message}`,
+          methodName: "process$",
+          moduleName: "coveringcells"
+        });
+
+        return rx.of(`error adding gridder job: ${e.message}`);
+
+      }))
+
+    )),
+
     rxo.concatMap((o: any) => {
+
+      logger.logInfo({
+        message: `added objects to the DB`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      });
 
       return gridderJob.getArea$(cellRawDataConn, cellPgConn, grid);
 
@@ -121,7 +243,25 @@ export function process$(params: any): rx.Observable<any> {
 
     rxo.concatMap((o: any) => {
 
+      logger.logInfo({
+        message: `GridderJob area retrieved`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      });
+
       return gridderJob.getCoveringCells$(cellPgConn, grid, params.zoom);
+
+    }),
+
+    rxo.map((o: any) => {
+
+      logger.logInfo({
+        message: `covering cells retrieved`,
+        methodName: "process$",
+        moduleName: "coveringcells"
+      });
+
+      return o;
 
     })
 

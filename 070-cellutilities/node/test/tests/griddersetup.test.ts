@@ -2,9 +2,9 @@ import "mocha";
 
 import { expect } from "chai";
 
-import { coveringCellsConfig } from "./common";
+import { gridderSetUpConfig } from "./common";
 
-import { process$ } from "../../src/lib/coveringcells";
+import { process$ } from "../../src/lib/gridder";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
@@ -17,13 +17,14 @@ describe("Read parameters from config file", function() {
 
   it("Read parameters from config file", function() {
 
-    expect(Object.keys(coveringCellsConfig)).to.deep.equal([
+    expect(Object.keys(gridderSetUpConfig)).to.deep.equal([
       "cellPg",
       "sourcePg",
       "grid",
       "gridderTask",
       "gridderJob",
-      "zoom"
+      "cell",
+      "targetZoom"
     ]);
 
   });
@@ -41,11 +42,11 @@ describe("Run script", function() {
 
     testCaseName: "Run script",
 
-    observables: [ process$(coveringCellsConfig) ],
+    observables: [ process$(gridderSetUpConfig) ],
 
-    assertions: [ (o: number) => expect(o).to.be.equal(20) ],
+    assertions: [ (o: number) => expect(o).to.be.equal(12) ],
 
-    verbose: false
+    verbose: true
 
   })
 

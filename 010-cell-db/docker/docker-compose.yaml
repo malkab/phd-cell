@@ -21,7 +21,7 @@ services:
       - "${MLKC_CELL_DB_DOCKER_EXTERNAL_PORT}:5432"
 
     volumes:
-      - ./000-localhost-volumes/cell-postgis:/data
+      - ./000-localhost-volumes/cell-db-postgis:/data
       - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
   cell-raw-data-postgis-dev:
@@ -39,7 +39,7 @@ services:
       - "${MLKC_CELL_RAW_DATA_DOCKER_EXTERNAL_PORT}:5432"
 
     volumes:
-      - ./000-localhost-volumes/cell-postgis:/data
+      - ./000-localhost-volumes/cell-raw-data-postgis:/data
       - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
   cell-redis-dev:

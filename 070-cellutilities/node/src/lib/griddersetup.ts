@@ -26,12 +26,6 @@ export function process$(params: any): rx.Observable<any> {
     minLogLevel: ELOGLEVELS.DEBUG
   })
 
-  logger.logInfo({
-    message: `initilizing process`,
-    methodName: "process$",
-    moduleName: "gridder"
-  })
-
   /**
    *
    * PG connection to the cellPg.
@@ -56,23 +50,11 @@ export function process$(params: any): rx.Observable<any> {
   // Test cellPg connection
   cellPgConn.executeParamQuery$("select 0").subscribe(
 
-    (o: any) => {
-
-      logger.logInfo({
-        message: `connected with Cell PG at ${cellPg.host}`,
-        methodName: "process$",
-        moduleName: "gridder"
-      })
-
-    },
+    (o: any) => console.log(`connected with Cell PG at ${cellPg.host}`),
 
     (o: Error) => {
 
-      logger.logError({
-        message: `error connecting with Cell PG at ${cellPg.host}`,
-        methodName: "process$",
-        moduleName: "gridder"
-      })
+      console.error(`error connecting with Cell PG at ${cellPg.host}`);
 
       exit(-1);
 
@@ -105,25 +87,13 @@ export function process$(params: any): rx.Observable<any> {
   params.gridderTask.pgConnectionId = "cellRawData";
 
   // Test source PG connection
-  cellRawDataConn.executeParamQuery$("select 0").subscribe(
+  cellPgConn.executeParamQuery$("select 0").subscribe(
 
-    (o: any) => {
-
-      logger.logInfo({
-        message: `connected with source PG at ${cellRawData.host}`,
-        methodName: "process$",
-        moduleName: "gridder"
-      })
-
-    },
+    (o: any) => console.log(`connected with source PG at ${cellPg.host}`),
 
     (o: Error) => {
 
-      logger.logError({
-        message: `error connecting with source PG at ${cellRawData.host}`,
-        methodName: "process$",
-        moduleName: "gridder"
-      })
+      console.error(`error connecting with source PG at ${cellPg.host}`);
 
       exit(-1);
 
@@ -171,23 +141,21 @@ export function process$(params: any): rx.Observable<any> {
       return gridderTask;
     }),
 
-    // rxo.concatMap((o: GridderTask) => rx.zip(
-    //   cellRawData.pgInsert$(cellPgConn)
-    //     .pipe(rxo.catchError((e: Error) => rx.of("duplicated source connection"))),
-    //   cellPg.pgInsert$(cellPgConn)
-    //     .pipe(rxo.catchError((e: Error) => rx.of("duplicated cell connection"))),
-    //   grid.pgInsert$(cellPgConn)
-    //     .pipe(rxo.catchError((e: Error) => rx.of("duplicated grid"))),
-    //   gridderTask.pgInsert$(cellPgConn)
-    //     .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder task"))),
-    //   gridderJob.pgInsert$(cellPgConn)
-    //     .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder job")))
-    // )),
+    rxo.concatMap((o: GridderTask) => rx.zip(
+      cellRawData.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated source connection"))),
+      cellPg.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated cell connection"))),
+      grid.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated grid"))),
+      gridderTask.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder task"))),
+      gridderJob.pgInsert$(cellPgConn)
+        .pipe(rxo.catchError((e: Error) => rx.of("duplicated gridder job")))
+    )),
 
-    // Compute the cell
-    rxo.concatMap((o: any) =>
-      gridderJob.startOnCellLocalMode(cellPgConn, cellRawDataConn,
-        [ cell ], params.targetZoom, logger))
+    // Setup the gridder task
+    rxo.concatMap((o: any) => gridderTask.setup$(cellRawDataConn, cellPgConn))
 
   )
 
