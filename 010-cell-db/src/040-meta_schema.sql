@@ -67,6 +67,14 @@ create table cell_meta.variable(
   primary key (gridder_task_id, variable_key)
 );
 
+-- Avoids the inclusion of a variable that has the same name for the same
+-- GridderTask. Since many GridderTasks inject lots of variables with a
+-- template, this is considered to be safe since the name should be unique
+-- within this GridderTask.
+alter table cell_meta.variable
+add constraint unique_gridder_task_id_name
+unique(gridder_task_id, name);
+
 /**
 
   Catalog. The catalog is a set of key / values for discrete variables to use

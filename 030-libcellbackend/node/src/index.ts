@@ -10,6 +10,8 @@ export * from "./core/cell";
 
 export * from "./griddertasks/discretepolyareasummarygriddertask";
 
+export * from "./griddertasks/pointaggregationsgriddertask";
+
 export * from "./griddertasks/discretepolytopareagriddertask";
 
 export * from "./griddertasks/griddertask";

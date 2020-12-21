@@ -2,6 +2,8 @@ import { DiscretePolyAreaSummaryGridderTask } from './discretepolyareasummarygri
 
 import { DiscretePolyTopAreaGridderTask } from './discretepolytopareagriddertask';
 
+import { PointAggregationsGridderTask } from './pointaggregationsgriddertask';
+
 import { RxPg, PgOrm } from '@malkab/rxpg';
 
 import { EGRIDDERTASKTYPE } from "./egriddertasktype";
@@ -17,7 +19,8 @@ import * as rx from "rxjs";
  */
 export function gridderTaskFactory$(params: any): rx.Observable<
   DiscretePolyAreaSummaryGridderTask |
-  DiscretePolyTopAreaGridderTask
+  DiscretePolyTopAreaGridderTask |
+  PointAggregationsGridderTask
 > {
 
   if (params.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
@@ -31,6 +34,14 @@ export function gridderTaskFactory$(params: any): rx.Observable<
   if (params.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
 
     return rx.of(new DiscretePolyTopAreaGridderTask({
+      ...params
+    }));
+
+  }
+
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.POINTAGGREGATIONS) {
+
+    return rx.of(new PointAggregationsGridderTask({
       ...params
     }));
 

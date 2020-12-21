@@ -158,8 +158,9 @@ describe("Variable pgInsert$", function() {
 
     assertions: [
 
-      (o: Variable) => { expect(o.name).to.be.equal("Var name") },
-      (o: Error) => { expect(o.message).to.be.equal('duplicate key value violates unique constraint "variable_pkey"') }
+      (o: Variable) => expect(o.name).to.be.equal("Var name"),
+      (o: Error) =>
+        expect(o.message).to.be.equal('duplicate key value violates unique constraint "unique_gridder_task_id_name"')
 
     ],
 

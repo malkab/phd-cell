@@ -17,13 +17,38 @@ import { exit as processExit } from "process";
  */
 const vars: any = readJsonSync([ "config.json" ]);
 
+/**
+ *
+ * Delay before exit to allow for all DB queries to be written (hopefully).
+ *
+ */
+function exitWait(exitCode: number): void {
+
+  console.log(`Awaiting 30 seconds for DB to exit with code ${exitCode}`);
+
+  setTimeout(
+
+    () => processExit(exitCode),
+
+    30000
+
+  )
+
+}
+
 process$(vars)
 .subscribe(
 
-  (o: any) => console.log("Inserting objects:", o),
+  (o: any) => console.log("CoveringCells next:", o),
 
-  (e: Error) => console.log("Error", e),
+  (e: Error) => {
 
-  () => processExit(0)
+    console.log("CoveringCells error:", e.message);
+
+    exitWait(-1);
+
+  },
+
+  () => exitWait(0)
 
 );

@@ -5,7 +5,7 @@ windows:
   - node: >
       clear ;
       sleep 0.5 ;
-      cd 070-cellutilities/docker/010_dev ;
+      cd 070-cellutilities/docker ;
       . mlkcontext common ;
       ./010_node.sh
 

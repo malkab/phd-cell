@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { Grid, Cell } from "../../src/index";
 
-import { eugrid, clearDatabase$, cellPgConn, cells, testCell_0_2_3 } from "./common";
+import { eugrid, clearDatabase$, cellPgConn, cells, testCell_0_2_3, testCell_2_27_32 } from "./common";
 
 import * as rx from "rxjs";
 
@@ -53,14 +53,14 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Insert CellBackend.
+ * Insert Cell.
  *
  */
-describe("CellBackend pgInsert$", function() {
+describe("Cell pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "CellBackend pgInsert$",
+    testCaseName: "Cell pgInsert$",
 
     observables: [ rx.concat(
 
@@ -123,6 +123,70 @@ describe("Get child cells and pgInsert$ them", function() {
     ],
 
     verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * drillDownClone$.
+ *
+ */
+describe("drillDownClone$", function() {
+
+  // Dummy data
+  testCell_0_2_3.data = { a: 10, b: 0 }
+
+  rxMochaTests({
+
+    testCaseName: "drillDownClone$",
+
+    observables: [ testCell_0_2_3.drillDownClone$(cellPgConn, 2) ],
+
+    assertions: [
+
+      // Check only the first cell
+      (o: Cell) => {
+        expect(o.zoom).to.be.equal(2);
+        expect(o.x).to.be.equal(20);
+        expect(o.y).to.be.equal(30);
+        expect(o.data).to.be.deep.equal({ a: 10, b: 0 })
+      }
+
+    ]
+
+  })
+
+})
+
+/**
+ *
+ * drillDownClone$ again to add more data.
+ *
+ */
+describe("drillDownClone$ again to add more data", function() {
+
+  // Dummy data
+  testCell_0_2_3.data = { c: -10 }
+
+  rxMochaTests({
+
+    testCaseName: "drillDownClone$ again to add more data",
+
+    observables: [ testCell_0_2_3.drillDownClone$(cellPgConn, 3) ],
+
+    assertions: [
+
+      // Check only the first cell
+      (o: Cell) => {
+        expect(o.zoom).to.be.equal(3);
+        expect(o.x).to.be.equal(40);
+        expect(o.y).to.be.equal(60);
+        expect(o.data).to.be.deep.equal({ c: -10 })
+      }
+
+    ]
 
   })
 

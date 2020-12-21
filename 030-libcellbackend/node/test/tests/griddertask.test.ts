@@ -146,7 +146,7 @@ describe("municipioDiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
     assertions: [
 
       (o: DiscretePolyAreaSummaryGridderTask) =>
-        expect(o.gridderTaskId, "Check ID").to.be.equal("municipioDiscreteAreaSummary")
+        expect(o.gridderTaskId, "Check ID").to.be.equal("municipioDiscretePolyAreaSummary")
 
     ],
 
@@ -197,7 +197,7 @@ describe("get$ municipioDiscretePolyAreaSummaryGridderTask", function() {
 
     testCaseName: "get$ municipioDiscretePolyAreaSummaryGridderTask",
 
-    observables: [ gridderTaskGet$(cellPgConn, "municipioDiscreteAreaSummary") ],
+    observables: [ gridderTaskGet$(cellPgConn, "municipioDiscretePolyAreaSummary") ],
 
     assertions: [
 

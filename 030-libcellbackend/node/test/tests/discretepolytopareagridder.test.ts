@@ -5,106 +5,15 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  PgConnection, Grid, DiscretePolyTopAreaGridderTask, gridderTaskGet$
+  DiscretePolyTopAreaGridderTask, gridderTaskGet$
 } from "../../src/index";
 
 import {
-  cellPgConn, cellRawData, cellRawDataConn, eugrid, testCell_4_270_329,
+  cellPgConn, cellRawDataConn, testCell_4_270_329,
   testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
   testCell_2_28_30,
-  municipioDiscretePolyTopAreaGridderTask, clearDatabase$, logger
+  municipioDiscretePolyTopAreaGridderTask, logger
 } from "./common";
-
-/**
- *
- * Initial database clearance.
- *
- */
-describe("Initial database clearance", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Initial database clearance",
-
-    observables: [ clearDatabase$ ],
-
-    assertions: [
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true,
-
-      (o: boolean) => expect(o).to.be.true
-
-    ],
-
-    verbose: false
-
-  })
-
-})
-
-/**
- *
- * Insert Grid.
- *
- */
-describe("GridBackend pgInsert$", function() {
-
-  rxMochaTests({
-
-    testCaseName: "GridBackend pgInsert$",
-
-    observables: [ eugrid.pgInsert$(cellPgConn) ],
-
-    assertions: [ (o: Grid) => expect(o.name).to.be.equal("eu-grid") ],
-
-    verbose: false,
-
-    active: true
-
-  })
-
-})
-
-/**
- *
- * Create PgConnection.
- *
- */
-describe("Create PgConnection", function() {
-
-  /**
-   *
-   * Create PgConnection.
-   *
-   */
-  rxMochaTests({
-
-    testCaseName: "Create PgConnection",
-
-    observables: [ cellRawData.pgInsert$(cellPgConn) ],
-
-    assertions: [
-      (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
-
-    verbose: false,
-
-    active: true
-
-  })
-
-})
 
 /**
  *

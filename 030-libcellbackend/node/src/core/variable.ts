@@ -109,7 +109,8 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
 
       rxo.concatMap((o: QueryResult) => {
 
-        const existingMiniHashes: string[] = o.rows.map((o: any) => o.key);
+        const existingMiniHashes: string[] = o.rows.map((o: any) =>
+          o.variable_key);
 
         // Get new minihash
         this._variableKey = miniHash({
@@ -164,6 +165,33 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
     return new Catalog({
       gridderTaskId: this.gridderTaskId,
       variableKey: <string>this.variableKey
+    })
+
+  }
+
+  /**
+   *
+   * Get variables by its GridderTaskId and name. This is needed for the
+   * DiscretePolyAreaSummary Gridder Task that generates many variables.
+   *
+   */
+  public static getByGridderTaskIdAndName$(
+    pg: RxPg,
+    gridderTaskId: string,
+    variableName: string
+  ): rx.Observable<Variable> {
+
+    return PgOrm.select$<Variable>({
+      pg: pg,
+      sql: `
+        select
+          gridder_task_id as "gridderTaskId",
+          variable_key as "variableKey",
+          *
+        from cell_meta.variable
+        where gridder_task_id = $1 and name = $2`,
+      params: () => [ gridderTaskId, variableName ],
+      type: Variable
     })
 
   }

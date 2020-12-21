@@ -97,9 +97,81 @@ create index cell_data_geom_4326_gist
 on cell_data.data
 using gist(geom_4326);
 
+/**
+
+  Gets the EPSG of the main grid (the first one).
+
+*/
+create or replace function cell__getmaingridepsg()
+returns integer as
+$$
+
+  select origin_epsg::integer
+  from cell_meta.grid
+  limit 1;
+
+$$
+language sql;
+
+/**
+
+  Gets the grid ID of the main grid (the first one).
+
+*/
+create or replace function cell__getmaingridid()
+returns varchar as
+$$
+
+  select grid_id::varchar
+  from cell_meta.grid
+  limit 1;
+
+$$
+language sql;
+
+/**
+
+  Returns a cell__cell object by providing (zoom, x, y) using the main grid
+  data.
+
+*/
+create or replace function cell__defaultcell(
+  _zoom integer,
+  _x integer,
+  _y integer
+) returns cell__cell as
+$$
+
+  select (
+    cell__getmaingridid(),
+    cell__getmaingridepsg(),
+    _zoom, _x, _y, '{}'::jsonb
+  )::cell__cell
+
+$$
+language sql;
+
+/**
+
+  Returns a bbox from an array of floats in the form
+  (lower_left_x, lower_left_y, upper_right_x, upper_right_y)
+
+*/
+create or replace function cell__bboxfromcorners(
+  _bbox float[]
+) returns geometry as
+$$
+
+  select
+    st_setsrid(st_makebox2d(st_point(_bbox[1], _bbox[2]),
+	    st_point(_bbox[3], _bbox[4])), cell__getmaingridepsg());
+
+$$
+language sql;
+
 /*
 
-    View to debug JSON output in QGIS
+  View to debug JSON output in QGIS.
 
 */
 create or replace view cell_data.data_qgis as
@@ -117,7 +189,7 @@ order by zoom;
 
 /*
 
-    The library code.
+  The library code.
 
 */
 
@@ -150,7 +222,7 @@ language sql;
 
 */
 create or replace function cell__getgridsrs(
-    _grid_id varchar(20)
+  _grid_id varchar(20)
 ) returns integer as
 $$
 
@@ -449,6 +521,107 @@ $$
 $$
 language sql;
 
+/**
+
+  Get all cells that has in its data the given variable keys (_varkeys). The
+  presence of the variable keys can be obtained either with AND or OR
+  (set _and to true for an AND, false for an OR, defaults to AND). Optionally,
+  a zoom (_zoom) filter can be provided to get only the cells at that zoom
+  level, or a geometry. Set both to null for no filters.
+
+*/
+create or replace function public.cell__getcellsbyvarkeys(
+  _varkeys varchar[],
+  _and boolean,
+  _zoom integer,
+  _geom geometry
+) returns setof cell_data.data as
+$$
+declare
+  _sql text;
+  _jsonb_object_keys text;
+  _jsonb_object_values text;
+  _where text;
+  _x varchar;
+  _bool varchar;
+begin
+
+  _jsonb_object_keys = '';
+  _jsonb_object_values = '';
+  _where = '(';
+
+  if _and is true then
+    _bool = 'and';
+  else
+    _bool = 'or';
+  end if;
+
+  if _and is null then
+    _bool = 'and';
+  end if;
+
+  foreach _x in array _varkeys loop
+
+    _jsonb_object_keys = _jsonb_object_keys || format('''%s'',', _x);
+    _jsonb_object_values = _jsonb_object_values ||
+      format('data ->> ''%s'',', _x);
+    _where = _where || format('data @? ''$."%s"''::jsonpath %s ', _x, _bool);
+
+  end loop;
+
+  _jsonb_object_keys = trim(trailing ',' from _jsonb_object_keys);
+  _jsonb_object_values = trim(trailing ',' from _jsonb_object_values);
+  _where = trim(trailing format(' %s ', _bool) from _where) || ')';
+
+  if _zoom is not null then
+
+    _where = _where || format(' and zoom = %s', _zoom);
+
+  end if;
+
+  if _geom is not null then
+
+    _where = _where || format(' and ''%s''::geometry && geom', _geom);
+
+  end if;
+
+  _sql = format('
+    select
+      grid_id,
+      epsg,
+      zoom,
+      x,
+      y,
+      jsonb_object(ARRAY[ %s ], ARRAY[ %s ]),
+      geom,
+      geom_4326
+    from cell_data.data
+    where %s
+    ', _jsonb_object_keys, _jsonb_object_values, _where);
+
+  return query execute _sql;
+
+end;
+$$
+language plpgsql;
+
+/**
+
+  Returns all variable keys for a given GridderTask ID as an array of varchars.
+
+*/
+create or replace function cell__getvariablekeysbygriddertaskid(
+  _griddertaskid varchar(64)
+) returns varchar[] as
+$$
+
+  select array_agg(variable_key)
+  from cell_meta.variable
+  where gridder_task_id = $1;
+
+$$
+language sql;
+
 /*
 
     JSONB Array functions.
@@ -511,7 +684,7 @@ returns null on null input;
     Utility views.
 
 */
--- Zoms above 5 to speed up visulization in QGIS
+-- Zooms above 5 to speed up visulization in QGIS
 create view cell_data.zoom_0_4 as select * from cell_data.data where zoom < 5;
 
 commit;

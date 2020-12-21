@@ -1,7 +1,8 @@
 import {
   Cell, PgConnection, Variable, Grid, GridderJob,
   DiscretePolyTopAreaGridderTask,
-  DiscretePolyAreaSummaryGridderTask
+  DiscretePolyAreaSummaryGridderTask,
+  PointAggregationsGridderTask
 } from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
@@ -19,7 +20,7 @@ import { NodeLogger, ELOGLEVELS } from "@malkab/node-logger";
  */
 export const logger: NodeLogger = new NodeLogger({
   appName: "libcellbackend",
-  consoleOut: true,
+  consoleOut: false,
   logFilePath: "/logs/",
   minLogLevel: ELOGLEVELS.DEBUG
 })
@@ -45,9 +46,9 @@ const pgCellParams: any = {
  *
  */
 const pgSourceParams: any = {
-  host: "37north.io",
-  pass: "3j329fjvkd2345-:k342ju",
-  port: 5632
+  host: "xxx",
+  pass: "xxx",
+  port: 0
 }
 
 /**
@@ -149,7 +150,7 @@ new DiscretePolyTopAreaGridderTask({
   gridderTaskId: "municipioDiscretePolyTopArea",
   gridId: "eu-grid",
   grid: eugrid,
-  name: "Municipio máxima área",
+  name : "Municipio máxima área",
   description: "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
   sourceTable: "context.municipio",
   geomField: "geom",
@@ -159,9 +160,14 @@ new DiscretePolyTopAreaGridderTask({
   categoryTemplate: "{{{municipio}}} ({{{provincia}}})"
 });
 
+/**
+ *
+ * DiscretePolyAreaSummaryGridderTask.
+ *
+ */
 export const municipioDiscretePolyAreaSummaryGridderTask: DiscretePolyAreaSummaryGridderTask =
 new DiscretePolyAreaSummaryGridderTask({
-  gridderTaskId: "municipioDiscreteAreaSummary",
+  gridderTaskId: "municipioDiscretePolyAreaSummary",
   gridId: "eu-grid",
   grid: eugrid,
   name: "Desglose de área de municipios",
@@ -169,8 +175,46 @@ new DiscretePolyAreaSummaryGridderTask({
   sourceTable: "context.municipio",
   geomField: "geom",
   discreteFields: [ "provincia", "municipio" ],
-  variableNameTemplate: "{{{municipio}}} ({{{provincia}}})",
-  variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
+  variableNameTemplate: "Área {{{municipio}}} ({{{provincia}}})",
+  variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}",
+})
+
+/**
+ *
+ * PointAggregationsGridderTask.
+ *
+ */
+export const poblacionPointAggregationsGridderTask: PointAggregationsGridderTask =
+new PointAggregationsGridderTask({
+  gridderTaskId: "poblacionPointAggregations",
+  gridId: "eu-grid",
+  grid: eugrid,
+  name: "Estadísticas de población",
+  description: "Estadísticas de población",
+  sourceTable: "poblacion.poblacion",
+  geomField: "geom",
+  variables: [
+    {
+      name: "Población total 2002",
+      description: "Población total del año 2002.",
+      expression: "sum(ptot02)"
+    },
+    {
+      name: "Población hombres 2020",
+      description: "Población de hombres del año 2002.",
+      expression: "sum(ph02)"
+    },
+    {
+      name: "Población mujeres 2002",
+      description: "Población de mujeres del año 2002.",
+      expression: "sum(pm02)"
+    },
+    {
+      name: "Índice de dependencia total 2002",
+      description: "Índice de dependencia total de 2002. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+      expression: "round(((sum(e001502)::float + sum(e6502)::float) / sum(e166402)::float)::numeric, 2)"
+    }
+  ]
 })
 
 /**
@@ -311,9 +355,22 @@ export const testCell_4_270_329: Cell = new Cell({
  * Gridder Job for top area for Huelva.
  *
  */
-export const gridderJobHuelva: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobHuelva",
+export const gridderJobTopArea: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobTopArea",
   gridderTaskId: "municipioDiscretePolyTopArea",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
+/**
+ *
+ * Gridder Job for area summary for Huelva.
+ *
+ */
+export const gridderJobAreaSummary: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobAreaSummary",
+  gridderTaskId: "municipioDiscretePolyAreaSummary",
   maxZoomLevel: 0,
   minZoomLevel: 2,
   sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"

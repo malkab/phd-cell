@@ -4,6 +4,8 @@ import { RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
+import * as rxo from "rxjs/operators";
+
 import { Grid } from "./grid";
 
 import { Bbox, IBbox } from "./bbox";
@@ -32,7 +34,6 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
   // TODO: implement full ORM
   public pgDelete$: (pg: RxPg) => rx.Observable<Cell> = (pg) => rx.of(this);
   public pgInsert$: (pg: RxPg) => rx.Observable<Cell> = (pg) => rx.of(this);
-  public pgUpdate$: (pg: RxPg) => rx.Observable<Cell> = (pg) => rx.of(this);
 
   /**
    *
@@ -597,6 +598,65 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
     } else {
 
       throw new Error("cell: undefined grid");
+
+    }
+
+  }
+
+  /**
+   *
+   * Sets the cell, adding new data to existing data. This will create / update
+   * the cell.
+   *
+   */
+  public pgUpdate$(pg: RxPg): rx.Observable<Cell> {
+
+    let sql: string = `select cell__setcell(
+      ($1, $2, $3, $4, $5, $6)::cell__cell
+    );`;
+
+    return pg.executeParamQuery$(sql, {
+      params: [ this.gridId, this.epsg, this.zoom, this.x, this.y, this.data ]
+    }).pipe(rxo.map((o: any) => this));
+
+  }
+
+  /**
+   *
+   * This function clone the current cell data into all of its child cells.
+   * Usefull for drilldown in GridderTasks.
+   *
+   */
+  public drillDownClone$(pg: RxPg, targetZoom: number): rx.Observable<Cell> {
+
+    // The child cells queue array
+    let subCells: Cell[] = this.getSubCells(this.zoom + 1);
+
+    // Clone data
+    subCells.map((o: Cell) => o.data = this.data);
+
+    if (this.zoom < targetZoom) {
+
+      return rx.of(...subCells)
+      .pipe(
+
+        rxo.concatMap((o: Cell) => {
+
+          return o.pgUpdate$(pg);
+
+        }),
+
+        rxo.concatMap((o: Cell) => {
+
+          return o.drillDownClone$(pg, targetZoom);
+
+        })
+
+      )
+
+    } else {
+
+      return rx.of(this);
 
     }
 

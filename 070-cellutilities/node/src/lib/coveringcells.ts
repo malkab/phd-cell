@@ -20,10 +20,14 @@ import { NodeLogger, ELOGLEVELS } from "@malkab/node-logger";
  */
 export function process$(params: any): rx.Observable<any> {
 
+  // Check for verbose parameter
+  const verbose: boolean = params.verbose ? params.verbose : false;
+
   const logger: NodeLogger = new NodeLogger({
-    appName: "gridder",
-    consoleOut: true,
-    minLogLevel: ELOGLEVELS.DEBUG
+    appName: "coveringcells",
+    consoleOut: verbose,
+    minLogLevel: ELOGLEVELS.DEBUG,
+    logFilePath: "."
   })
 
   logger.logInfo({
@@ -39,7 +43,7 @@ export function process$(params: any): rx.Observable<any> {
    */
   const cellPg: PgConnection = new PgConnection({
     pgConnectionId: "cellPg",
-    applicationName: "cellutility_base_geom_gridding",
+    applicationName: "coveringcells",
     db: "cell",
     host: params.cellPg.host,
     maxPoolSize: 200,
@@ -87,7 +91,7 @@ export function process$(params: any): rx.Observable<any> {
    */
   const cellRawData: PgConnection = new PgConnection({
     pgConnectionId: "cellRawData",
-    applicationName: "cellutility_base_geom_gridding",
+    applicationName: "coveringcells",
     db: params.sourcePg.db,
     host: params.sourcePg.host,
     maxPoolSize: 200,
@@ -149,10 +153,11 @@ export function process$(params: any): rx.Observable<any> {
    */
   let gridderTask: GridderTask;
 
-  // Insert objects into the Cell DB
+  // Factorize the right GridderTask
   return gridderTaskFactory$(params.gridderTask)
   .pipe(
 
+    // Configure the GridderTask and the GridderJob
     rxo.map((o: GridderTask) => {
       gridderTask = o;
       gridderTask.grid = grid;
@@ -160,8 +165,10 @@ export function process$(params: any): rx.Observable<any> {
       return gridderTask;
     }),
 
+    // Insert objects at the database
     rxo.concatMap((o: GridderTask) => rx.zip(
 
+      // Source connection
       cellRawData.pgInsert$(cellPgConn)
       .pipe(rxo.catchError((e: Error) => {
 
@@ -175,6 +182,7 @@ export function process$(params: any): rx.Observable<any> {
 
       })),
 
+      // Cell connection
       cellPg.pgInsert$(cellPgConn)
       .pipe(rxo.catchError((e: Error) => {
 
@@ -188,6 +196,7 @@ export function process$(params: any): rx.Observable<any> {
 
       })),
 
+      // Grid
       grid.pgInsert$(cellPgConn)
       .pipe(rxo.catchError((e: Error) => {
 
@@ -201,6 +210,7 @@ export function process$(params: any): rx.Observable<any> {
 
       })),
 
+      // GridderTask
       gridderTask.pgInsert$(cellPgConn)
       .pipe(rxo.catchError((e: Error) => {
 
@@ -214,6 +224,7 @@ export function process$(params: any): rx.Observable<any> {
 
       })),
 
+      // GridderJob
       gridderJob.pgInsert$(cellPgConn)
       .pipe(rxo.catchError((e: Error) => {
 
@@ -229,6 +240,7 @@ export function process$(params: any): rx.Observable<any> {
 
     )),
 
+    // Get the area of the GridderJob
     rxo.concatMap((o: any) => {
 
       logger.logInfo({
@@ -241,6 +253,7 @@ export function process$(params: any): rx.Observable<any> {
 
     }),
 
+    // Get covering cells for the GridderJob
     rxo.concatMap((o: any) => {
 
       logger.logInfo({
@@ -253,6 +266,7 @@ export function process$(params: any): rx.Observable<any> {
 
     }),
 
+    // Return final
     rxo.map((o: any) => {
 
       logger.logInfo({

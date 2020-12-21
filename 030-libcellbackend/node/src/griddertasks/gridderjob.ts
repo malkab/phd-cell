@@ -218,42 +218,37 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
    * @param fullCoverageDrillDown
    * The zoom where the full coverage drill down must take place.
    */
-  public startOnCellLocalMode(
+  public computeCells$(
     cellPg: RxPg,
     sourcePg: RxPg,
     cells: Cell[],
     targetZoom: number,
     log?: NodeLogger
-  ): void {
+  ): rx.Observable<any> {
 
-    cells.map((o: Cell) => {
+    if (this.gridderTask) {
 
-      if (this.gridderTask) {
+      return rx.of(...cells)
+      .pipe(
 
-        this.gridderTask?.computeCell$(sourcePg, cellPg, o, targetZoom, log)
-        .subscribe(
+        rxo.concatMap((o: Cell) => {
 
-          (o: any) => {
+          o.grid = this.gridderTask?.grid;
 
-            const c: Cell[] = o.filter((x: Cell) => x.zoom <= targetZoom);
+          return (<GridderTask>this.gridderTask).computeCell$(sourcePg, cellPg, o, targetZoom, log);
 
-            this.startOnCellLocalMode(cellPg, sourcePg, c, targetZoom, log);
+        }),
 
-          },
+        rxo.concatMap((o: Cell[]) =>
+          this.computeCells$(cellPg, sourcePg, o, targetZoom, log))
 
-          (e: Error) => console.log("D: error", e.message),
+      )
 
-          () => console.log("D: complete")
+    } else {
 
-        );
+      throw new Error("GridderJob: undefined GridderTask");
 
-      } else {
-
-        throw new Error("GridderJob: undefined GridderTask");
-
-      }
-
-    })
+    }
 
   }
 

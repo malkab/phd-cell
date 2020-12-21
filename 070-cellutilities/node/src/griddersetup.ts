@@ -1,4 +1,4 @@
-import { process$ } from "./lib/gridder";
+import { process$ } from "./lib/griddersetup";
 
 import { readJsonSync } from "@malkab/node-utils";
 
@@ -6,7 +6,7 @@ import { exit as processExit } from "process";
 
 /**
  *
- * This script grids a cell.
+ * This script sets up a GridderTask.
  *
  */
 /**
@@ -38,11 +38,11 @@ function exitWait(exitCode: number): void {
 process$(vars)
 .subscribe(
 
-  (o: any) => console.log("Gridder next:", o),
+  (o: any) => console.log("GridderSetUp next:", o),
 
   (e: Error) => {
 
-    console.log("Gridder error:", e.message);
+    console.log("GridderSetUp error:", e.message);
 
     exitWait(-1);
 

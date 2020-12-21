@@ -418,7 +418,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
    *
    */
   public setup$(sourcePg: RxPg, cellPg: RxPg, log?: NodeLogger):
-  rx.Observable<any> {
+  rx.Observable<DiscretePolyTopAreaGridderTask> {
 
     // This gridder creates only one variable
     const variable: Variable = new Variable({
