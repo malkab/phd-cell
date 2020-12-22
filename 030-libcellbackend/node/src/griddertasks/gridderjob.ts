@@ -235,7 +235,8 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
           o.grid = this.gridderTask?.grid;
 
-          return (<GridderTask>this.gridderTask).computeCell$(sourcePg, cellPg, o, targetZoom, log);
+          return (<GridderTask>this.gridderTask)
+            .computeCell$(sourcePg, cellPg, o, targetZoom, log);
 
         }),
 

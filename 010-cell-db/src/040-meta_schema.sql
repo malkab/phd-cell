@@ -62,7 +62,7 @@ create table cell_meta.gridder_task(
 create table cell_meta.variable(
   gridder_task_id varchar(64) references cell_meta.gridder_task(gridder_task_id),
   variable_key varchar(64) unique,
-  name varchar(150),
+  name text,
   description text,
   primary key (gridder_task_id, variable_key)
 );

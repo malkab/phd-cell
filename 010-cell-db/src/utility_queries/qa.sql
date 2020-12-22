@@ -10,16 +10,18 @@ drop schema if exists qa cascade;
 
 create schema qa;
 
+--\set griddertaskid hicAreaSummary
 \set griddertaskid municipioDiscreteAreaSummary
-\set zoom 1
-\set x 4
-\set y 5
+-- Zoom, just for alignment
+\set z 1
+\set x 6
+\set y 3
 
 create materialized view qa.qa as
 select *
 from cell__getcellsbyvarkeys(
   cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
     null,
-    cell__cellgeom(cell__defaultcell(:zoom, :x, :y)));
+    cell__cellgeom(cell__defaultcell(:z, :x, :y)));
 
 commit;

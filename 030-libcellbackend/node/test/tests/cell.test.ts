@@ -4,9 +4,11 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { Grid, Cell } from "../../src/index";
+import { Grid, Cell, Coordinate } from "../../src/index";
 
-import { eugrid, clearDatabase$, cellPgConn, cells, testCell_0_2_3, testCell_2_27_32 } from "./common";
+import {
+  eugrid, clearDatabase$, cellPgConn, cells, testCell_0_2_3
+} from "./common";
 
 import * as rx from "rxjs";
 
@@ -187,6 +189,40 @@ describe("drillDownClone$ again to add more data", function() {
       }
 
     ]
+
+  })
+
+})
+
+/**
+ *
+ * center.
+ *
+ */
+describe("center", function() {
+
+  rxMochaTests({
+
+    testCaseName: "center",
+
+    observables: [ rx.of(testCell_0_2_3.center) ],
+
+    assertions: [
+
+      // Check only the first cell
+      (o: Coordinate) => {
+
+        expect(o.epsg).to.be.equal("3035");
+        expect(o.x).to.be.equal(2950000);
+        expect(o.y).to.be.equal(1850000);
+
+      }
+
+    ],
+
+
+
+
 
   })
 

@@ -153,6 +153,21 @@ language sql;
 
 /**
 
+  Returns the cell center.
+
+*/
+create or replace function public.cell__cellcenter(
+  _cell cell__cell
+) returns geometry as
+$$
+
+  select st_centroid(cell__cellgeom(_cell));
+
+$$
+language sql;
+
+/**
+
   Returns a bbox from an array of floats in the form
   (lower_left_x, lower_left_y, upper_right_x, upper_right_y)
 

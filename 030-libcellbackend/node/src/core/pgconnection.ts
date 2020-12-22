@@ -135,9 +135,9 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
       applicationName = "cell",
       db = "cell",
       host = "postgis",
-      maxPoolSize = 200,
-      minPoolSize = 50,
-      timeout = 0,
+      maxPoolSize = 10,
+      minPoolSize = 2,
+      timeout = 10000,
       pass = "postgres",
       port = 5432,
       dbUser = "postgres"

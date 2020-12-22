@@ -23,13 +23,13 @@ const vars: any = readJsonSync([ "config.json" ]);
  */
 function exitWait(exitCode: number): void {
 
-  console.log(`Awaiting 30 seconds for DB to exit with code ${exitCode}`);
+  console.log(`Awaiting 3 minutes for DB to exit with code ${exitCode}`);
 
   setTimeout(
 
     () => processExit(exitCode),
 
-    30000
+    180000
 
   )
 
