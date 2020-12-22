@@ -5,7 +5,7 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  Variable, PgConnection, DiscretePolyTopAreaGridderTask, Grid
+  Variable, SourcePgConnection, DiscretePolyTopAreaGridderTask, Grid
 } from "../../src/index";
 
 import {
@@ -56,10 +56,10 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Insert PgConnection.
+ * Insert SourcePgConnection.
  *
  */
-describe("Insert PgConnection", function() {
+describe("Insert SourcePgConnection", function() {
 
   /**
    *
@@ -73,7 +73,7 @@ describe("Insert PgConnection", function() {
     observables: [ cellRawData.pgInsert$(cellPgConn) ],
 
     assertions: [
-      (o: PgConnection) =>
+      (o: SourcePgConnection) =>
         expect(o.name, "pgInsert$").to.be.equal("Cell Raw Data") ],
 
     verbose: false,

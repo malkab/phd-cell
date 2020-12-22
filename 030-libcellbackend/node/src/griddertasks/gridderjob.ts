@@ -76,7 +76,7 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
   /**
    *
-   * SQL to retrieve the area from the PgConnection.
+   * SQL to retrieve the area from the SourcePgConnection.
    *
    */
   private _sqlAreaRetrieval: string;

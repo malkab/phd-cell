@@ -6,14 +6,14 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
   PointAggregationsGridderTask, gridderTaskGet$
-} from "../../src/index";
+} from "../../../src/index";
 
 import {
   cellPgConn, cellRawDataConn, testCell_4_270_329,
   testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
   testCell_2_28_30,
   poblacionPointAggregationsGridderTask, logger
-} from "./common";
+} from "../common";
 
 /**
  *
@@ -157,13 +157,13 @@ describe("PointAggregationsGridderTaskBackend computeCell$", function() {
 
       (o: any) => {
 
-        expect(o.length, "Child cells for 2,24,31").to.be.equal(0);
+        expect(o.length, "Child cells for 2,24,31").to.be.equal(4);
 
       },
 
       (o: any) => {
 
-        expect(o.length, "Child cells for 2,28,32").to.be.equal(0);
+        expect(o.length, "Child cells for 2,28,32").to.be.equal(4);
 
       },
 
@@ -175,13 +175,13 @@ describe("PointAggregationsGridderTaskBackend computeCell$", function() {
 
       (o: any) => {
 
-        expect(o.length, "Child cells for 3,54,65").to.be.equal(0);
+        expect(o.length, "Child cells for 3,54,65").to.be.equal(25);
 
       },
 
       (o: any) => {
 
-        expect(o.length, "Child cells for 4,270,329").to.be.equal(0);
+        expect(o.length, "Child cells for 4,270,329").to.be.equal(4);
 
       }
 

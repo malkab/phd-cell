@@ -1,5 +1,5 @@
 import {
-  Cell, Grid, PgConnection, GridderTask, GridderJob,
+  Cell, Grid, SourcePgConnection, GridderTask, GridderJob,
   gridderTaskFactory$
 } from "@malkab/libcellbackend";
 
@@ -41,21 +41,16 @@ export function process$(params: any): rx.Observable<any> {
    * PG connection to the cellPg.
    *
    */
-  const cellPg: PgConnection = new PgConnection({
-    pgConnectionId: "cellPg",
-    applicationName: "griddersetup",
+  const cellPgConn: RxPg = new RxPg({
+    applicationName: "cellutility_base_geom_gridding",
     db: "cell",
     host: params.cellPg.host,
     maxPoolSize: 200,
     minPoolSize: 10,
     pass: params.cellPg.pass,
     port: params.cellPg.port,
-    dbUser: params.cellPg.user,
-    description: "Cell DB",
-    name: "Cell DB"
-  });
-
-  const cellPgConn: RxPg = cellPg.open();
+    user: params.cellPg.user
+  })
 
   // Test cellPg connection
   cellPgConn.executeParamQuery$("select 0").subscribe(
@@ -63,9 +58,9 @@ export function process$(params: any): rx.Observable<any> {
     (o: any) => {
 
       logger.logInfo({
-        message: `connected with Cell PG at ${cellPg.host}`,
+        message: `connected with Cell PG at ${params.cellPg.host}`,
         methodName: "process$",
-        moduleName: "griddersetup"
+        moduleName: "gridder"
       })
 
     },
@@ -73,9 +68,9 @@ export function process$(params: any): rx.Observable<any> {
     (o: Error) => {
 
       logger.logError({
-        message: `error connecting with Cell PG at ${cellPg.host}`,
+        message: `error connecting with Cell PG at ${params.cellPg.host}`,
         methodName: "process$",
-        moduleName: "griddersetup"
+        moduleName: "gridder"
       })
 
       exit(-1);
@@ -89,8 +84,8 @@ export function process$(params: any): rx.Observable<any> {
    * PgConnection to source.
    *
    */
-  const cellRawData: PgConnection = new PgConnection({
-    pgConnectionId: "cellRawData",
+  const cellRawData: SourcePgConnection = new SourcePgConnection({
+    sourcePgConnectionId: "cellRawData",
     applicationName: "griddersetup",
     db: params.sourcePg.db,
     host: params.sourcePg.host,
@@ -182,20 +177,6 @@ export function process$(params: any): rx.Observable<any> {
         });
 
         return rx.of(`error adding source connection: ${e.message}`);
-
-      })),
-
-      // Cell connection
-      cellPg.pgInsert$(cellPgConn)
-      .pipe(rxo.catchError((e: Error) => {
-
-        logger.logError({
-          message: `error adding cell connection: ${e.message}`,
-          methodName: "process$",
-          moduleName: "griddersetup"
-        });
-
-        return rx.of(`error adding cell connection: ${e.message}`);
 
       })),
 

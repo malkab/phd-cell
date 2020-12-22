@@ -161,7 +161,8 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
   /**
    *
    * Apply the gridder task to a cell. This method must return a single item
-   * Observable with the child cells of the computed cell.
+   * Observable with the child cells of the computed cell. This Observable is
+   * allowed to throw errors.
    *
    */
   public computeCell$(
@@ -180,7 +181,8 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
   /**
    *
    * Set ups the GridderTask for the GridderJob setup$ method. This method must
-   * return a single stream Observable with the GridderTask.
+   * return a single stream Observable with the GridderTask. This Observable is
+   * allowed to throw errors.
    *
    */
   public setup$(sourcePg: RxPg, cellPg: RxPg, log?: NodeLogger):

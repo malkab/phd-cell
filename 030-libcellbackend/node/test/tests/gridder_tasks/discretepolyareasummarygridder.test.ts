@@ -5,16 +5,15 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  DiscretePolyAreaSummaryGridderTask, gridderTaskGet$,
-  Variable
-} from "../../src/index";
+  DiscretePolyAreaSummaryGridderTask, gridderTaskGet$
+} from "../../../src/index";
 
 import {
   cellPgConn, cellRawDataConn, testCell_4_270_329,
   testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
   testCell_2_28_30,
   municipioDiscretePolyAreaSummaryGridderTask, logger
-} from "./common";
+} from "../common";
 
 
 

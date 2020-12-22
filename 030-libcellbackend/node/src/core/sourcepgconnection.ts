@@ -9,29 +9,21 @@ import * as rx from "rxjs";
  * A PG connection to connect to raw data.
  *
  */
-export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
+export class SourcePgConnection implements PgOrm.IPgOrm<SourcePgConnection> {
 
   // Dummy PgOrm
   // TODO: implement pgDelete$ and pgUpdate$
-  public pgDelete$: (pg: RxPg) => rx.Observable<PgConnection> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<PgConnection> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<PgConnection> = (pg) => rx.of();
+  public pgDelete$: (pg: RxPg) => rx.Observable<SourcePgConnection> = (pg) => rx.of();
+  public pgInsert$: (pg: RxPg) => rx.Observable<SourcePgConnection> = (pg) => rx.of();
+  public pgUpdate$: (pg: RxPg) => rx.Observable<SourcePgConnection> = (pg) => rx.of();
 
   /**
    *
-   * The connection.
+   * sourcePgConnectionId.
    *
    */
-  private _conn: RxPg | undefined;
-  get conn(): RxPg | undefined { return this._conn }
-
-  /**
-   *
-   * pgConnectionId.
-   *
-   */
-  private _pgConnectionId: string;
-  get pgConnectionId(): string { return this._pgConnectionId }
+  private _sourcePgConnectionId: string;
+  get sourcePgConnectionId(): string { return this._sourcePgConnectionId }
 
   /**
    *
@@ -72,7 +64,6 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
    *
    */
   private _minPoolSize: number;
-
   get minPoolSize(): number { return this._minPoolSize }
 
   /**
@@ -129,7 +120,7 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
    *
    */
   constructor({
-      pgConnectionId,
+      sourcePgConnectionId,
       name,
       description,
       applicationName = "cell",
@@ -142,7 +133,7 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
       port = 5432,
       dbUser = "postgres"
     }: {
-      pgConnectionId: string;
+      sourcePgConnectionId: string;
       name: string;
       description: string;
       applicationName?: string;
@@ -158,7 +149,7 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
 
     this._name = name;
     this._description = description;
-    this._pgConnectionId = pgConnectionId;
+    this._sourcePgConnectionId = sourcePgConnectionId;
     this._applicationName = applicationName;
     this._db = db;
     this._host = host;
@@ -168,7 +159,6 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
     this._pass = pass;
     this._port = port;
     this._dbUser = dbUser;
-    this._conn = undefined;
 
     PgOrm.generateDefaultPgOrmMethods(this, {
 
@@ -176,7 +166,7 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
 
           sql: () => `insert into cell_meta.pg_connection
             values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-          params$: () => rx.of([ this.pgConnectionId, this.name, this.description,
+          params$: () => rx.of([ this.sourcePgConnectionId, this.name, this.description,
             this.applicationName, this.db, this.host, this.maxPoolSize,
             this.minPoolSize, this.pass, this.port,
             this.dbUser ])
@@ -196,7 +186,7 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
    */
   public open(): RxPg {
 
-    this._conn = new RxPg({
+    return new RxPg({
       applicationName: this._applicationName,
       db: this._db,
       host: this._host,
@@ -208,21 +198,6 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
       user: this._dbUser
     })
 
-    return this._conn;
-
-  }
-
-  /**
-   *
-   * Close.
-   *
-   */
-  public close(): boolean {
-
-    this._conn?.close$().subscribe();
-    this._conn = undefined;
-    return true;
-
   }
 
   /**
@@ -230,13 +205,13 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
    * Get$.
    *
    */
-  public static get$(pg: RxPg, pgConnectionId: string): rx.Observable<PgConnection> {
+  public static get$(pg: RxPg, sourcePgConnectionId: string): rx.Observable<SourcePgConnection> {
 
-    return PgOrm.select$<PgConnection>({
+    return PgOrm.select$<SourcePgConnection>({
       pg: pg,
       sql: `
         select
-          pg_connection_id as "pgConnectionId",
+          pg_connection_id as "sourcePgConnectionId",
           application_name as "applicationName",
           db,
           host,
@@ -249,8 +224,8 @@ export class PgConnection implements PgOrm.IPgOrm<PgConnection> {
           description
         from cell_meta.pg_connection
         where pg_connection_id = $1`,
-      params: () => [ pgConnectionId ],
-      type: PgConnection
+      params: () => [ sourcePgConnectionId ],
+      type: SourcePgConnection
     })
 
   }

@@ -1,12 +1,12 @@
 # Added by mlkcontext
 # -------------------
-010-cell-db/src/050-add_metadata.sql
-070-cellutilities/assets/gridder-config-discretepolytoparea.json
-070-cellutilities/assets/griddersetup-config-discretepolyareasummary.json
-070-cellutilities/assets/coveringcells-config-discretepolytoparea.json
-070-cellutilities/assets/gridder-config-discretepolyareasummary.json
-070-cellutilities/assets/coveringcells-config-discretepolyareasummary.json
-070-cellutilities/assets/griddersetup-config-discretepolytoparea.json
-assets/redis_config/redis.conf
 assets/postgres_config/postgresql.conf
+assets/redis_config/redis.conf
+010-cell-db/src/050-add_metadata.sql
+070-cellutilities/assets/coveringcells-config-discretepolyareasummary.json
+070-cellutilities/assets/griddersetup-config-discretepolyareasummary.json
+070-cellutilities/assets/gridder-config-discretepolyareasummary.json
+070-cellutilities/assets/coveringcells-config-discretepolytoparea.json
+070-cellutilities/assets/griddersetup-config-discretepolytoparea.json
+070-cellutilities/assets/gridder-config-discretepolytoparea.json
 # -------------------

@@ -4,7 +4,7 @@
 
 */
 
-import { PgConnection, IPgConnection } from "./libcellbackend/libcell/pgconnection";
+import { SourcePgConnection, IPgConnection } from "./libcellbackend/libcell/pgconnection";
 import { Catalog } from "./libcellbackend/libcell/catalog";
 import { Grid } from "./libcellbackend/libcell/grid";
 import { CellObject } from "./libcellbackend/libcell/cellobject";
@@ -128,7 +128,7 @@ export class CellAPI {
                 this._redisQueueApiWorker,
                 this._redisQueueWorkerApi,
                 this._persistence,
-                iCellAPI.redisUrl, 
+                iCellAPI.redisUrl,
                 iCellAPI.redisPort,
                 iCellAPI.redisPassword,
                 (error: any) => {
@@ -227,7 +227,7 @@ export class CellAPI {
     */
 
     public startGridderJob(id: string): Promise<GridderJob> {
-        
+
         return new Promise<GridderJob>((resolve, reject) => {
 
             this._libCellFactory.get("GridderJob", id)
@@ -308,14 +308,14 @@ export class CellAPI {
         return new Promise<Catalog>((resolve, reject) => {
 
             let catalog: Catalog;
-            let pgConnection: PgConnection;
+            let sourcePgConnection: PgConnection;
 
             this._libCellFactory.get("Catalog", id)
             .then((cat: Catalog) => {
 
                 catalog = cat;
 
-                const pgSource: PostGIS = this._getPostGIS(catalog.pgConnection, 1);
+                const pgSource: PostGIS = this._getPostGIS(catalog.sourcePgConnection, 1);
 
                 // Get distinct values
                 return pgSource.distinct(catalog.table, catalog.column);
@@ -410,7 +410,7 @@ export class CellAPI {
 
     */
 
-    private _getPostGIS(pgConnection: PgConnection, connNumber: number): PostGIS {
+    private _getPostGIS(sourcePgConnection: PgConnection, connNumber: number): PostGIS {
 
         const pg =  new PostGIS(
             pgConnection.host,

@@ -6,14 +6,14 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
   DiscretePolyTopAreaGridderTask, gridderTaskGet$
-} from "../../src/index";
+} from "../../../src/index";
 
 import {
   cellPgConn, cellRawDataConn, testCell_4_270_329,
   testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
   testCell_2_28_30,
   municipioDiscretePolyTopAreaGridderTask, logger
-} from "./common";
+} from "../common";
 
 /**
  *

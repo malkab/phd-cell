@@ -1,8 +1,9 @@
 import {
-  Cell, PgConnection, Variable, Grid, GridderJob,
+  Cell, SourcePgConnection, Variable, Grid, GridderJob,
   DiscretePolyTopAreaGridderTask,
   DiscretePolyAreaSummaryGridderTask,
-  PointAggregationsGridderTask
+  PointAggregationsGridderTask,
+  PointIdwGridderTask
 } from "../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
@@ -56,29 +57,23 @@ const pgSourceParams: any = {
  * PG connection to the cellPg.
  *
  */
-export const cellPg: PgConnection = new PgConnection({
-  pgConnectionId: "cellPg",
+export const cellPgConn: RxPg = new RxPg({
   applicationName: "libcellbackend_quick_test",
   db: "cell",
   host: pgCellParams.host,
   maxPoolSize: 200,
-  minPoolSize: 200,
+  minPoolSize: 50,
   pass: pgCellParams.pass,
-  port: pgCellParams.port,
-  dbUser: "postgres",
-  description: "Cell DB",
-  name: "Cell DB"
+  port: pgCellParams.port
 });
-
-export const cellPgConn: RxPg = cellPg.open();
 
 /**
  *
- * PgConnection to kepler, external.
+ * SourcePgConnection to kepler, external.
  *
  */
-export const cellRawData: PgConnection = new PgConnection({
-  pgConnectionId: "cellRawDataConn",
+export const cellRawData: SourcePgConnection = new SourcePgConnection({
+  sourcePgConnectionId: "cellRawDataConn",
   applicationName: "libcellbackend_quick_test",
   db: "cell_raw_data",
   host: pgSourceParams.host,
@@ -215,6 +210,29 @@ new PointAggregationsGridderTask({
       expression: "round(((sum(e001502)::float + sum(e6502)::float) / sum(e166402)::float)::numeric, 2)"
     }
   ]
+})
+
+/**
+ *
+ * PointIdwGridderTask.
+ *
+ */
+export const mdtGridderTask: PointIdwGridderTask =
+new PointIdwGridderTask({
+  gridderTaskId: "mdtIdw",
+  gridId: "eu-grid",
+  grid: eugrid,
+  name: "Interpolación MDT con IDW",
+  description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método Inverse Distance Weighting.",
+  sourceTable: "mdt.mdt",
+  geomField: "geom",
+  maxDistance: 200,
+  numberOfPoints: 2,
+  heightField: "h",
+  round: 1,
+  power: 2,
+  variableName: "MDT según IDW",
+  variableDescription: "Interpolación del MDT de 100 metros mediante IDW"
 })
 
 /**
@@ -374,4 +392,50 @@ export const gridderJobAreaSummary: GridderJob = new GridderJob({
   maxZoomLevel: 0,
   minZoomLevel: 2,
   sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
+/**
+ *
+ * Gridder Job for point IDW for Huelva.
+ *
+ */
+export const gridderJobPointIdw: GridderJob = new GridderJob({
+  gridderJobId: "mdtPointIdw",
+  gridderTaskId: "mdtIdw",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
+/**
+ *
+ * HIC Area Summary tests.
+ *
+ */
+
+/**
+ *
+ * DiscretePolyAreaSummaryGridderTask, HIC.
+ *
+ */
+export const hicAreaSummaryGridderTask: DiscretePolyAreaSummaryGridderTask =
+new DiscretePolyAreaSummaryGridderTask({
+  gridderTaskId: "hicAreaSummary",
+  gridId: "eu-grid",
+  grid: eugrid,
+  name: "Desglose de área de Hábitats de Interés Comunitario (HIC)",
+  description: "Área de cada categoría de Hábitats de Interés Comunitario (HIC)",
+  sourceTable: "hic.hic_view",
+  geomField: "geom",
+  discreteFields: [ "descripcion" ],
+  variableNameTemplate: "Área HIC {{{descripcion}}}",
+  variableDescriptionTemplate: "Área del Hábitat de Interés Comunitario {{{descripcion}}}"
+})
+
+export const hicAreaSummaryGridderJob: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobHicAreaSummary",
+  gridderTaskId: "hicAreaSummary",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.andalucia"
 })

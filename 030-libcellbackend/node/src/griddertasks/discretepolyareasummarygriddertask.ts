@@ -265,8 +265,25 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
     return sourcePg.executeParamQuery$(sql)
     .pipe(
 
+      rxo.catchError((e: Error) => {
+
+        if (log) log.logError({
+          message: `error processing geometries: ${e.message}`,
+          methodName: "computeCell$",
+          moduleName: "DiscretePolyAreaSummaryGridderTask",
+          payload: {
+            error: e.message,
+            cell: cell.apiSafeSerial,
+            targetZoom: targetZoom
+          }
+        })
+
+        throw new Error("geometry processing error");
+
+      }),
+
       // Get variables matching the discrete terms for each overlapping polygon
-      rxo.concatMap((o: QueryResult) => {
+      rxo.concatMap((o: any) => {
 
         if (log) log.logInfo({
           message: `got ${o.rowCount} colliding polygons`,
@@ -349,7 +366,21 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       rxo.last(),
 
       // For 0 covering polygons there is no last, so an error is detected
-      rxo.catchError((e: Error) => rx.of([])),
+      rxo.catchError((e: Error) => {
+
+        // Intercept here again the geometru processing error from the
+        // beginning
+        if (e.message === "geometry processing error") {
+
+          throw new Error("geometry processing error");
+
+        } else {
+
+          return rx.of([]);
+
+        }
+
+      }),
 
       rxo.map(() => {
 

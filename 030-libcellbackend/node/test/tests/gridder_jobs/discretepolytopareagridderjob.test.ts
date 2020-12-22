@@ -5,34 +5,33 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  DiscretePolyAreaSummaryGridderTask, GridderJob, Cell,
+  DiscretePolyTopAreaGridderTask, GridderJob, Cell,
   gridderTaskGet$, GridderTask
-} from "../../src/index";
+} from "../../../src/index";
 
 import {
-  gridderJobAreaSummary, cellPgConn, cellRawDataConn, eugrid,
-  municipioDiscretePolyAreaSummaryGridderTask, logger
-} from "./common";
+  gridderJobTopArea, cellPgConn, cellRawDataConn, eugrid,
+  municipioDiscretePolyTopAreaGridderTask, logger
+} from "../common";
 
 import * as rxo from "rxjs/operators";
 
 /**
  *
- * DiscretePolyAreaSummaryGridderTask pgInsert$.
+ * DiscretePolyTopAreaGridderTask pgInsert$.
  *
  */
-describe("DiscretePolyAreaSummaryGridderTask pgInsert$", function() {
+describe("DiscretePolyTopAreaGridderTask pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolyAreaSummaryGridderTask pgInsert$",
+    testCaseName: "DiscretePolyTopAreaGridderTask pgInsert$",
 
-    observables: [ municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: DiscretePolyAreaSummaryGridderTask) => expect(o.name)
-        .to.be.equal("Desglose de área de municipios")
+      (o: DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
 
     ],
 
@@ -44,21 +43,20 @@ describe("DiscretePolyAreaSummaryGridderTask pgInsert$", function() {
 
 /**
  *
- * gridderJobAreaSummary pgInsert$.
+ * gridderJobTopArea pgInsert$.
  *
  */
-describe("gridderJobAreaSummary pgInsert$", function() {
+describe("gridderJobTopArea pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "gridderJobAreaSummary pgInsert$",
+    testCaseName: "gridderJobTopArea pgInsert$",
 
-    observables: [ gridderJobAreaSummary.pgInsert$(cellPgConn) ],
+    observables: [ gridderJobTopArea.pgInsert$(cellPgConn) ],
 
     assertions: [
 
-      (o: GridderJob) =>
-        expect(o.gridderJobId).to.be.equal("gridderJobAreaSummary")
+      (o: GridderJob) => expect(o.gridderJobId).to.be.equal("gridderJobTopArea")
 
     ],
 
@@ -70,18 +68,18 @@ describe("gridderJobAreaSummary pgInsert$", function() {
 
 /**
  *
- * gridderJobAreaSummary get and area retrieval.
+ * gridderJobTopArea get and area retrieval.
  *
  */
-describe("gridderJobAreaSummary get and area retrieval", function() {
+describe("gridderJobTopArea get and area retrieval", function() {
 
   rxMochaTests({
 
-    testCaseName: "gridderJobAreaSummary get and area retrieval",
+    testCaseName: "gridderJobTopArea get and area retrieval",
 
     observables: [
 
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
+      GridderJob.get$(cellPgConn, "gridderJobTopArea")
       .pipe(
 
         rxo.concatMap((o: GridderJob) =>
@@ -94,7 +92,7 @@ describe("gridderJobAreaSummary get and area retrieval", function() {
     assertions: [
 
       (o: GridderJob) =>
-        expect(o.gridderJobId).to.be.equal("gridderJobAreaSummary")
+        expect(o.gridderJobId).to.be.equal("gridderJobTopArea")
 
     ],
 
@@ -117,7 +115,7 @@ describe("Get coverage of target area at zoom 0", function() {
 
     observables: [
 
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
+      GridderJob.get$(cellPgConn, "gridderJobTopArea")
       .pipe(
 
         rxo.concatMap((o: GridderJob) =>
@@ -153,7 +151,7 @@ describe("Get coverage of target area at zoom 1", function() {
 
     observables: [
 
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
+      GridderJob.get$(cellPgConn, "gridderJobTopArea")
       .pipe(
 
         rxo.concatMap((o: GridderJob) =>
@@ -189,7 +187,7 @@ describe("setup$", function() {
 
     observables: [
 
-      gridderTaskGet$(cellPgConn, "municipioDiscretePolyAreaSummary")
+      gridderTaskGet$(cellPgConn, "municipioDiscretePolyTopArea")
       .pipe(
 
         rxo.concatMap((o: GridderTask) =>
@@ -201,8 +199,7 @@ describe("setup$", function() {
 
     assertions: [
 
-      (o: GridderTask) => expect(o.name)
-        .to.be.equal("Desglose de área de municipios")
+      (o: GridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
 
     ],
 
@@ -227,7 +224,7 @@ describe("computeCell$", function() {
 
     observables: [
 
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
+      GridderJob.get$(cellPgConn, "gridderJobTopArea")
       .pipe(
 
         rxo.concatMap((o: GridderJob) => o.getGridderTask$(cellPgConn)),

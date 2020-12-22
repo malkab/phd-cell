@@ -1,6 +1,6 @@
 {
   "name": "@malkab/libcellbackend",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Backend library for Cell to use at API, Controller, and Worker",
   "scope": "@malkab",
   "author": {
@@ -43,6 +43,7 @@
     "@malkab/ts-utils": "^4.1.13",
     "@types/chai": "^4.2.14",
     "@types/lodash": "^4.14.165",
+    "@types/mathjs": "^6.0.9",
     "@types/mocha": "^7.0.0",
     "@types/node": "^14.14.10",
     "@types/webpack-env": "^1.16.0",
@@ -70,6 +71,7 @@
     "@malkab/rxpg": "^4.1.23",
     "@turf/turf": "^5.1.6",
     "@types/proj4": "^2.5.0",
+    "mathjs": "^8.1.0",
     "proj4": "^2.6.3"
   }
 }

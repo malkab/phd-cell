@@ -4,11 +4,11 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { PgConnection, Grid } from "../../src/index";
+import { SourcePgConnection, Grid } from "../../../src/index";
 
 import {
   cellPgConn, cellRawData, eugrid, clearDatabase$
-} from "./common";
+} from "../common";
 
 /**
  *
@@ -74,24 +74,24 @@ describe("Grid pgInsert$", function() {
 
 /**
  *
- * Create PgConnection.
+ * Create SourcePgConnection.
  *
  */
-describe("Create PgConnection", function() {
+describe("Create SourcePgConnection", function() {
 
   /**
    *
-   * Create PgConnection.
+   * Create SourcePgConnection.
    *
    */
   rxMochaTests({
 
-    testCaseName: "Create PgConnection",
+    testCaseName: "Create SourcePgConnection",
 
     observables: [ cellRawData.pgInsert$(cellPgConn) ],
 
     assertions: [
-      (o: PgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
+      (o: SourcePgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
 
     verbose: false,
 

@@ -1,6 +1,6 @@
 export * from "./core/catalog";
 
-export * from "./core/pgconnection";
+export * from "./core/sourcepgconnection";
 
 export * from "./core/variable";
 
@@ -9,6 +9,8 @@ export * from "./core/grid";
 export * from "./core/cell";
 
 export * from "./griddertasks/discretepolyareasummarygriddertask";
+
+export * from "./griddertasks/pointidwgriddertask";
 
 export * from "./griddertasks/pointaggregationsgriddertask";
 
