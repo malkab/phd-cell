@@ -4,6 +4,9 @@
 
     A library to assist in the gridding process of geographic layers.
 
+    Run as cell_master, cell_master must be the owner of all objects and
+    cell_readonly must have select permissions.
+
 */
 begin;
 
@@ -30,6 +33,10 @@ create type cell__cell as (
 */
 create schema cell_meta;
 
+grant usage on schema cell_meta to {{{MLKC_CELL_DB_USER_READONLY}}};
+grant select on all tables in schema cell_meta
+to {{{MLKC_CELL_DB_USER_READONLY}}};
+
 -- Main CellDS objects table
 create table cell_meta.grid(
     grid_id varchar(64) primary key,
@@ -48,6 +55,10 @@ create table cell_meta.grid(
 */
 -- Schema
 create schema cell_data;
+
+grant usage on schema cell_data to {{{MLKC_CELL_DB_USER_READONLY}}};
+grant select on all tables in schema cell_data
+to {{{MLKC_CELL_DB_USER_READONLY}}};
 
 /**
 
@@ -809,5 +820,28 @@ returns null on null input;
 */
 -- Zooms above 5 to speed up visulization in QGIS
 create view cell_data.zoom_0_4 as select * from cell_data.data where zoom < 5;
+
+/**
+
+  Permissions for the cell_readonly user.
+
+*/
+grant usage on schema cell_data
+to cell_readonly;
+
+grant usage on schema cell_meta
+to cell_readonly;
+
+grant usage on schema public
+to cell_readonly;
+
+grant select on all tables in schema cell_data
+to cell_readonly;
+
+grant select on all tables in schema cell_meta
+to cell_readonly;
+
+grant select on all tables in schema public
+to cell_readonly;
 
 commit;

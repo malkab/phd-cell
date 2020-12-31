@@ -16,16 +16,16 @@
       <symbol force_rhr="0" alpha="1" clip_to_extent="1" type="fill" name="0">
         <layer locked="0" enabled="1" class="SimpleFill" pass="0">
           <prop k="border_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-          <prop k="color" v="125,139,143,255"/>
+          <prop k="color" v="229,182,54,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="110,154,110,255"/>
+          <prop k="outline_color" v="191,191,191,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0.46"/>
+          <prop k="outline_width" v="0.1"/>
           <prop k="outline_width_unit" v="MM"/>
-          <prop k="style" v="dense7"/>
+          <prop k="style" v="no"/>
           <data_defined_properties>
             <Option type="Map">
               <Option value="" type="QString" name="name"/>
@@ -105,20 +105,20 @@
   <referencingLayers/>
   <fieldConfiguration>
     <field name="gid">
-      <editWidget type="Range">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field name="figura">
       <editWidget type="TextEdit">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="nombre">
+    <field name="codigo">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field name="descripcion">
       <editWidget type="TextEdit">
         <config>
           <Option/>
@@ -128,25 +128,25 @@
   </fieldConfiguration>
   <aliases>
     <alias name="" field="gid" index="0"/>
-    <alias name="" field="figura" index="1"/>
-    <alias name="" field="nombre" index="2"/>
+    <alias name="" field="codigo" index="1"/>
+    <alias name="" field="descripcion" index="2"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
     <default expression="" field="gid" applyOnUpdate="0"/>
-    <default expression="" field="figura" applyOnUpdate="0"/>
-    <default expression="" field="nombre" applyOnUpdate="0"/>
+    <default expression="" field="codigo" applyOnUpdate="0"/>
+    <default expression="" field="descripcion" applyOnUpdate="0"/>
   </defaults>
   <constraints>
     <constraint unique_strength="1" constraints="3" field="gid" exp_strength="0" notnull_strength="1"/>
-    <constraint unique_strength="0" constraints="0" field="figura" exp_strength="0" notnull_strength="0"/>
-    <constraint unique_strength="0" constraints="0" field="nombre" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="codigo" exp_strength="0" notnull_strength="0"/>
+    <constraint unique_strength="0" constraints="0" field="descripcion" exp_strength="0" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
     <constraint desc="" field="gid" exp=""/>
-    <constraint desc="" field="figura" exp=""/>
-    <constraint desc="" field="nombre" exp=""/>
+    <constraint desc="" field="codigo" exp=""/>
+    <constraint desc="" field="descripcion" exp=""/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions>
@@ -155,8 +155,8 @@
   <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
     <columns>
       <column width="-1" type="field" name="gid" hidden="0"/>
-      <column width="-1" type="field" name="figura" hidden="0"/>
-      <column width="-1" type="field" name="nombre" hidden="0"/>
+      <column width="-1" type="field" name="codigo" hidden="0"/>
+      <column width="-1" type="field" name="descripcion" hidden="0"/>
       <column width="-1" type="actions" hidden="1"/>
     </columns>
   </attributetableconfig>
@@ -189,18 +189,18 @@ def my_form_open(dialog, layer, feature):
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
   <editable>
-    <field editable="1" name="figura"/>
+    <field editable="1" name="codigo"/>
+    <field editable="1" name="descripcion"/>
     <field editable="1" name="gid"/>
-    <field editable="1" name="nombre"/>
   </editable>
   <labelOnTop>
-    <field labelOnTop="0" name="figura"/>
+    <field labelOnTop="0" name="codigo"/>
+    <field labelOnTop="0" name="descripcion"/>
     <field labelOnTop="0" name="gid"/>
-    <field labelOnTop="0" name="nombre"/>
   </labelOnTop>
   <dataDefinedFieldProperties/>
   <widgets/>
-  <previewExpression>"nombre"</previewExpression>
+  <previewExpression>"descripcion"</previewExpression>
   <mapTip></mapTip>
   <layerGeometryType>2</layerGeometryType>
 </qgis>

@@ -14,6 +14,27 @@ import * as rxo from "rxjs/operators";
 
 import { NodeLogger, ELOGLEVELS } from "@malkab/node-logger";
 
+import { EnvVarsStorage } from "@malkab/node-utils";
+
+/**
+ *
+ * Get env vars.
+ *
+ */
+const env: EnvVarsStorage = new EnvVarsStorage(
+  "MLKC_CELL_DB_HOST",
+  "MLKC_CELL_DB_USER_CELL_MASTER",
+  "MLKC_CELL_DB_PASS_CELL_MASTER",
+  "MLKC_CELL_DB_PORT",
+
+  "MLKC_CELL_RAW_DATA_HOST",
+  "MLKC_CELL_RAW_DATA_USER_CELL_READONLY",
+  "MLKC_CELL_RAW_DATA_PASS_CELL_READONLY",
+  "MLKC_CELL_RAW_DATA_USER",
+  "MLKC_CELL_RAW_DATA_PASS",
+  "MLKC_CELL_RAW_DATA_PORT"
+);
+
 /**
  *
  * The logger, for the gridders.
@@ -34,9 +55,10 @@ export const logger: NodeLogger = new NodeLogger({
  *
  */
 const pgCellParams: any = {
-  host: "cell-db-postgis-dev",
-  pass: "postgres",
-  port: 5432
+  host: env.e.MLKC_CELL_DB_HOST,
+  user: env.e.MLKC_CELL_DB_USER_CELL_MASTER,
+  pass: env.e.MLKC_CELL_DB_PASS_CELL_MASTER,
+  port: env.e.MLKC_CELL_DB_PORT
 }
 
 /**
@@ -47,9 +69,10 @@ const pgCellParams: any = {
  *
  */
 const pgSourceParams: any = {
-  host: "xxx",
-  pass: "xxx",
-  port: 0
+  host: env.e.MLKC_CELL_RAW_DATA_HOST,
+  user: env.e.MLKC_CELL_RAW_DATA_USER,
+  pass: env.e.MLKC_CELL_RAW_DATA_PASS,
+  port: env.e.MLKC_CELL_RAW_DATA_PORT
 }
 
 /**
@@ -314,15 +337,6 @@ export const testCell_0_3_1: Cell = new Cell({
   grid: eugrid
 })
 
-// This is a full coverage for municipios with a single municipio
-export const testCell_2_27_32: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 2,
-  x: 27,
-  y: 32,
-  grid: eugrid
-})
-
 // This is a partial coverage for municipios
 export const testCell_2_24_31: Cell = new Cell({
   gridId: "eu-grid",
@@ -367,6 +381,116 @@ export const testCell_4_270_329: Cell = new Cell({
   y: 329,
   grid: eugrid
 })
+
+// Level 5 (500 m)
+export const testCell_5_108_130: Cell = new Cell({
+  gridId: "eu-grid",
+  zoom: 5,
+  x: 108,
+  y: 130,
+  grid: eugrid
+})
+
+// Level 6 (250 m)
+export const testCell_6_216_260: Cell = new Cell({
+  gridId: "eu-grid",
+  zoom: 5,
+  x: 108,
+  y: 130,
+  grid: eugrid
+})
+
+// Level 7 (125 m)
+export const testCell_7_2160_2560: Cell = new Cell({
+  gridId: "eu-grid",
+  zoom: 7,
+  x: 2160,
+  y: 2560,
+  grid: eugrid
+})
+
+// Level 8 (25 m)
+export const testCell_8_10800_12800: Cell = new Cell({
+  gridId: "eu-grid",
+  zoom: 8,
+  x: 10800,
+  y: 12800,
+  grid: eugrid
+})
+
+// Level 9 (5 m)
+export const testCell_9_54000_64000: Cell = new Cell({
+  gridId: "eu-grid",
+  zoom: 9,
+  x: 54000,
+  y: 64000,
+  grid: eugrid
+})
+
+/**
+ *
+ * Cell family of (2,27,32): full coverage for municipios with a single
+ * municipio
+ *
+ */
+export const cellFamily_2_27_32: Cell[] = [
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 2,
+    x: 27,
+    y: 32,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 3,
+    x: 54,
+    y: 64,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 4,
+    x: 270,
+    y: 320,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 5,
+    x: 540,
+    y: 640,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 6,
+    x: 1080,
+    y: 1280,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 7,
+    x: 2160,
+    y: 2560,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 8,
+    x: 10800,
+    y: 12800,
+    grid: eugrid
+  }),
+  new Cell({
+    gridId: "eu-grid",
+    zoom: 9,
+    x: 54000,
+    y: 64000,
+    grid: eugrid
+  })
+]
 
 /**
  *
