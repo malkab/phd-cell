@@ -54,7 +54,7 @@ export const logger: NodeLogger = new NodeLogger({
  * DON'T USE THE PRODUCTION SERVER HERE.
  *
  */
-const pgCellParams: any = {
+const pgParamsCell: any = {
   host: env.e.MLKC_CELL_DB_HOST,
   user: env.e.MLKC_CELL_DB_USER_CELL_MASTER,
   pass: env.e.MLKC_CELL_DB_PASS_CELL_MASTER,
@@ -68,7 +68,7 @@ const pgCellParams: any = {
  * Read only, can use production server here.
  *
  */
-const pgSourceParams: any = {
+const pgParamsSource: any = {
   host: env.e.MLKC_CELL_RAW_DATA_HOST,
   user: env.e.MLKC_CELL_RAW_DATA_USER,
   pass: env.e.MLKC_CELL_RAW_DATA_PASS,
@@ -80,14 +80,14 @@ const pgSourceParams: any = {
  * PG connection to the cellPg.
  *
  */
-export const cellPgConn: RxPg = new RxPg({
+export const pgConnCell: RxPg = new RxPg({
   applicationName: "libcellbackend_quick_test",
   db: "cell",
-  host: pgCellParams.host,
+  host: pgParamsCell.host,
   maxPoolSize: 200,
   minPoolSize: 50,
-  pass: pgCellParams.pass,
-  port: pgCellParams.port
+  pass: pgParamsCell.pass,
+  port: pgParamsCell.port
 });
 
 /**
@@ -95,28 +95,28 @@ export const cellPgConn: RxPg = new RxPg({
  * SourcePgConnection to kepler, external.
  *
  */
-export const cellRawData: SourcePgConnection = new SourcePgConnection({
+export const pgConnectionCellRawData: SourcePgConnection = new SourcePgConnection({
   sourcePgConnectionId: "cellRawDataConn",
   applicationName: "libcellbackend_quick_test",
   db: "cell_raw_data",
-  host: pgSourceParams.host,
+  host: pgParamsSource.host,
   maxPoolSize: 200,
   minPoolSize: 50,
-  pass: pgSourceParams.pass,
-  port: pgSourceParams.port,
+  pass: pgParamsSource.pass,
+  port: pgParamsSource.port,
   dbUser: "postgres",
   description: "Connection to Cell Raw Data database to consume original data vectors.",
   name: "Cell Raw Data"
 });
 
-export const cellRawDataConn: RxPg = cellRawData.open();
+export const pgConnCellRawData: RxPg = pgConnectionCellRawData.open();
 
 /**
  *
  * Clear the database.
  *
  */
-export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeParamQuery$(`
+export const clearDatabase$: rx.Observable<boolean> = pgConnCell.executeParamQuery$(`
   delete from cell_data.data;
   delete from cell_meta.gridder_job;
   delete from cell_meta.catalog;
@@ -137,7 +137,7 @@ export const clearDatabase$: rx.Observable<boolean> = cellPgConn.executeParamQue
  * Grid.
  *
  */
-export const eugrid: Grid = new Grid({
+export const gridEu: Grid = new Grid({
   description: "A grid based on the official EU one",
   gridId: "eu-grid",
   name: "eu-grid",
@@ -160,14 +160,120 @@ export const eugrid: Grid = new Grid({
 
 /**
  *
- * DiscretePolygonTopAreaGridderTask.
+ * Default GridderTask and GridderJob to test common features.
  *
  */
-export const municipioDiscretePolyTopAreaGridderTask: DiscretePolyTopAreaGridderTask =
-new DiscretePolyTopAreaGridderTask({
-  gridderTaskId: "municipioDiscretePolyTopArea",
+export const gridderTaskDefault: DiscretePolyAreaSummaryGridderTask =
+new DiscretePolyAreaSummaryGridderTask({
+  gridderTaskId: "gridderTaskDefault",
   gridId: "eu-grid",
-  grid: eugrid,
+  grid: gridEu,
+  name: "Name Default",
+  description: "Description Default",
+  sourceTable: "hic.hic_view",
+  geomField: "geom",
+  discreteFields: [ "descripcion" ],
+  variableNameTemplate: "Área HIC {{{descripcion}}}",
+  variableDescriptionTemplate: "Área del Hábitat de Interés Comunitario {{{descripcion}}}"
+})
+
+export const gridderJobDefault: GridderJob = new GridderJob({
+  gridderJobId: "defaultGridderJob",
+  gridderTaskId: "gridderTaskDefault",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.andalucia"
+})
+
+/**
+ *
+ * Test cells.
+ *
+ */
+export const testCell: Cell[] = [];
+
+// Municipio polygon: full coverage single class
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 27,
+  y: 32,
+  grid: gridEu
+}))
+
+// Municipio polygon: partial coverage single class
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 26,
+  y: 32,
+  grid: gridEu
+}))
+
+// Municipio polygon: full coverage multi class
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 28,
+  y: 32,
+  grid: gridEu
+}))
+
+// Municipio polygon: no collision
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 25,
+  y: 32,
+  grid: gridEu
+}))
+
+// Municipio polygon: partial coverage multi class
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 2,
+  x: 25,
+  y: 31,
+  grid: gridEu
+}))
+
+// Zoom 7 for MDT
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 7,
+  x: 2195,
+  y: 2680,
+  grid: gridEu
+}))
+
+// Zoom 8 for MDT
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 8,
+  x: 10980,
+  y: 13400,
+  grid: gridEu
+}))
+
+// Zoom 9 for MDT
+testCell.push(new Cell({
+  gridId: "eu-grid",
+  zoom: 9,
+  x: 54905,
+  y: 67000,
+  grid: gridEu
+}))
+
+/**
+ *
+ * Municipio DiscretePolygonTopArea.
+ *
+ */
+export const gridderTaskDiscretePolyTopAreaMunicipio: DiscretePolyTopAreaGridderTask =
+new DiscretePolyTopAreaGridderTask({
+  gridderTaskId: "gridderTaskDiscretePolyTopAreaMunicipio",
+  gridId: "eu-grid",
+  grid: gridEu,
   name : "Municipio máxima área",
   description: "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
   sourceTable: "context.municipio",
@@ -178,16 +284,24 @@ new DiscretePolyTopAreaGridderTask({
   categoryTemplate: "{{{municipio}}} ({{{provincia}}})"
 });
 
+export const gridderJobDiscretePolyTopAreaMunicipio: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobDiscretePolyTopAreaMunicipio",
+  gridderTaskId: "gridderTaskDiscretePolyTopAreaMunicipio",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
 /**
  *
- * DiscretePolyAreaSummaryGridderTask.
+ * Municipio DiscretePolyAreaSummary.
  *
  */
-export const municipioDiscretePolyAreaSummaryGridderTask: DiscretePolyAreaSummaryGridderTask =
+export const gridderTaskDiscretePolyAreaSummaryMunicipio: DiscretePolyAreaSummaryGridderTask =
 new DiscretePolyAreaSummaryGridderTask({
-  gridderTaskId: "municipioDiscretePolyAreaSummary",
+  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryMunicipio",
   gridId: "eu-grid",
-  grid: eugrid,
+  grid: gridEu,
   name: "Desglose de área de municipios",
   description: "Área de cada municipio en la celda, incluyendo su provincia",
   sourceTable: "context.municipio",
@@ -197,16 +311,24 @@ new DiscretePolyAreaSummaryGridderTask({
   variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}",
 })
 
+export const gridderJobDiscretePolyAreaSummaryMunicipio: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobDiscretePolyAreaSummaryMunicipio",
+  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryMunicipio",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
 /**
  *
- * PointAggregationsGridderTask.
+ * Población PointAggregations.
  *
  */
-export const poblacionPointAggregationsGridderTask: PointAggregationsGridderTask =
+export const gridderTaskPointAggregationsPoblacion: PointAggregationsGridderTask =
 new PointAggregationsGridderTask({
-  gridderTaskId: "poblacionPointAggregations",
+  gridderTaskId: "gridderTaskPointAggregationsPoblacion",
   gridId: "eu-grid",
-  grid: eugrid,
+  grid: gridEu,
   name: "Estadísticas de población",
   description: "Estadísticas de población",
   sourceTable: "poblacion.poblacion",
@@ -235,16 +357,24 @@ new PointAggregationsGridderTask({
   ]
 })
 
+export const gridderJobPointAggregationsPoblacion: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobPointAggregationsPoblacion",
+  gridderTaskId: "gridderTaskPointAggregationsPoblacion",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
 /**
  *
- * PointIdwGridderTask.
+ * MDT PointIdw.
  *
  */
-export const mdtGridderTask: PointIdwGridderTask =
+export const gridderTaskPointIdwMdt: PointIdwGridderTask =
 new PointIdwGridderTask({
-  gridderTaskId: "mdtIdw",
+  gridderTaskId: "gridderTaskPointIdwMdt",
   gridId: "eu-grid",
-  grid: eugrid,
+  grid: gridEu,
   name: "Interpolación MDT con IDW",
   description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método Inverse Distance Weighting.",
   sourceTable: "mdt.mdt",
@@ -258,248 +388,9 @@ new PointIdwGridderTask({
   variableDescription: "Interpolación del MDT de 100 metros mediante IDW"
 })
 
-/**
- *
- * Variable.
- *
- */
-export const variable: Variable = new Variable({
-  gridderTaskId: "municipioDiscretePolyTopArea",
-  name: "Var name",
-  description: "Var description",
-  gridderTask: municipioDiscretePolyTopAreaGridderTask
-});
-
-/**
- *
- * Cells.
- *
- */
-export const cells: Cell[] = [];
-
-for (let z = 0; z<1; z++) {
-
-  for (let x = 0; x<6; x++) {
-
-    for (let y = 0; y<4; y++) {
-
-      cells.push(new Cell({
-        gridId: "eu-grid",
-        x: x,
-        y: y,
-        zoom: z,
-        grid: eugrid
-      }))
-
-    }
-
-  }
-
-}
-
-export const testCell_0_2_2: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 0,
-  x: 2,
-  y: 2,
-  grid: eugrid
-})
-
-export const testCell_0_2_3: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 0,
-  x: 2,
-  y: 3,
-  grid: eugrid
-})
-
-export const testCell_0_3_2: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 0,
-  x: 3,
-  y: 2,
-  grid: eugrid
-})
-
-export const testCell_0_2_1: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 0,
-  x: 2,
-  y: 1,
-  grid: eugrid
-})
-
-export const testCell_0_3_1: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 0,
-  x: 3,
-  y: 1,
-  grid: eugrid
-})
-
-// This is a partial coverage for municipios
-export const testCell_2_24_31: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 2,
-  x: 24,
-  y: 31,
-  grid: eugrid
-})
-
-// This is a full coverage with several municipios
-export const testCell_2_28_30: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 2,
-  x: 28,
-  y: 30,
-  grid: eugrid
-})
-
-// No coverage of municipios at all
-export const testCell_2_25_32: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 2,
-  x: 25,
-  y: 32,
-  grid: eugrid
-})
-
-// Full coverage of a municipio, level 3
-export const testCell_3_54_65: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 3,
-  x: 54,
-  y: 65,
-  grid: eugrid
-})
-
-// Full coverage of a municipio, level 4 (1000 m)
-export const testCell_4_270_329: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 4,
-  x: 270,
-  y: 329,
-  grid: eugrid
-})
-
-// Level 5 (500 m)
-export const testCell_5_108_130: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 5,
-  x: 108,
-  y: 130,
-  grid: eugrid
-})
-
-// Level 6 (250 m)
-export const testCell_6_216_260: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 5,
-  x: 108,
-  y: 130,
-  grid: eugrid
-})
-
-// Level 7 (125 m)
-export const testCell_7_2160_2560: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 7,
-  x: 2160,
-  y: 2560,
-  grid: eugrid
-})
-
-// Level 8 (25 m)
-export const testCell_8_10800_12800: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 8,
-  x: 10800,
-  y: 12800,
-  grid: eugrid
-})
-
-// Level 9 (5 m)
-export const testCell_9_54000_64000: Cell = new Cell({
-  gridId: "eu-grid",
-  zoom: 9,
-  x: 54000,
-  y: 64000,
-  grid: eugrid
-})
-
-/**
- *
- * Cell family of (2,27,32): full coverage for municipios with a single
- * municipio
- *
- */
-export const cellFamily_2_27_32: Cell[] = [
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 2,
-    x: 27,
-    y: 32,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 3,
-    x: 54,
-    y: 64,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 4,
-    x: 270,
-    y: 320,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 5,
-    x: 540,
-    y: 640,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 6,
-    x: 1080,
-    y: 1280,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 7,
-    x: 2160,
-    y: 2560,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 8,
-    x: 10800,
-    y: 12800,
-    grid: eugrid
-  }),
-  new Cell({
-    gridId: "eu-grid",
-    zoom: 9,
-    x: 54000,
-    y: 64000,
-    grid: eugrid
-  })
-]
-
-/**
- *
- * Gridder Job for top area for Huelva.
- *
- */
-export const gridderJobTopArea: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobTopArea",
-  gridderTaskId: "municipioDiscretePolyTopArea",
+export const gridderJobPointIdwMdt: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobPointIdwMdt",
+  gridderTaskId: "gridderTaskPointIdwMdt",
   maxZoomLevel: 0,
   minZoomLevel: 2,
   sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
@@ -507,46 +398,14 @@ export const gridderJobTopArea: GridderJob = new GridderJob({
 
 /**
  *
- * Gridder Job for area summary for Huelva.
+ * HIC DiscretePolyAreaSummary.
  *
  */
-export const gridderJobAreaSummary: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobAreaSummary",
-  gridderTaskId: "municipioDiscretePolyAreaSummary",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
-})
-
-/**
- *
- * Gridder Job for point IDW for Huelva.
- *
- */
-export const gridderJobPointIdw: GridderJob = new GridderJob({
-  gridderJobId: "mdtPointIdw",
-  gridderTaskId: "mdtIdw",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
-})
-
-/**
- *
- * HIC Area Summary tests.
- *
- */
-
-/**
- *
- * DiscretePolyAreaSummaryGridderTask, HIC.
- *
- */
-export const hicAreaSummaryGridderTask: DiscretePolyAreaSummaryGridderTask =
+export const gridderTaskDiscretePolyAreaSummaryHic: DiscretePolyAreaSummaryGridderTask =
 new DiscretePolyAreaSummaryGridderTask({
-  gridderTaskId: "hicAreaSummary",
+  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryHic",
   gridId: "eu-grid",
-  grid: eugrid,
+  grid: gridEu,
   name: "Desglose de área de Hábitats de Interés Comunitario (HIC)",
   description: "Área de cada categoría de Hábitats de Interés Comunitario (HIC)",
   sourceTable: "hic.hic_view",
@@ -556,10 +415,22 @@ new DiscretePolyAreaSummaryGridderTask({
   variableDescriptionTemplate: "Área del Hábitat de Interés Comunitario {{{descripcion}}}"
 })
 
-export const hicAreaSummaryGridderJob: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobHicAreaSummary",
-  gridderTaskId: "hicAreaSummary",
+export const gridderJobDiscretePolyAreaSummaryHic: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobDiscretePolyAreaSummaryHic",
+  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryHic",
   maxZoomLevel: 0,
   minZoomLevel: 2,
   sqlAreaRetrieval: "select geom from context.andalucia"
 })
+
+/**
+ *
+ * Variable default.
+ *
+ */
+export const variableDefault: Variable = new Variable({
+  gridderTaskId: "gridderTaskDiscretePolyTopAreaMunicipio",
+  name: "Var default name",
+  description: "Var default description",
+  gridderTask: gridderTaskDiscretePolyTopAreaMunicipio
+});

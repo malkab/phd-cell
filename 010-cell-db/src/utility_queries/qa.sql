@@ -14,19 +14,26 @@ create schema qa;
 grant usage on schema qa
 to cell_readonly;
 
+-- Select the Gridder Task ID
 \set griddertaskid hicAreaSummary
 -- \set griddertaskid municipioDiscreteAreaSummary
+-- \set griddertaskid municipioDiscretePolyTopArea
+-- \set griddertaskid municipioDiscreteAreaSummary
+-- \set griddertaskid eennppDiscreteAreaSummary
+-- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
+-- \set griddertaskid provinciaDiscreteAreaSummary
+-- \set griddertaskid seccionCensalDiscreteAreaSummary
+
 -- Zoom, just for alignment
-\set z 0
-\set x 1
+\set z 1
+\set x 8
 \set y 3
 
 create materialized view qa.qa as
 select *
 from cell__getcellsbyvarkeys(
   cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
-    7, null);
-    --cell__cellgeom(cell__defaultcell(:z, :x, :y)));
+    5, null); -- cell__cellgeom(cell__defaultcell(:z, :x, :y)));
 
 grant select on all tables in schema qa to cell_readonly;
 

@@ -5,17 +5,15 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  DiscretePolyAreaSummaryGridderTask, gridderTaskGet$
+  DiscretePolyAreaSummaryGridderTask, gridderTaskGet$, Cell
 } from "../../../src/index";
 
 import {
-  cellPgConn, cellRawDataConn, testCell_4_270_329,
-  testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
-  testCell_2_28_30,
-  municipioDiscretePolyAreaSummaryGridderTask, logger
+  gridderTaskDiscretePolyAreaSummaryMunicipio, pgConnCell, pgConnCellRawData,
+  testCell, logger
 } from "../common";
 
-
+import * as rx from "rxjs";
 
 /**
  *
@@ -28,7 +26,7 @@ describe("DiscretePolyAreaSummaryGridderTask pgInsert$", function() {
 
     testCaseName: "DiscretePolyAreaSummaryGridderTask pgInsert$",
 
-    observables: [ municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ gridderTaskDiscretePolyAreaSummaryMunicipio.pgInsert$(pgConnCell) ],
 
     assertions: [
 
@@ -55,7 +53,7 @@ describe("DiscretePolyAreaSummaryGridderTask get$", function() {
 
     testCaseName: "DiscretePolyAreaSummaryGridderTask get$",
 
-    observables: [ gridderTaskGet$(cellPgConn, "municipioDiscretePolyAreaSummary") ],
+    observables: [ gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyAreaSummaryMunicipio") ],
 
     assertions: [
 
@@ -84,13 +82,14 @@ describe("DiscretePolyAreaSummaryGridderTask get$", function() {
  * Setup the GridderTask.
  *
  */
-describe("DiscretePolyAreaSummaryGridderTaskBackend setup$", function() {
+describe("DiscretePolyAreaSummaryGridderTask setup$", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolyAreaSummaryGridderTaskBackend setup$",
+    testCaseName: "DiscretePolyAreaSummaryGridderTask setup$",
 
-    observables: [ municipioDiscretePolyAreaSummaryGridderTask.setup$(cellRawDataConn, cellPgConn) ],
+    observables: [ gridderTaskDiscretePolyAreaSummaryMunicipio
+      .setup$(pgConnCellRawData, pgConnCell) ],
 
     assertions: [
 
@@ -111,66 +110,28 @@ describe("DiscretePolyAreaSummaryGridderTaskBackend setup$", function() {
  * computeCell$.
  *
  */
-describe("DiscretePolyAreaSummaryGridderTaskBackend computeCell$", function() {
+describe("DiscretePolyAreaSummaryGridderTask computeCell$", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolyAreaSummaryGridderTaskBackend computeCell$",
+    testCaseName: "DiscretePolyAreaSummaryGridderTask computeCell$",
 
     timeout: 300000,
 
     observables: [
 
-      // Full coverage, single municipio
-      municipioDiscretePolyAreaSummaryGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_27_32, 4, logger),
-      // Partial coverage, several municipios
-      municipioDiscretePolyAreaSummaryGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_24_31, 3, logger),
-      // Full coverage, several municipios
-      municipioDiscretePolyAreaSummaryGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_28_30, 3, logger),
-      // Void cell
-      municipioDiscretePolyAreaSummaryGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_2_25_32, 3, logger),
-      // Full coverage, single municipio
-      municipioDiscretePolyAreaSummaryGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_3_54_65, 6, logger),
-      // Full coverage, single municipio
-      municipioDiscretePolyAreaSummaryGridderTask.computeCell$(cellRawDataConn, cellPgConn, testCell_4_270_329, 7, logger)
+      rx.zip(...testCell.map((x: Cell) =>
+      gridderTaskDiscretePolyAreaSummaryMunicipio.computeCell$(
+          pgConnCellRawData, pgConnCell, x, 4, logger)))
 
     ],
 
     assertions: [
 
-      (o: any) => {
+      (o: Cell[][]) => {
 
-        expect(o.length, "Child cells for 2,27,32").to.be.equal(0);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 2,24,31").to.be.equal(4);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 2,28,32").to.be.equal(4);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 2,25,32").to.be.equal(0);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 3,54,65").to.be.equal(0);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 4,270,329").to.be.equal(0);
+        expect(o.map((x: Cell[]) => x.length), "Child cells")
+          .to.be.deep.equal([ 0, 4, 4, 0, 4, 0, 0, 0 ]);
 
       }
 

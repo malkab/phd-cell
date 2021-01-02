@@ -5,15 +5,15 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  PointAggregationsGridderTask, gridderTaskGet$
+  PointAggregationsGridderTask, gridderTaskGet$, Cell
 } from "../../../src/index";
 
 import {
-  cellPgConn, cellRawDataConn, testCell_4_270_329,
-  testCell_3_54_65, testCell_2_25_32, testCell_2_27_32, testCell_2_24_31,
-  testCell_2_28_30,
-  poblacionPointAggregationsGridderTask, logger
+  pgConnCell, pgConnCellRawData,
+  testCell, logger, gridderTaskPointAggregationsPoblacion
 } from "../common";
+
+import * as rx from "rxjs";
 
 /**
  *
@@ -26,7 +26,7 @@ describe("PointAggregationsGridderTask pgInsert$", function() {
 
     testCaseName: "PointAggregationsGridderTask pgInsert$",
 
-    observables: [ poblacionPointAggregationsGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ gridderTaskPointAggregationsPoblacion.pgInsert$(pgConnCell) ],
 
     assertions: [
 
@@ -54,7 +54,7 @@ describe("PointAggregationsGridderTask get$", function() {
 
     testCaseName: "PointAggregationsGridderTask get$",
 
-    observables: [ gridderTaskGet$(cellPgConn, "poblacionPointAggregations") ],
+    observables: [ gridderTaskGet$(pgConnCell, "gridderTaskPointAggregationsPoblacion") ],
 
     assertions: [
 
@@ -89,13 +89,13 @@ describe("PointAggregationsGridderTask get$", function() {
  * Setup the GridderTask.
  *
  */
-describe("PointAggregationsGridderTaskBackend setup$", function() {
+describe("PointAggregationsGridderTask setup$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointAggregationsGridderTaskBackend setup$",
+    testCaseName: "PointAggregationsGridderTask setup$",
 
-    observables: [ poblacionPointAggregationsGridderTask.setup$(cellRawDataConn, cellPgConn) ],
+    observables: [ gridderTaskPointAggregationsPoblacion.setup$(pgConnCellRawData, pgConnCell) ],
 
     assertions: [
 
@@ -116,72 +116,28 @@ describe("PointAggregationsGridderTaskBackend setup$", function() {
  * computeCell$.
  *
  */
-describe("PointAggregationsGridderTaskBackend computeCell$", function() {
+describe("PointAggregationsGridderTask computeCell$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointAggregationsGridderTaskBackend computeCell$",
+    testCaseName: "PointAggregationsGridderTask computeCell$",
 
     timeout: 300000,
 
     observables: [
 
-      // Has data
-      poblacionPointAggregationsGridderTask
-        .computeCell$(cellRawDataConn, cellPgConn, testCell_2_27_32, 4, logger),
-      // Partial coverage, does not have data
-      poblacionPointAggregationsGridderTask
-        .computeCell$(cellRawDataConn, cellPgConn, testCell_2_24_31, 3, logger),
-      // Does not have data
-      poblacionPointAggregationsGridderTask
-        .computeCell$(cellRawDataConn, cellPgConn, testCell_2_28_30, 3, logger),
-      // Void cell
-      poblacionPointAggregationsGridderTask
-        .computeCell$(cellRawDataConn, cellPgConn, testCell_2_25_32, 3, logger),
-      // Does not have data
-      poblacionPointAggregationsGridderTask
-        .computeCell$(cellRawDataConn, cellPgConn, testCell_3_54_65, 6, logger),
-      // Does not have data
-      poblacionPointAggregationsGridderTask
-        .computeCell$(cellRawDataConn, cellPgConn, testCell_4_270_329, 7, logger)
+      rx.zip(...testCell.map((x: Cell) =>
+      gridderTaskPointAggregationsPoblacion.computeCell$(
+          pgConnCellRawData, pgConnCell, x, 9, logger)))
 
     ],
 
     assertions: [
 
-      (o: any) => {
+      (o: Cell[][]) => {
 
-        expect(o.length, "Child cells for 2,27,32").to.be.equal(4);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 2,24,31").to.be.equal(4);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 2,28,32").to.be.equal(4);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 2,25,32").to.be.equal(0);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 3,54,65").to.be.equal(25);
-
-      },
-
-      (o: any) => {
-
-        expect(o.length, "Child cells for 4,270,329").to.be.equal(4);
+        expect(o.map((x: Cell[]) => x.length), "Child cells")
+          .to.be.deep.equal([ 4, 4, 4, 4, 4, 25, 25, 0 ]);
 
       }
 

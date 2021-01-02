@@ -41,7 +41,7 @@ USER=$MLKC_CELL_RAW_DATA_USER
 # The pass
 PASS=$MLKC_CELL_RAW_DATA_PASS
 # The DB
-DB=postgres
+DB=cell_raw_data
 # Declare volumes, a line per volume, complete in source:destination
 # form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
 VOLUMES=(

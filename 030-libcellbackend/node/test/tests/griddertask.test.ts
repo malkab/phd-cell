@@ -6,13 +6,12 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
   Grid, SourcePgConnection, GridderTask, gridderTaskGet$,
-  DiscretePolyTopAreaGridderTask, DiscretePolyAreaSummaryGridderTask
+  DiscretePolyTopAreaGridderTask
 } from "../../src/index";
 
 import {
-  cellPgConn, cellRawData, clearDatabase$, eugrid,
-  municipioDiscretePolyTopAreaGridderTask,
-  municipioDiscretePolyAreaSummaryGridderTask
+  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu,
+  gridderTaskDiscretePolyTopAreaMunicipio
 } from "./common";
 import { EGRIDDERTASKTYPE } from "../../src/griddertasks/egriddertasktype";
 
@@ -71,7 +70,7 @@ describe("Create SourcePgConnection", function() {
 
     testCaseName: "ORM pgInsert$",
 
-    observables: [ cellRawData.pgInsert$(cellPgConn) ],
+    observables: [ pgConnectionCellRawData.pgInsert$(pgConnCell) ],
 
     assertions: [
       (o: SourcePgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
@@ -86,16 +85,16 @@ describe("Create SourcePgConnection", function() {
 
 /**
  *
- * Grid eugrid pgInsert$.
+ * Grid gridEu pgInsert$.
  *
  */
-describe("Grid eugrid pgInsert$", function() {
+describe("Grid gridEu pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "Grid eugrid pgInsert$",
+    testCaseName: "Grid gridEu pgInsert$",
 
-    observables: [ eugrid.pgInsert$(cellPgConn) ],
+    observables: [ gridEu.pgInsert$(pgConnCell) ],
 
     assertions: [
 
@@ -112,41 +111,19 @@ describe("Grid eugrid pgInsert$", function() {
  * DiscretePolyTopAreaGridderTaskBackend ORM.
  *
  */
-describe("municipioDiscretePolyTopAreaGridderTask ORM", function() {
+describe("gridderTaskDiscretePolyTopAreaMunicipio ORM", function() {
 
   rxMochaTests({
 
     testCaseName: "pgInsert$()",
 
-    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ gridderTaskDiscretePolyTopAreaMunicipio.pgInsert$(pgConnCell) ],
 
     assertions: [
 
       (o: DiscretePolyTopAreaGridderTask) =>
-        expect(o.gridderTaskId, "Check ID").to.be.equal("municipioDiscretePolyTopArea")
-
-    ],
-
-    verbose: false,
-
-    active: true
-
-  })
-
-})
-
-describe("municipioDiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
-
-  rxMochaTests({
-
-    testCaseName: "pgInsert$()",
-
-    observables: [ municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn) ],
-
-    assertions: [
-
-      (o: DiscretePolyAreaSummaryGridderTask) =>
-        expect(o.gridderTaskId, "Check ID").to.be.equal("municipioDiscretePolyAreaSummary")
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
 
     ],
 
@@ -160,51 +137,24 @@ describe("municipioDiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
 
 /**
  *
- * get$ municipioDiscretePolyTopAreaGridderTask.
+ * get$ gridderTaskDiscretePolyTopAreaMunicipio.
  *
  */
-describe("get$ municipioDiscretePolyTopAreaGridderTask", function() {
+describe("get$ gridderTaskDiscretePolyTopAreaMunicipio", function() {
 
   rxMochaTests({
 
-    testCaseName: "get$ municipioDiscretePolyTopAreaGridderTask",
+    testCaseName: "get$ gridderTaskDiscretePolyTopAreaMunicipio",
 
-    observables: [ gridderTaskGet$(cellPgConn, "municipioDiscretePolyTopArea") ],
+    observables: [ gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyTopAreaMunicipio") ],
 
     assertions: [
 
       (o: GridderTask) => {
 
         expect(o.name).to.equal("Municipio máxima área");
-        expect(o.gridderTaskType).to.equal(EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA);
-
-      }
-
-    ]
-
-  })
-
-})
-
-/**
- *
- * get$ municipioDiscretePolyAreaSummaryGridderTask.
- *
- */
-describe("get$ municipioDiscretePolyAreaSummaryGridderTask", function() {
-
-  rxMochaTests({
-
-    testCaseName: "get$ municipioDiscretePolyAreaSummaryGridderTask",
-
-    observables: [ gridderTaskGet$(cellPgConn, "municipioDiscretePolyAreaSummary") ],
-
-    assertions: [
-
-      (o: GridderTask) => {
-
-        expect(o.name).to.equal("Desglose de área de municipios");
-        expect(o.gridderTaskType).to.equal(EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY);
+        expect(o.gridderTaskType)
+          .to.equal(EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA);
 
       }
 

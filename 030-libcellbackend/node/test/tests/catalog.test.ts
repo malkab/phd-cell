@@ -9,8 +9,8 @@ import {
 } from "../../src/index";
 
 import {
-  cellRawData, cellPgConn, clearDatabase$, eugrid,
-  municipioDiscretePolyTopAreaGridderTask, variable
+  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu,
+  gridderTaskDiscretePolyTopAreaMunicipio, variableDefault
 } from "./common";
 
 import * as rxo from "rxjs/operators";
@@ -70,7 +70,7 @@ describe("SourcePgConnection pgInsert$", function() {
 
     testCaseName: "SourcePgConnection pgInsert$",
 
-    observables: [ cellRawData.pgInsert$(cellPgConn) ],
+    observables: [ pgConnectionCellRawData.pgInsert$(pgConnCell) ],
 
     assertions: [
       (o: SourcePgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
@@ -94,7 +94,7 @@ describe("Grid eugrid pgInsert$", function() {
 
     testCaseName: "Grid eugrid pgInsert$",
 
-    observables: [ eugrid.pgInsert$(cellPgConn) ],
+    observables: [ gridEu.pgInsert$(pgConnCell) ],
 
     assertions: [
 
@@ -108,22 +108,23 @@ describe("Grid eugrid pgInsert$", function() {
 
 /**
  *
- * Insert DiscretePolyTopAreaGridderTaskBackend.
+ * Insert gridderTaskDiscretePolyTopAreaMunicipio.
  *
  */
-describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
+describe("Insert gridderTaskDiscretePolyTopAreaMunicipio", function() {
 
   rxMochaTests({
 
     testCaseName: "pgInsert$()",
 
-    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ gridderTaskDiscretePolyTopAreaMunicipio.pgInsert$(pgConnCell) ],
 
     assertions: [
 
       (o: DiscretePolyTopAreaGridderTask) => {
 
-        expect(o.gridderTaskId, "GridderTask pgInsert$()").to.be.equal("municipioDiscretePolyTopArea")
+        expect(o.gridderTaskId, "GridderTask pgInsert$()")
+          .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
 
       }
 
@@ -148,13 +149,13 @@ describe("Create variable", function() {
 
     testCaseName: "Create variable",
 
-    observables: [ variable.pgInsert$(cellPgConn) ],
+    observables: [ variableDefault.pgInsert$(pgConnCell) ],
 
     assertions: [
 
       (o: Variable) => {
 
-        expect(o.name).to.be.equal("Var name");
+        expect(o.name).to.be.equal("Var default name");
 
       }
 
@@ -181,14 +182,14 @@ describe("Create catalog and load catalog data", function() {
 
     observables: [
 
-      Variable.getByGridderTaskId$(cellPgConn, variable.gridderTaskId)
+      Variable.getByGridderTaskId$(pgConnCell, variableDefault.gridderTaskId)
       .pipe(
 
         rxo.map((o: Variable[]) => o[0]),
 
         rxo.map((o: Variable) => o.getCatalog$()),
 
-        rxo.concatMap((o: Catalog) => o.dbLoadForwardBackward$(cellPgConn))
+        rxo.concatMap((o: Catalog) => o.dbLoadForwardBackward$(pgConnCell))
 
       )
 
@@ -226,16 +227,16 @@ describe("Insert one key on empty catalog", function() {
 
     observables: [
 
-      Variable.getByGridderTaskId$(cellPgConn, variable.gridderTaskId)
+      Variable.getByGridderTaskId$(pgConnCell, variableDefault.gridderTaskId)
       .pipe(
 
         rxo.map((o: Variable[]) => o[0]),
 
         rxo.map((o: Variable) => o.getCatalog$()),
 
-        rxo.concatMap((o: Catalog) => o.dbAddEntries$(cellPgConn, [ "value" ])),
+        rxo.concatMap((o: Catalog) => o.dbAddEntries$(pgConnCell, [ "value" ])),
 
-        rxo.concatMap((o: Catalog) => o.dbLoadForwardBackward$(cellPgConn))
+        rxo.concatMap((o: Catalog) => o.dbLoadForwardBackward$(pgConnCell))
 
       )
 
@@ -273,17 +274,17 @@ describe("Load Catalog and add more entries", function() {
 
     observables: [
 
-      Variable.getByGridderTaskId$(cellPgConn, variable.gridderTaskId)
+      Variable.getByGridderTaskId$(pgConnCell, variableDefault.gridderTaskId)
       .pipe(
 
         rxo.map((o: Variable[]) => o[0]),
 
         rxo.map((o: Variable) => o.getCatalog$()),
 
-        rxo.concatMap((o: Catalog) => o.dbAddEntries$(cellPgConn,
+        rxo.concatMap((o: Catalog) => o.dbAddEntries$(pgConnCell,
           [ "value0", "value1", "value2" ])),
 
-        rxo.concatMap((o: Catalog) => o.dbLoadForwardBackward$(cellPgConn))
+        rxo.concatMap((o: Catalog) => o.dbLoadForwardBackward$(pgConnCell))
 
       )
 

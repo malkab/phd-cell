@@ -7,7 +7,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 import { SourcePgConnection, Grid } from "../../../src/index";
 
 import {
-  cellPgConn, cellRawData, eugrid, clearDatabase$
+  pgConnCell, pgConnectionCellRawData, gridEu, clearDatabase$
 } from "../common";
 
 /**
@@ -40,7 +40,7 @@ describe("Grid pgInsert$", function() {
 
     testCaseName: "Grid pgInsert$",
 
-    observables: [ eugrid.pgInsert$(cellPgConn) ],
+    observables: [ gridEu.pgInsert$(pgConnCell) ],
 
     assertions: [ (o: Grid) => expect(o.name).to.be.equal("eu-grid") ],
 
@@ -68,7 +68,7 @@ describe("Create SourcePgConnections", function() {
 
     observables: [
 
-      cellRawData.pgInsert$(cellPgConn)
+      pgConnectionCellRawData.pgInsert$(pgConnCell)
 
     ],
 

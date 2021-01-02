@@ -5,13 +5,14 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  DiscretePolyAreaSummaryGridderTask, GridderJob, Cell,
+  DiscretePolyAreaSummaryGridderTask, GridderJob,
   gridderTaskGet$, GridderTask
 } from "../../../src/index";
 
 import {
-  gridderJobAreaSummary, cellPgConn, cellRawDataConn, eugrid,
-  municipioDiscretePolyAreaSummaryGridderTask, logger
+  pgConnCell, logger,
+  pgConnCellRawData, gridderTaskDiscretePolyAreaSummaryMunicipio,
+  gridderJobDiscretePolyAreaSummaryMunicipio, testCell
 } from "../common";
 
 import * as rxo from "rxjs/operators";
@@ -27,7 +28,7 @@ describe("DiscretePolyAreaSummaryGridderTask pgInsert$", function() {
 
     testCaseName: "DiscretePolyAreaSummaryGridderTask pgInsert$",
 
-    observables: [ municipioDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ gridderTaskDiscretePolyAreaSummaryMunicipio.pgInsert$(pgConnCell) ],
 
     assertions: [
 
@@ -53,120 +54,12 @@ describe("gridderJobAreaSummary pgInsert$", function() {
 
     testCaseName: "gridderJobAreaSummary pgInsert$",
 
-    observables: [ gridderJobAreaSummary.pgInsert$(cellPgConn) ],
+    observables: [ gridderJobDiscretePolyAreaSummaryMunicipio.pgInsert$(pgConnCell) ],
 
     assertions: [
 
       (o: GridderJob) =>
-        expect(o.gridderJobId).to.be.equal("gridderJobAreaSummary")
-
-    ],
-
-    verbose: false
-
-  })
-
-})
-
-/**
- *
- * gridderJobAreaSummary get and area retrieval.
- *
- */
-describe("gridderJobAreaSummary get and area retrieval", function() {
-
-  rxMochaTests({
-
-    testCaseName: "gridderJobAreaSummary get and area retrieval",
-
-    observables: [
-
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
-      .pipe(
-
-        rxo.concatMap((o: GridderJob) =>
-          o.getArea$(cellRawDataConn, cellPgConn, eugrid))
-
-      )
-
-    ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o.gridderJobId).to.be.equal("gridderJobAreaSummary")
-
-    ],
-
-    verbose: false
-
-  })
-
-})
-
-/**
- *
- * Get coverage of target area at zoom 0.
- *
- */
-describe("Get coverage of target area at zoom 0", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Get coverage of target area at zoom 0",
-
-    observables: [
-
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
-      .pipe(
-
-        rxo.concatMap((o: GridderJob) =>
-          o.getCoveringCells$(cellPgConn, eugrid, 0))
-
-      )
-
-    ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o).to.be.equal(7)
-
-    ],
-
-    verbose: false
-
-  })
-
-})
-
-/**
- *
- * Get coverage of target area at zoom 1.
- *
- */
-describe("Get coverage of target area at zoom 1", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Get coverage of target area at zoom 1",
-
-    observables: [
-
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
-      .pipe(
-
-        rxo.concatMap((o: GridderJob) =>
-          o.getCoveringCells$(cellPgConn, eugrid, 1))
-
-      )
-
-    ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o).to.be.equal(12)
+        expect(o.gridderJobId).to.be.equal("gridderJobDiscretePolyAreaSummaryMunicipio")
 
     ],
 
@@ -189,11 +82,11 @@ describe("setup$", function() {
 
     observables: [
 
-      gridderTaskGet$(cellPgConn, "municipioDiscretePolyAreaSummary")
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyAreaSummaryMunicipio")
       .pipe(
 
         rxo.concatMap((o: GridderTask) =>
-          o.setup$(cellRawDataConn, cellPgConn, logger)),
+          o.setup$(pgConnCellRawData, pgConnCell, logger)),
 
       )
 
@@ -227,34 +120,16 @@ describe("computeCell$", function() {
 
     observables: [
 
-      GridderJob.get$(cellPgConn, "gridderJobAreaSummary")
+      GridderJob.get$(pgConnCell, "gridderJobDiscretePolyAreaSummaryMunicipio")
       .pipe(
 
-        rxo.concatMap((o: GridderJob) => o.getGridderTask$(cellPgConn)),
+        rxo.concatMap((o: GridderJob) => o.getGridderTask$(pgConnCell)),
 
         rxo.concatMap((o: GridderJob) => o.computeCells$(
-          cellPgConn,
-          cellRawDataConn,
-          [
-            new Cell({
-              gridId: "eu-grid",
-              zoom: 1,
-              x: 1,
-              y: 6,
-            }),
-            new Cell({
-              gridId: "eu-grid",
-              zoom: 1,
-              x: 2,
-              y: 6,
-            }),
-            new Cell({
-              gridId: "eu-grid",
-              zoom: 1,
-              x: 2,
-              y: 5,
-            })
-          ], 3, logger)
+          pgConnCell,
+          pgConnCellRawData,
+          testCell,
+          3, logger)
         )
 
       )

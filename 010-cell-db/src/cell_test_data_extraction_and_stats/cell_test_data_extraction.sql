@@ -74,4 +74,57 @@ from
   test_cell_data.test_cell b on
   st_intersects(a.geom, b.geom);
 
+-- Extracto municipio
+create table test_cell_data.municipio as
+select
+  a.gid,
+  a.cod_mun,
+  a.municipio,
+  a.cod_ent,
+  st_intersection(a.geom, b.geom) as geom
+from
+  context.municipio a inner join
+  test_cell_data.test_cell b on
+  st_intersects(a.geom, b.geom);
+
+-- Extracto provincia
+create table test_cell_data.provincia as
+select
+  a.gid,
+  a.provincia,
+  st_intersection(a.geom, b.geom) as geom
+from
+  context.provincia a inner join
+  test_cell_data.test_cell b on
+  st_intersects(a.geom, b.geom);
+
+-- Extracto provincia
+create table test_cell_data.seccion_censal as
+select
+  a.gid,
+  a.provincia,
+  st_intersection(a.geom, b.geom) as geom
+from
+  context.seccion_censal a inner join
+  test_cell_data.test_cell b on
+  st_intersects(a.geom, b.geom);
+
+-- Extracto sección censal
+create table test_cell_data.seccion_censal as
+select
+  a.gid,
+  a.provincia,
+  st_intersection(a.geom, b.geom) as geom
+from
+  context.seccion_censal a inner join
+  test_cell_data.test_cell b on
+  st_intersects(a.geom, b.geom);
+
+-- Permissions
+grant usage on schema test_cell_data
+to cell_readonly;
+
+grant select on all tables in schema test_cell_data
+to cell_readonly;
+
 commit;

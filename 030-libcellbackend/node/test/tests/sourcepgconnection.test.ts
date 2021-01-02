@@ -6,7 +6,7 @@ import { rxMochaTests } from "@malkab/ts-utils";
 
 import { SourcePgConnection } from "../../src/index";
 
-import { cellPgConn, cellRawData, clearDatabase$ } from "./common";
+import { pgConnCell, pgConnectionCellRawData, clearDatabase$ } from "./common";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -69,7 +69,7 @@ describe("pgInsert$", function() {
 
     observables: [
 
-      cellRawData.pgInsert$(cellPgConn)
+      pgConnectionCellRawData.pgInsert$(pgConnCell)
 
     ],
 
@@ -98,10 +98,10 @@ describe("get$", function() {
 
     testCaseName: "get$",
 
-    observables: [ SourcePgConnection.get$(cellPgConn, cellRawData.sourcePgConnectionId) ],
+    observables: [ SourcePgConnection.get$(pgConnCell, pgConnectionCellRawData.sourcePgConnectionId) ],
 
     assertions: [
-      (o: SourcePgConnection) => expect(o.name).to.be.equal(cellRawData.name) ],
+      (o: SourcePgConnection) => expect(o.name).to.be.equal(pgConnectionCellRawData.name) ],
 
     verbose: false,
 
@@ -122,7 +122,7 @@ describe("open()", function() {
 
     testCaseName: "open()",
 
-    observables: [ SourcePgConnection.get$(cellPgConn, cellRawData.sourcePgConnectionId)
+    observables: [ SourcePgConnection.get$(pgConnCell, pgConnectionCellRawData.sourcePgConnectionId)
     .pipe(
 
       rxo.map((o: SourcePgConnection) => o.open()),

@@ -9,8 +9,8 @@ import {
 } from "../../src/index";
 
 import {
-  clearDatabase$, variable, cellRawData, cellPgConn, eugrid,
-  municipioDiscretePolyTopAreaGridderTask
+  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu,
+  gridderTaskDiscretePolyTopAreaMunicipio, variableDefault
 } from "./common";
 
 import * as rx from "rxjs";
@@ -70,7 +70,7 @@ describe("Insert SourcePgConnection", function() {
 
     testCaseName: "pgInsert$",
 
-    observables: [ cellRawData.pgInsert$(cellPgConn) ],
+    observables: [ pgConnectionCellRawData.pgInsert$(pgConnCell) ],
 
     assertions: [
       (o: SourcePgConnection) =>
@@ -86,16 +86,16 @@ describe("Insert SourcePgConnection", function() {
 
 /**
  *
- * Grid eugrid pgInsert$.
+ * Grid gridEu pgInsert$.
  *
  */
-describe("Grid eugrid pgInsert$", function() {
+describe("Grid gridEu pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "Grid eugrid pgInsert$",
+    testCaseName: "Grid gridEu pgInsert$",
 
-    observables: [ eugrid.pgInsert$(cellPgConn) ],
+    observables: [ gridEu.pgInsert$(pgConnCell) ],
 
     assertions: [
 
@@ -112,19 +112,20 @@ describe("Grid eugrid pgInsert$", function() {
  * Insert DiscretePolyTopAreaGridderTaskBackend.
  *
  */
-describe("Insert municipioDiscretePolyTopAreaGridderTask", function() {
+describe("Insert gridderTaskDiscretePolyTopAreaMunicipio", function() {
 
   rxMochaTests({
 
-    testCaseName: "Insert municipioDiscretePolyTopAreaGridderTask",
+    testCaseName: "Insert gridderTaskDiscretePolyTopAreaMunicipio",
 
-    observables: [ municipioDiscretePolyTopAreaGridderTask.pgInsert$(cellPgConn) ],
+    observables: [ gridderTaskDiscretePolyTopAreaMunicipio.pgInsert$(pgConnCell) ],
 
     assertions: [
 
       (o: DiscretePolyTopAreaGridderTask) => {
 
-        expect(o.gridderTaskId).to.be.equal("municipioDiscretePolyTopArea")
+        expect(o.gridderTaskId)
+          .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
 
       }
 
@@ -151,14 +152,14 @@ describe("Variable pgInsert$", function() {
 
     observables: [ rx.concat(
 
-      variable.pgInsert$(cellPgConn),
-      variable.pgInsert$(cellPgConn)
+      variableDefault.pgInsert$(pgConnCell),
+      variableDefault.pgInsert$(pgConnCell)
 
     ) ],
 
     assertions: [
 
-      (o: Variable) => expect(o.name).to.be.equal("Var name"),
+      (o: Variable) => expect(o.name).to.be.equal("Var default name"),
       (o: Error) =>
         expect(o.message).to.be.equal('duplicate key value violates unique constraint "unique_gridder_task_id_name"')
 
