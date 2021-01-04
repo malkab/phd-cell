@@ -9,7 +9,9 @@
 \set dbowneruser cell_master
 \set dbreadonlyuser cell_readonly
 
-\c postgres
+\set search_path public
+
+\c postgres postgres
 
 begin;
 
@@ -27,7 +29,13 @@ commit;
 create database :dbname
 owner :dbowneruser;
 
+grant all privileges on database :dbname
+to :dbowneruser;
+
 \c :dbname
+
+-- Create PostGIS extension
+create extension postgis;
 
 -- Drop default privileges for public
 revoke all privileges on database :dbname
@@ -46,7 +54,8 @@ from :dbreadonlyuser;
 grant connect on database :dbname
 to :dbreadonlyuser;
 
-create extension postgis;
+grant all privileges on schema public
+to :dbowneruser;
 
 grant usage on schema public
 to :dbreadonlyuser;

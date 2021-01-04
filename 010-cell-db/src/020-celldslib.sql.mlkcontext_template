@@ -8,6 +8,11 @@
     cell_readonly must have select permissions.
 
 */
+
+\set search_path public
+
+\c cell cell_master
+
 begin;
 
 /*
@@ -33,10 +38,6 @@ create type cell__cell as (
 */
 create schema cell_meta;
 
-grant usage on schema cell_meta to {{{MLKC_CELL_DB_USER_READONLY}}};
-grant select on all tables in schema cell_meta
-to {{{MLKC_CELL_DB_USER_READONLY}}};
-
 -- Main CellDS objects table
 create table cell_meta.grid(
     grid_id varchar(64) primary key,
@@ -55,10 +56,6 @@ create table cell_meta.grid(
 */
 -- Schema
 create schema cell_data;
-
-grant usage on schema cell_data to {{{MLKC_CELL_DB_USER_READONLY}}};
-grant select on all tables in schema cell_data
-to {{{MLKC_CELL_DB_USER_READONLY}}};
 
 /**
 
@@ -752,6 +749,51 @@ $$
   select array_agg(variable_key)
   from cell_meta.variable
   where gridder_task_id = $1;
+
+$$
+language sql;
+
+/**
+
+  Drops a Gridder Task and all its elements:
+
+  - all variable_keys of its variables in cell's data vector;
+  - all Variables in cell_meta.variable;
+  - all Gridder Jobs in cell_meta.gridder_job;
+  - the Gridder Task itself at cell_meta.gridder_task.
+
+  If the Gridder Task referenced by the ID exists, the function will
+  return the ID. If not, will return null.
+
+*/
+create or replace function cell__delete_gridder_task (
+  _gridder_task_id varchar
+) returns varchar as
+$$
+
+  with variable_keys as (
+    select
+      array_agg(variable_key)::text[] as keys
+    from
+      cell_meta.variable
+    where gridder_task_id = $1
+  )
+  update cell_data.data
+  set data = a.data - b.keys
+  from
+    cell_data.data a, variable_keys b
+  where
+    b.keys is not null;
+
+  delete from cell_meta.variable
+  where gridder_task_id = $1;
+
+  delete from cell_meta.gridder_job
+  where gridder_task_id = $1;
+
+  delete from cell_meta.gridder_task
+  where gridder_task_id = $1
+  returning gridder_task_id;
 
 $$
 language sql;
