@@ -37,7 +37,29 @@ describe("cell-utilities", () => {
   // describe("\n\n  --- discretepolyareasummarygriddersetup.test ---\n",
   //   () => require("./tests/discretepolyareasummarygriddersetup.test"));
 
-  describe("\n\n  --- discretepolyareasummarygridder.test ---\n",
-    () => require("./tests/discretepolyareasummarygridder.test"));
+  // describe("\n\n  --- discretepolyareasummarygridder.test ---\n",
+  //   () => require("./tests/discretepolyareasummarygridder.test"));
+
+  // PointAggregations
+
+  // describe("\n\n  --- pointaggregationscoveringcells.test ---\n",
+  //   () => require("./tests/pointaggregationscoveringcells.test"));
+
+  // describe("\n\n  --- pointaggregationsgriddersetup.test ---\n",
+  //   () => require("./tests/pointaggregationsgriddersetup.test"));
+
+  // describe("\n\n  --- pointaggregationsgridder.test ---\n",
+  //   () => require("./tests/pointaggregationsgridder.test"));
+
+  // PointIdwInterpolation
+
+  describe("\n\n  --- pointidwinterpolationcoveringcells.test ---\n",
+    () => require("./tests/pointidwinterpolationcoveringcells.test"));
+
+  describe("\n\n  --- pointidwinterpolationgriddersetup.test ---\n",
+    () => require("./tests/pointidwinterpolationgriddersetup.test"));
+
+  describe("\n\n  --- pointidwinterpolationgridder.test ---\n",
+    () => require("./tests/pointidwinterpolationgridder.test"));
 
 });

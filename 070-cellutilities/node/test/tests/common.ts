@@ -46,6 +46,8 @@ export const clearDatabase$: rx.Observable<boolean> = cellPg.executeParamQuery$(
  * Read config for scripts, mounted at /config/basegeomgridding-config.json.
  *
  */
+
+// DISCRETEPOLYTOPAREA
 export const discretePolyTopAreaCoveringCellsConfig: any =
   readJsonSync([ "/config/coveringcells-config-discretepolytoparea.json" ]);
 
@@ -55,6 +57,8 @@ export const discretePolyTopAreaGridderConfig: any =
 export const discretePolyTopAreaGridderSetUpConfig: any =
   readJsonSync([ "/config/griddersetup-config-discretepolytoparea.json" ]);
 
+
+// DISCRETEPOLYAREASUMMARY
 export const discretePolyAreaSummaryCoveringCellsConfig: any =
   readJsonSync([ "/config/coveringcells-config-discretepolyareasummary.json" ]);
 
@@ -63,3 +67,24 @@ export const discretePolyAreaSummaryGridderConfig: any =
 
 export const discretePolyAreaSummaryGridderSetUpConfig: any =
   readJsonSync([ "/config/griddersetup-config-discretepolyareasummary.json" ]);
+
+
+// POINTAGGREGATIONS
+export const pointAggregationsCoveringCellsConfig: any =
+  readJsonSync([ "/config/coveringcells-config-pointaggregations.json" ]);
+
+export const pointAggregationsGridderConfig: any =
+  readJsonSync([ "/config/gridder-config-pointaggregations.json" ]);
+
+export const pointAggregationsGridderSetUpConfig: any =
+  readJsonSync([ "/config/griddersetup-config-pointaggregations.json" ]);
+
+// POINTIDWINTERPOLATION
+export const pointIdwInterpolationCoveringCellsConfig: any =
+  readJsonSync([ "/config/coveringcells-config-pointidwinterpolation.json" ]);
+
+export const pointIdwInterpolationGridderConfig: any =
+  readJsonSync([ "/config/gridder-config-pointidwinterpolation.json" ]);
+
+export const pointIdwInterpolationGridderSetUpConfig: any =
+  readJsonSync([ "/config/griddersetup-config-pointidwinterpolation.json" ]);

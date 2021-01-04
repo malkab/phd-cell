@@ -5,15 +5,18 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  Grid, SourcePgConnection, GridderTask, gridderTaskGet$,
+  Grid, SourcePgConnection, GridderTask, gridderTaskGet$, Cell,
   DiscretePolyTopAreaGridderTask
 } from "../../src/index";
 
 import {
-  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu,
-  gridderTaskDiscretePolyTopAreaMunicipio
+  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu, testCell,
+  gridderTaskDiscretePolyTopAreaMunicipio, pgConnCellRawData, logger
 } from "./common";
+
 import { EGRIDDERTASKTYPE } from "../../src/griddertasks/egriddertasktype";
+
+import * as rx from "rxjs";
 
 /**
  *
@@ -56,19 +59,14 @@ describe("Initial database clearance", function() {
 
 /**
  *
- * Test SourcePgConnection.
+ * SourcePgConnection pgInsert$.
  *
  */
-describe("Create SourcePgConnection", function() {
+describe("SourcePgConnection pgInsert$", function() {
 
-  /**
-   *
-   * Connection DB insert.
-   *
-   */
   rxMochaTests({
 
-    testCaseName: "ORM pgInsert$",
+    testCaseName: "SourcePgConnection pgInsert$",
 
     observables: [ pgConnectionCellRawData.pgInsert$(pgConnCell) ],
 
@@ -85,14 +83,14 @@ describe("Create SourcePgConnection", function() {
 
 /**
  *
- * Grid gridEu pgInsert$.
+ * Grid pgInsert$.
  *
  */
-describe("Grid gridEu pgInsert$", function() {
+describe("Grid pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "Grid gridEu pgInsert$",
+    testCaseName: "Grid pgInsert$",
 
     observables: [ gridEu.pgInsert$(pgConnCell) ],
 
@@ -108,10 +106,10 @@ describe("Grid gridEu pgInsert$", function() {
 
 /**
  *
- * DiscretePolyTopAreaGridderTaskBackend ORM.
+ * GridderTask pgInsert$.
  *
  */
-describe("gridderTaskDiscretePolyTopAreaMunicipio ORM", function() {
+describe("GridderTask pgInsert$", function() {
 
   rxMochaTests({
 
@@ -137,14 +135,14 @@ describe("gridderTaskDiscretePolyTopAreaMunicipio ORM", function() {
 
 /**
  *
- * get$ gridderTaskDiscretePolyTopAreaMunicipio.
+ * GridderTask get$.
  *
  */
-describe("get$ gridderTaskDiscretePolyTopAreaMunicipio", function() {
+describe("GridderTask get$", function() {
 
   rxMochaTests({
 
-    testCaseName: "get$ gridderTaskDiscretePolyTopAreaMunicipio",
+    testCaseName: "GridderTask get$",
 
     observables: [ gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyTopAreaMunicipio") ],
 
@@ -159,6 +157,73 @@ describe("get$ gridderTaskDiscretePolyTopAreaMunicipio", function() {
       }
 
     ]
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask setup$.
+ *
+ */
+describe("GridderTask setup$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask setup$",
+
+    observables: [ gridderTaskDiscretePolyTopAreaMunicipio.setup$(pgConnCellRawData, pgConnCell) ],
+
+    assertions: [
+
+      (o: DiscretePolyTopAreaGridderTask) => expect(o.name).to.be.equal("Municipio máxima área")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask computeCell$.
+ *
+ */
+describe("GridderTask computeCell$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask computeCell$",
+
+    timeout: 300000,
+
+    observables: [
+
+      rx.zip(...testCell.map((x: Cell) =>
+        gridderTaskDiscretePolyTopAreaMunicipio.computeCell$(
+          pgConnCellRawData, pgConnCell, x, 4, logger)))
+
+    ],
+
+    assertions: [
+
+      (o: Cell[][]) => {
+
+        expect(o.map((x: Cell[]) => x.length), "Child cells")
+          .to.be.deep.equal([ 0, 4, 4, 0, 4, 0, 0, 0 ]);
+
+      }
+
+    ],
+
+    verbose: false,
+
+    active: true
 
   })
 

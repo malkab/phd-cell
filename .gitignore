@@ -5,9 +5,15 @@
 010-cell-db/src/050-add_metadata.sql
 070-cellutilities/assets/coveringcells-config-discretepolyareasummary.json
 070-cellutilities/assets/coveringcells-config-discretepolytoparea.json
+070-cellutilities/assets/coveringcells-config-pointaggregations.json
+070-cellutilities/assets/coveringcells-config-pointidwinterpolation.json
 070-cellutilities/assets/gridder-config-discretepolyareasummary.json
 070-cellutilities/assets/gridder-config-discretepolytoparea.json
+070-cellutilities/assets/gridder-config-pointaggregations.json
+070-cellutilities/assets/gridder-config-pointidwinterpolation.json
 070-cellutilities/assets/griddersetup-config-discretepolyareasummary.json
 070-cellutilities/assets/griddersetup-config-discretepolytoparea.json
+070-cellutilities/assets/griddersetup-config-pointaggregations.json
+070-cellutilities/assets/griddersetup-config-pointidwinterpolation.json
 assets/postgres_config/postgresql.conf
 assets/redis_config/redis.conf

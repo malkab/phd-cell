@@ -16,6 +16,8 @@ import { exit as processExit } from "process";
  */
 const vars: any = readJsonSync([ "config.json" ]);
 
+console.log("Gridder script version 1.0.0");
+
 /**
  *
  * Delay before exit to allow for all DB queries to be written (hopefully).
@@ -23,13 +25,13 @@ const vars: any = readJsonSync([ "config.json" ]);
  */
 function exitWait(exitCode: number): void {
 
-  console.log(`Awaiting 30 secs for DB to exit with code ${exitCode}`);
+  console.log(`Awaiting 15 secs for DB to exit with code ${exitCode}`);
 
   setTimeout(
 
     () => processExit(exitCode),
 
-    30000
+    15000
 
   )
 
