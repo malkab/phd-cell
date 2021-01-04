@@ -15,13 +15,13 @@ grant usage on schema qa
 to cell_readonly;
 
 -- Select the Gridder Task ID
--- \set griddertaskid hicAreaSummary
+\set griddertaskid hicAreaSummary
 -- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid municipioDiscretePolyTopArea
 -- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid eennppDiscreteAreaSummary
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
-\set griddertaskid provinciaDiscreteAreaSummary
+-- \set griddertaskid provinciaDiscreteAreaSummary
 -- \set griddertaskid seccionCensalDiscreteAreaSummary
 
 -- Zoom, just for alignment
