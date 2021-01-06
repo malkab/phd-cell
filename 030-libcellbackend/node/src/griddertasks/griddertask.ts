@@ -14,6 +14,8 @@ import { NodeLogger } from "@malkab/node-logger";
 
 import { Grid } from "../core/grid";
 
+import { Variable } from "../core/variable";
+
 /**
  *
  * Base class to define GridderTasks. A gridder task describes the lower level
@@ -37,7 +39,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * GridderTask type.
    *
    */
-  private _gridderTaskType: EGRIDDERTASKTYPE | undefined;
+  protected _gridderTaskType: EGRIDDERTASKTYPE | undefined;
   get gridderTaskType(): EGRIDDERTASKTYPE | undefined { return this._gridderTaskType }
 
   /**
@@ -46,7 +48,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * the specific task. It will be fixed for all GridderTasks for this type.
    *
    */
-  private _gridderTaskTypeName: string | undefined;
+  protected _gridderTaskTypeName: string | undefined;
   get gridderTaskTypeName(): string | undefined { return this._gridderTaskTypeName }
 
   /**
@@ -56,7 +58,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * of this type will have the same description.
    *
    */
-  private _gridderTaskTypeDescription: string | undefined;
+  protected _gridderTaskTypeDescription: string | undefined;
   get gridderTaskTypeDescription(): string | undefined { return this._gridderTaskTypeDescription }
 
   /**
@@ -64,7 +66,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * The grid ID.
    *
    */
-  private _gridId: string;
+  protected _gridId: string;
   get gridId(): string { return this._gridId }
 
   /**
@@ -72,7 +74,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * The grid.
    *
    */
-  private _grid: Grid | undefined;
+  protected _grid: Grid | undefined;
   get grid(): Grid | undefined { return this._grid };
   set grid(grid: Grid | undefined) { this._grid = grid };
 
@@ -81,7 +83,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * Source table.
    *
    */
-  private _sourceTable: string;
+  protected _sourceTable: string;
   get sourceTable(): string { return this._sourceTable }
 
   /**
@@ -89,7 +91,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * GridderTaskId.
    *
    */
-  private _gridderTaskId: string;
+  protected _gridderTaskId: string;
   get gridderTaskId(): string { return this._gridderTaskId }
 
   /**
@@ -97,7 +99,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * Name.
    *
    */
-  private _name: string;
+  protected _name: string;
   get name(): string { return this._name }
 
   /**
@@ -105,7 +107,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * Description.
    *
    */
-  private _description: string;
+  protected _description: string;
   get description(): string { return this._description }
 
   /**
@@ -113,8 +115,16 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * Description template for variables.
    *
    */
-  private _geomField: string;
+  protected _geomField: string;
   get geomField(): string { return this._geomField }
+
+  /**
+   *
+   * The index variable key.
+   *
+   */
+  protected _indexVariableKey: string | undefined;
+  get indexVariableKey(): string | undefined { return this._indexVariableKey }
 
   /**
    *
@@ -131,7 +141,8 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       name,
       description,
       sourceTable,
-      geomField
+      geomField,
+      indexVariableKey
     }: {
       gridderTaskId: string;
       gridderTaskType: EGRIDDERTASKTYPE;
@@ -143,6 +154,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       description: string;
       sourceTable: string;
       geomField: string;
+      indexVariableKey?: string;
   }) {
 
     this._gridderTaskId = gridderTaskId;
@@ -155,6 +167,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
     this._description = description;
     this._sourceTable=  sourceTable;
     this._geomField = geomField;
+    this._indexVariableKey = indexVariableKey;
 
   }
 
@@ -205,6 +218,53 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       rxo.map((o: Grid) => {
         this.grid = o;
         return this;
+      })
+
+    )
+
+  }
+
+  /**
+   *
+   * Sets the index variable key. Some single-variable returning GridderTask
+   * will use the single variable as the key, so no additional variable must
+   * be created. This GridderTask should provide the indexVariableKey param.
+   * For multi-variable producing GridderTask, however, a brand new index
+   * variable is created.
+   *
+   */
+  public setIndexVariableKey(cellPg: RxPg, indexVariableKey?: string):
+  rx.Observable<GridderTask> {
+
+    // This is an index variable for multi-variable returning GridderTasks.
+    // Single-variable returning GridderTasks won't use it.
+    const idxVar: Variable = new Variable({
+      gridderTaskId: this.gridderTaskId,
+      name: `Index var ${this.gridderTaskId}`,
+      description: `Index variable for GridderTask ${this.gridderTaskId}.`,
+      gridderTask: this
+    });
+
+    // To store the final key of the index variable. This will depend on the
+    // GridderTask supplying an indexVariableKey or not.
+    const initialObservable$: rx.Observable<string> =
+      indexVariableKey ? rx.of(indexVariableKey) :
+      idxVar.pgInsert$(cellPg).pipe(rxo.map((o: Variable) => <string>o.variableKey));
+
+    return initialObservable$
+    .pipe(
+
+      rxo.concatMap((o: string) => {
+
+        return cellPg.executeParamQuery$(`
+          update cell_meta.gridder_task
+          set index_variable_key = $1
+          where gridder_task_id = $2;`,
+          {
+            params: [ o, this.gridderTaskId ]
+          }
+        );
+
       })
 
     )

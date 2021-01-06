@@ -102,7 +102,8 @@ create table cell_meta.gridder_task(
   description text,
   source_table varchar(150),
   geom_field varchar(150),
-  additional_params jsonb
+  additional_params jsonb,
+  index_variable_key varchar(64)
 );
 
 /**
@@ -755,9 +756,9 @@ language sql;
 
 /**
 
-  Drops a Gridder Task and all its elements:
+  Drops a Gridder Task and all its dependencies, but not the data from the
+  cell vectors (use cell__deletecelldatavectorvars for that):
 
-  - all variable_keys of its variables in cell's data vector;
   - all Variables in cell_meta.variable;
   - all Gridder Jobs in cell_meta.gridder_job;
   - the Gridder Task itself at cell_meta.gridder_task.
@@ -766,24 +767,10 @@ language sql;
   return the ID. If not, will return null.
 
 */
-create or replace function cell__delete_gridder_task (
+create or replace function cell__deletegriddertask(
   _gridder_task_id varchar
 ) returns varchar as
 $$
-
-  with variable_keys as (
-    select
-      array_agg(variable_key)::text[] as keys
-    from
-      cell_meta.variable
-    where gridder_task_id = $1
-  )
-  update cell_data.data
-  set data = a.data - b.keys
-  from
-    cell_data.data a, variable_keys b
-  where
-    b.keys is not null;
 
   delete from cell_meta.variable
   where gridder_task_id = $1;
@@ -794,6 +781,45 @@ $$
   delete from cell_meta.gridder_task
   where gridder_task_id = $1
   returning gridder_task_id;
+
+$$
+language sql;
+
+/**
+
+  Drops all the variables from a GridderTask in cell data vectors
+  for a given zoom and geometry. Must be done in tiny steps because it's a
+  huge query.
+
+*/
+create or replace function cell__deletecelldatavectorvars(
+  _gridder_task_id varchar,
+  _zoom integer,
+  _geom geometry
+) returns text[] as
+$$
+
+  with variable_keys as (
+    select
+      array_agg(variable_key)::text[] as keys
+    from
+      cell_meta.variable
+    where gridder_task_id = $1
+    order by keys
+  ),
+  cells as (
+    select *
+    from cell_data.data
+    where st_intersects($3, geom) and zoom = $2
+  )
+  update cell_data.data d
+  set data = d.data - a.keys
+  from (
+    select * from cells, variable_keys
+  ) a
+  where
+    a.keys is not null and d.zoom = a.zoom and d.x = a.x and d.y = a.y
+  returning a.keys;
 
 $$
 language sql;

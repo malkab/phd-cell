@@ -1,6 +1,6 @@
 import { PgOrm } from "@malkab/rxpg"
 
-import { RxPg, QueryResult } from "@malkab/rxpg";
+import { RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
@@ -95,6 +95,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       description,
       sourceTable,
       geomField,
+      indexVariableKey,
       discreteFields,
       variableNameTemplate,
       variableDescriptionTemplate,
@@ -107,6 +108,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       description: string;
       sourceTable: string;
       geomField: string;
+      indexVariableKey?: string;
       discreteFields: string[];
       variableNameTemplate: string;
       variableDescriptionTemplate: string;
@@ -123,7 +125,8 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       name: name,
       description: description,
       sourceTable: sourceTable,
-      geomField: geomField
+      geomField: geomField,
+      indexVariableKey: indexVariableKey
     });
 
     this._variableNameTemplate = variableNameTemplate;
@@ -136,7 +139,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
@@ -149,7 +152,20 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
             discreteFields: this.discreteFields,
             variableNameTemplate: this.variableNameTemplate,
             variableDescriptionTemplate: this.variableDescriptionTemplate
-          }
+          },
+          this.indexVariableKey
+        ])
+      },
+
+      pgUpdate$: {
+        sql: () => `
+        update cell_meta.gridder_task
+        set
+          name = $1,
+          description = $2;`,
+        params$: () => rx.of([
+          this.name,
+          this.description
         ])
       }
 
@@ -176,7 +192,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       order by ${this.discreteFields.join(",")}`
     ).pipe(
 
-      // Build variables from discrete items
+      // Build variables from discrete items and the index variable
       rxo.concatMap((o: any) => {
 
         variables = o.rows.map((x: any) => {
@@ -202,6 +218,9 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       }),
 
       rxo.last(),
+
+      // Set the index variable
+      rxo.concatMap((o: Variable) => this.setIndexVariableKey(cellPg)),
 
       rxo.map((o: any) => this)
 

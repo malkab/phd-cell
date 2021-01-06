@@ -80,7 +80,8 @@ export function gridderTaskGet$(pg: RxPg, gridderTaskId: string): rx.Observable<
         description,
         source_table as "sourceTable",
         geom_field as "geomField",
-        additional_params as "additionalParams"
+        additional_params as "additionalParams",
+        index_variable_key as "indexVariableKey"
       from cell_meta.gridder_task where gridder_task_id = $1;`,
     params: () => [ gridderTaskId ],
     type: GridderTask,

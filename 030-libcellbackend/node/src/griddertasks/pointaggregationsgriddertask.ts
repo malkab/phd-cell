@@ -10,8 +10,6 @@ import { Cell } from "../core/cell";
 
 import { Variable } from "../core/variable";
 
-import { processTemplate } from "../core/utils";
-
 import { GridderTask } from "./griddertask";
 
 import { EGRIDDERTASKTYPE } from './egriddertasktype';
@@ -79,6 +77,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       description,
       sourceTable,
       geomField,
+      indexVariableKey,
       variables
     }: {
       gridderTaskId: string;
@@ -88,6 +87,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       description: string;
       sourceTable: string;
       geomField: string;
+      indexVariableKey?: string;
       variables: IPointAggregationsGridderTaskVariable[];
   }) {
 
@@ -101,7 +101,8 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       name: name,
       description: description,
       sourceTable: sourceTable,
-      geomField: geomField
+      geomField: geomField,
+      indexVariableKey: indexVariableKey
     });
 
     this._variables = variables;
@@ -111,7 +112,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
@@ -122,7 +123,20 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
           this.geomField,
           {
             variables: this._variables
-          }
+          },
+          this.indexVariableKey
+        ])
+      },
+
+      pgUpdate$: {
+        sql: () => `
+        update cell_meta.gridder_task
+        set
+          name = $1,
+          description = $2;`,
+        params$: () => rx.of([
+          this.name,
+          this.description
         ])
       }
 
@@ -157,6 +171,9 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     .pipe(
 
       rxo.last(),
+
+      // Add index variable
+      rxo.concatMap((o: Variable) => this.setIndexVariableKey(cellPg)),
 
       rxo.map((o: any) => this)
 

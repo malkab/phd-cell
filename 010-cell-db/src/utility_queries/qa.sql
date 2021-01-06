@@ -23,6 +23,7 @@ to cell_readonly;
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
 -- \set griddertaskid provinciaDiscreteAreaSummary
 -- \set griddertaskid seccionCensalDiscreteAreaSummary
+-- \set griddertaskid gridderTaskPointAggregationsPoblacion
 
 -- Zoom, just for alignment
 \set z 1

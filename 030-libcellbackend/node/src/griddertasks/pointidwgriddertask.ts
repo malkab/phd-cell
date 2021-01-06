@@ -121,6 +121,7 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       description,
       sourceTable,
       geomField,
+      indexVariableKey,
       heightField,
       variableName,
       variableDescription,
@@ -136,6 +137,7 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       description: string;
       sourceTable: string;
       geomField: string;
+      indexVariableKey?: string;
       heightField: string,
       variableName: string;
       variableDescription: string;
@@ -155,7 +157,8 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       name: name,
       description: description,
       sourceTable: sourceTable,
-      geomField: geomField
+      geomField: geomField,
+      indexVariableKey: indexVariableKey
     });
 
     this._heightField = heightField;
@@ -189,6 +192,18 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
             power: this.power
           }
         ])
+      },
+
+      pgUpdate$: {
+        sql: () => `
+        update cell_meta.gridder_task
+        set
+          name = $1,
+          description = $2;`,
+        params$: () => rx.of([
+          this.name,
+          this.description
+        ])
       }
 
     })
@@ -214,6 +229,9 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
 
     return variable.pgInsert$(cellPg)
     .pipe(
+
+      // Single variable GridderTask, index var is the only var
+      rxo.concatMap((o: Variable) => this.setIndexVariableKey(cellPg, o.variableKey)),
 
       rxo.map((o: any) => this)
 

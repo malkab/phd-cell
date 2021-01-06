@@ -109,6 +109,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       description,
       sourceTable,
       geomField,
+      indexVariableKey,
       discreteFields,
       variableName,
       variableDescription,
@@ -121,6 +122,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       description: string;
       sourceTable: string;
       geomField: string;
+      indexVariableKey?: string;
       discreteFields: string[];
       variableName: string;
       variableDescription: string;
@@ -137,7 +139,8 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       name: name,
       description: description,
       sourceTable: sourceTable,
-      geomField: geomField
+      geomField: geomField,
+      indexVariableKey: indexVariableKey
     });
 
     this._discreteFields = discreteFields;
@@ -150,7 +153,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
@@ -164,7 +167,20 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
             variableName: this.variableName,
             variableDescription: this.variableDescription,
             categoryTemplate: this.categoryTemplate
-          }
+          },
+          this.indexVariableKey
+        ])
+      },
+
+      pgUpdate$: {
+        sql: () => `
+        update cell_meta.gridder_task
+        set
+          name = $1,
+          description = $2;`,
+        params$: () => rx.of([
+          this.name,
+          this.description
         ])
       }
 
@@ -435,6 +451,9 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
 
       rxo.map((o: Variable) => {
 
+        // Set the index variable key to this only variable
+        this._indexVariableKey = o.variableKey;
+
         // And only one catalog
         catalog = new Catalog({
           gridderTaskId: this.gridderTaskId,
@@ -458,6 +477,9 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       }),
 
       rxo.concatMap((o: any) => catalog.pgInsert$(cellPg)),
+
+      rxo.concatMap((o:any) =>
+        this.setIndexVariableKey(cellPg, <string>this._indexVariableKey)),
 
       rxo.map((o: any) => this)
 
