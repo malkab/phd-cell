@@ -110,6 +110,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       sourceTable,
       geomField,
       indexVariableKey,
+      indexVariable,
       discreteFields,
       variableName,
       variableDescription,
@@ -123,6 +124,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       sourceTable: string;
       geomField: string;
       indexVariableKey?: string;
+      indexVariable?: Variable;
       discreteFields: string[];
       variableName: string;
       variableDescription: string;
@@ -140,7 +142,8 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
-      indexVariableKey: indexVariableKey
+      indexVariableKey: indexVariableKey,
+      indexVariable: indexVariable
     });
 
     this._discreteFields = discreteFields;
@@ -221,9 +224,6 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
     // To hold the key in the catalog in case there are full coverage subcells
     let key: string | undefined;
 
-    // Set the grid of the cell
-    cell.grid = this.grid;
-
     if (log) log.logInfo({
       message: `start cell (${cell.epsg},${cell.zoom},${cell.x},${cell.y})`,
       methodName: "computeCell$",
@@ -231,9 +231,18 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
     })
 
-    // Get the variable and the catalog from the DB
-    return Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)
+    // Get the dependencies
+    return this.getDependencies$(cellPg)
     .pipe(
+
+      rxo.concatMap((o: GridderTask) => {
+
+        // Set the grid of the cell
+        cell.grid = this.grid;
+
+        return Variable.getByGridderTaskId$(cellPg, this.gridderTaskId);
+
+      }),
 
       rxo.concatMap((o: Variable[]) => {
 
@@ -479,7 +488,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       rxo.concatMap((o: any) => catalog.pgInsert$(cellPg)),
 
       rxo.concatMap((o:any) =>
-        this.setIndexVariableKey(cellPg, <string>this._indexVariableKey)),
+        this.setIndexVariableKey$(cellPg, <string>this._indexVariableKey)),
 
       rxo.map((o: any) => this)
 

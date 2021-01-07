@@ -72,6 +72,7 @@
     "@turf/turf": "^5.1.6",
     "@types/proj4": "^2.5.0",
     "mathjs": "^8.1.0",
-    "proj4": "^2.6.3"
+    "proj4": "^2.6.3",
+    "simple-statistics": "^7.4.0"
   }
 }

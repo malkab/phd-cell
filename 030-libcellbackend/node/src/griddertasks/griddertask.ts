@@ -128,6 +128,15 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
 
   /**
    *
+   *
+   * The index variable.
+   *
+   */
+  protected _indexVariable: Variable | undefined;
+  get indexVariable(): Variable | undefined { return this._indexVariable }
+
+  /**
+   *
    * Constructor.
    *
    */
@@ -142,7 +151,8 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       description,
       sourceTable,
       geomField,
-      indexVariableKey
+      indexVariableKey,
+      indexVariable = undefined
     }: {
       gridderTaskId: string;
       gridderTaskType: EGRIDDERTASKTYPE;
@@ -155,6 +165,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       sourceTable: string;
       geomField: string;
       indexVariableKey?: string;
+      indexVariable?: Variable;
   }) {
 
     this._gridderTaskId = gridderTaskId;
@@ -168,6 +179,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
     this._sourceTable=  sourceTable;
     this._geomField = geomField;
     this._indexVariableKey = indexVariableKey;
+    this._indexVariable = indexVariable;
 
   }
 
@@ -233,7 +245,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * variable is created.
    *
    */
-  public setIndexVariableKey(cellPg: RxPg, indexVariableKey?: string):
+  public setIndexVariableKey$(cellPg: RxPg, indexVariableKey?: string):
   rx.Observable<GridderTask> {
 
     // This is an index variable for multi-variable returning GridderTasks.
@@ -266,6 +278,51 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
         );
 
       })
+
+    )
+
+  }
+
+  /**
+   *
+   * Gets the index variable and store it in the indexVariable member, returning
+   * this GridderTask.
+   *
+   */
+  public getIndexVariable$(cellPg: RxPg): rx.Observable<GridderTask> {
+
+    return Variable.getByKey$(cellPg, <string>this.indexVariableKey)
+    .pipe(
+
+      rxo.catchError((o: Error) => {
+
+        return rx.throwError(new Error(`GridderTask ${this.gridderTaskId} of type ${this.gridderTaskType} has no index Variable, set it up first`));
+
+      }),
+
+      rxo.map((o: Variable) => {
+
+        this._indexVariable = o;
+        return this;
+
+      })
+
+    )
+
+  }
+
+  /**
+   *
+   * Gets dependencies: Grid and index variable, setting them in the right
+   * members.
+   *
+   */
+  public getDependencies$(cellPg: RxPg): rx.Observable<GridderTask> {
+
+    return rx.zip(this.getGrid$(cellPg), this.getIndexVariable$(cellPg))
+    .pipe(
+
+      rxo.map((o: any) => o[0])
 
     )
 

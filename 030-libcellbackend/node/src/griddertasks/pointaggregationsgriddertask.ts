@@ -18,8 +18,6 @@ import { NodeLogger } from "@malkab/node-logger";
 
 import { Grid } from "../core/grid";
 
-import { uniq } from "lodash";
-
 /**
  *
  * An interface to describe the variables member items.
@@ -78,6 +76,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       sourceTable,
       geomField,
       indexVariableKey,
+      indexVariable,
       variables
     }: {
       gridderTaskId: string;
@@ -88,6 +87,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       sourceTable: string;
       geomField: string;
       indexVariableKey?: string;
+      indexVariable?: Variable;
       variables: IPointAggregationsGridderTaskVariable[];
   }) {
 
@@ -102,7 +102,8 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
-      indexVariableKey: indexVariableKey
+      indexVariableKey: indexVariableKey,
+      indexVariable: indexVariable
     });
 
     this._variables = variables;
@@ -173,7 +174,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       rxo.last(),
 
       // Add index variable
-      rxo.concatMap((o: Variable) => this.setIndexVariableKey(cellPg)),
+      rxo.concatMap((o: Variable) => this.setIndexVariableKey$(cellPg)),
 
       rxo.map((o: any) => this)
 
@@ -199,32 +200,36 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     // GridderTask.
     let variables: Variable[];
 
+    // To get the variables
+    let variableObs$: rx.Observable<Variable>[] =
+      this.variables.map((o: IPointAggregationsGridderTaskVariable) =>
+        Variable.getByGridderTaskIdAndName$(cellPg, this.gridderTaskId,
+          o.name))
+
+    // A flag to signal points where colliding the cell to drill down
+    let hasData: boolean = false;
+
     // Start of the SQL, taking into account the collision of the cell's geom.
     let sql: string = `
       with a as (
-        select
-          *
-        from
-          ${this.sourceTable}
+        select *
+        from ${this.sourceTable}
         where st_intersects(geom, st_geomfromewkt('${cell.ewkt}'))
+      ),
+      total as (
+        select count(*) as n_points from a
       )
       select
         jsonb_build_object(
     `;
 
-    // Get the variables for this GridderTask in the same order they are coded
-    // in the variables member
-    return rx.zip(
-
-      ...this.variables.map((o: IPointAggregationsGridderTaskVariable) => {
-
-        return Variable.getByGridderTaskIdAndName$(cellPg, this.gridderTaskId,
-          o.name)
-
-      })
-
-    )
+    // Get the dependencies
+    return this.getDependencies$(cellPg)
     .pipe(
+
+      // Get the variables for this GridderTask in the same order they are coded
+      // in the variables member
+      rxo.concatMap((o: GridderTask) => rx.zip(...variableObs$)),
 
       // Compose the final SQL adding the variable names and expressions
       rxo.concatMap((o: Variable[]) => {
@@ -238,7 +243,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
         }
 
         sql = sql.replace(/,+$/, "");
-        sql += `) as data from a;`;
+        sql += `) as data, n_points from a, total group by n_points;`;
 
         return sourcePg.executeParamQuery$(sql);
 
@@ -247,10 +252,14 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       // Check results. If there are any data, update cell's data and update.
       rxo.concatMap((o: QueryResult) => {
 
-        // Check for empty results
-        if (uniq(Object.values(o.rows[0].data))[0]) {
+        if (o.rowCount > 0) {
+
+          // Set the hasData flag
+          hasData = true;
 
           cell.data = o.rows[0].data;
+          cell.data[<string>(<Variable>this.indexVariable).variableKey] =
+            o.rows[0].n_points;
 
           return cell.pgUpdate$(cellPg);
 
@@ -265,7 +274,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       // If there are data, check for sub cells to continue computations.
       rxo.map((o: Cell) => {
 
-        if (Object.keys(o.data).length > 0) {
+        if (hasData) {
 
           if (cell.zoom < targetZoom ) {
 

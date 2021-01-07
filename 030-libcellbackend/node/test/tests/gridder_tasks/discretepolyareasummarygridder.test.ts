@@ -5,7 +5,7 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  DiscretePolyAreaSummaryGridderTask, gridderTaskGet$, Cell
+  DiscretePolyAreaSummaryGridderTask, gridderTaskGet$, Cell, GridderTask
 } from "../../../src/index";
 
 import {
@@ -14,6 +14,8 @@ import {
 } from "../common";
 
 import * as rx from "rxjs";
+
+import * as rxo from "rxjs/operators";
 
 /**
  *
@@ -120,9 +122,14 @@ describe("DiscretePolyAreaSummaryGridderTask computeCell$", function() {
 
     observables: [
 
-      rx.zip(...testCell.map((x: Cell) =>
-      gridderTaskDiscretePolyAreaSummaryMunicipio.computeCell$(
-          pgConnCellRawData, pgConnCell, x, 4, logger)))
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyAreaSummaryMunicipio")
+      .pipe(
+
+        rxo.concatMap((o: DiscretePolyAreaSummaryGridderTask) =>
+          rx.zip(...testCell.map((x: Cell) =>
+            o.computeCell$(pgConnCellRawData, pgConnCell, x, 5, logger))))
+
+      )
 
     ],
 

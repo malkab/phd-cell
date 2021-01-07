@@ -5,12 +5,12 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  PointIdwGridderTask, gridderTaskGet$, Cell
+  PointIdwGridderTask, gridderTaskGet$, Cell, MdtProcessingGridderTask
 } from "../../../src/index";
 
 import {
   gridderTaskPointIdwMdt, pgConnCell, pgConnCellRawData,
-  testCell, logger
+  testCell, logger, gridderTaskMdtProcessing
 } from "../common";
 
 import * as rx from "rxjs";
@@ -19,20 +19,22 @@ import * as rxo from "rxjs/operators";
 
 /**
  *
- * PointIdwGridderTask pgInsert$.
+ * MdtProcessingGridderTask pgInsert$.
  *
  */
-describe("PointIdwGridderTask pgInsert$", function() {
+describe("MdtProcessingGridderTask pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointIdwGridderTask pgInsert$",
+    testCaseName: "MdtProcessingGridderTask pgInsert$",
 
-    observables: [ gridderTaskPointIdwMdt.pgInsert$(pgConnCell) ],
+    observables: [ gridderTaskMdtProcessing.pgInsert$(pgConnCell) ],
 
     assertions: [
 
-      (o: PointIdwGridderTask) => expect(o.name).to.be.equal("Interpolación MDT con IDW")
+      (o: MdtProcessingGridderTask) =>
+        expect(o.name)
+          .to.be.equal("Interpolación MDT por media de alturas e IDW")
 
     ],
 
@@ -46,22 +48,22 @@ describe("PointIdwGridderTask pgInsert$", function() {
 
 /**
  *
- * PointIdwGridderTask get$.
+ * MdtProcessingGridderTask get$.
  *
  */
-describe("PointIdwGridderTask get$", function() {
+describe("MdtProcessingGridderTask get$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointIdwGridderTask get$",
+    testCaseName: "MdtProcessingGridderTask get$",
 
-    observables: [ gridderTaskGet$(pgConnCell, "gridderTaskPointIdwMdt") ],
+    observables: [ gridderTaskGet$(pgConnCell, "gridderTaskMdtProcessing") ],
 
     assertions: [
 
       (o: PointIdwGridderTask) => {
 
-        expect(o.name).to.be.equal("Interpolación MDT con IDW");
+        expect(o.name).to.be.equal("Interpolación MDT por media de alturas e IDW");
 
         expect(o.gridId, "gridId").to.be.equal("eu-grid");
 
@@ -81,20 +83,21 @@ describe("PointIdwGridderTask get$", function() {
 
 /**
  *
- * PointIdwGridderTask setup$.
+ * MdtProcessingGridderTask setup$.
  *
  */
-describe("PointIdwGridderTask setup$", function() {
+describe("MdtProcessingGridderTask setup$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointIdwGridderTask setup$",
+    testCaseName: "MdtProcessingGridderTask setup$",
 
-    observables: [ gridderTaskPointIdwMdt.setup$(pgConnCellRawData, pgConnCell) ],
+    observables: [ gridderTaskMdtProcessing.setup$(pgConnCellRawData, pgConnCell) ],
 
     assertions: [
 
-      (o: PointIdwGridderTask) => expect(o.name).to.be.equal("Interpolación MDT con IDW")
+      (o: MdtProcessingGridderTask) =>
+        expect(o.name).to.be.equal("Interpolación MDT por media de alturas e IDW")
 
     ],
 
@@ -111,17 +114,17 @@ describe("PointIdwGridderTask setup$", function() {
  * computeCell$.
  *
  */
-describe("PointIdwGridderTask computeCell$", function() {
+describe("MdtProcessingGridderTask computeCell$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointIdwGridderTask computeCell$",
+    testCaseName: "MdtProcessingGridderTask computeCell$",
 
     timeout: 300000,
 
     observables: [
 
-      gridderTaskGet$(pgConnCell, "gridderTaskPointIdwMdt")
+      gridderTaskGet$(pgConnCell, "gridderTaskMdtProcessing")
       .pipe(
 
         rxo.concatMap((o: PointIdwGridderTask) =>

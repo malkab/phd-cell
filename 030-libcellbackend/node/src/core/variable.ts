@@ -196,4 +196,27 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
 
   }
 
+  /**
+   *
+   * Get variable by key.
+   *
+   */
+  public static getByKey$(pg: RxPg, key: string):
+  rx.Observable<Variable> {
+
+    return PgOrm.select$<Variable>({
+      pg: pg,
+      sql: `
+        select
+          gridder_task_id as "gridderTaskId",
+          variable_key as "variableKey",
+          *
+        from cell_meta.variable
+        where variable_key = $1`,
+      params: () => [ key ],
+      type: Variable
+    })
+
+  }
+
 }

@@ -1,7 +1,7 @@
 import {
   Cell, SourcePgConnection, Variable, Grid, GridderJob,
   DiscretePolyTopAreaGridderTask,
-  DiscretePolyAreaSummaryGridderTask,
+  DiscretePolyAreaSummaryGridderTask, MdtProcessingGridderTask,
   PointAggregationsGridderTask,
   PointIdwGridderTask
 } from "../../src/index";
@@ -380,7 +380,7 @@ new PointIdwGridderTask({
   sourceTable: "mdt.mdt",
   geomField: "geom",
   maxDistance: 200,
-  numberOfPoints: 2,
+  numberOfPoints: 16,
   heightField: "h",
   round: 1,
   power: 2,
@@ -391,6 +391,37 @@ new PointIdwGridderTask({
 export const gridderJobPointIdwMdt: GridderJob = new GridderJob({
   gridderJobId: "gridderJobPointIdwMdt",
   gridderTaskId: "gridderTaskPointIdwMdt",
+  maxZoomLevel: 0,
+  minZoomLevel: 2,
+  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
+})
+
+/**
+ *
+ * MDT processing.
+ *
+ */
+export const gridderTaskMdtProcessing: MdtProcessingGridderTask =
+new MdtProcessingGridderTask({
+  gridderTaskId: "gridderTaskMdtProcessing",
+  gridId: "eu-grid",
+  grid: gridEu,
+  name: "Interpolación MDT por media de alturas e IDW",
+  description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método de media de alturas si la densidad de puntos de alturas es lo suficientemente alta en la celda o por interpolación Inverse Distance Weighting si no.",
+  sourceTable: "mdt.mdt",
+  geomField: "geom",
+  maxDistance: 200,
+  numberOfPoints: 16,
+  heightField: "h",
+  round: 1,
+  power: 2,
+  variableName: "Procesamiento MDT",
+  variableDescription: "Procesamiento del MDT de 100 metros mediante media / interpolación IDW"
+})
+
+export const gridderJobMdtProcessing: GridderJob = new GridderJob({
+  gridderJobId: "gridderJobMdtProcessing",
+  gridderTaskId: "gridderTaskMdtProcessing",
   maxZoomLevel: 0,
   minZoomLevel: 2,
   sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"

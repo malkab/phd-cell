@@ -15,6 +15,8 @@ import {
 
 import * as rx from "rxjs";
 
+import * as rxo from "rxjs/operators";
+
 /**
  *
  * PointAggregationsGridderTask pgInsert$.
@@ -126,9 +128,15 @@ describe("PointAggregationsGridderTask computeCell$", function() {
 
     observables: [
 
-      rx.zip(...testCell.map((x: Cell) =>
-      gridderTaskPointAggregationsPoblacion.computeCell$(
-          pgConnCellRawData, pgConnCell, x, 9, logger)))
+      gridderTaskGet$(pgConnCell, "gridderTaskPointAggregationsPoblacion")
+      .pipe(
+
+        rxo.concatMap((o: PointAggregationsGridderTask) =>
+          rx.zip(...testCell.map((x: Cell) =>
+            o.computeCell$(
+              pgConnCellRawData, pgConnCell, x, 5, logger))))
+
+      )
 
     ],
 
@@ -137,7 +145,7 @@ describe("PointAggregationsGridderTask computeCell$", function() {
       (o: Cell[][]) => {
 
         expect(o.map((x: Cell[]) => x.length), "Child cells")
-          .to.be.deep.equal([ 4, 4, 4, 0, 4, 25, 25, 0 ]);
+          .to.be.deep.equal([ 4, 4, 4, 0, 0, 0, 0, 0 ]);
 
       }
 

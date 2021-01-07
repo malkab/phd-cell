@@ -12,6 +12,8 @@ export * from "./griddertasks/discretepolyareasummarygriddertask";
 
 export * from "./griddertasks/pointidwgriddertask";
 
+export * from "./griddertasks/mdtprocessinggriddertask";
+
 export * from "./griddertasks/pointaggregationsgriddertask";
 
 export * from "./griddertasks/discretepolytopareagriddertask";
@@ -23,3 +25,5 @@ export * from "./griddertasks/griddertaskfactory";
 export * from "./griddertasks/gridderjob";
 
 export * from "./core/coordinate";
+
+export * from "./core/utils";

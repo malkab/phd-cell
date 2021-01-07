@@ -199,6 +199,42 @@ describe("GridderTask Top Area get$", function() {
 
 /**
  *
+ * GridderTask computeCell$ before setup$.
+ *
+ */
+describe("GridderTask computeCell$ before setup$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask computeCell$ before setup$",
+
+    timeout: 300000,
+
+    observables: [
+
+      gridderTaskDiscretePolyTopAreaMunicipio.computeCell$(
+        pgConnCellRawData, pgConnCell, testCell[0], 4, logger)
+
+    ],
+
+    assertions: [
+
+      (o: Error) =>
+        expect(o.message)
+          .to.be.equal("GridderTask gridderTaskDiscretePolyTopAreaMunicipio of type DISCRETEPOLYTOPAREA has no index Variable, set it up first")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
  * GridderTask Area Summary setup$.
  *
  */
@@ -253,9 +289,14 @@ describe("GridderTask Top Area computeCell$", function() {
 
     observables: [
 
-      rx.zip(...testCell.map((x: Cell) =>
-        gridderTaskDiscretePolyTopAreaMunicipio.computeCell$(
-          pgConnCellRawData, pgConnCell, x, 4, logger)))
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyTopAreaMunicipio")
+      .pipe(
+
+        rxo.concatMap((o: GridderTask) => rx.zip(...testCell.map((x: Cell) =>
+          gridderTaskDiscretePolyTopAreaMunicipio.computeCell$(
+            pgConnCellRawData, pgConnCell, x, 4, logger))))
+
+      )
 
     ],
 
@@ -378,9 +419,13 @@ describe("GridderTask Area Summary computeCell$", function() {
 
     observables: [
 
-      rx.zip(...testCell.map((x: Cell) =>
-        gridderTaskDiscretePolyAreaSummaryMunicipio.computeCell$(
-          pgConnCellRawData, pgConnCell, x, 4, logger)))
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyAreaSummaryMunicipio")
+      .pipe(
+
+        rxo.concatMap((o: GridderTask) => rx.zip(...testCell.map((x: Cell) =>
+          o.computeCell$(pgConnCellRawData, pgConnCell, x, 4, logger))))
+
+      )
 
     ],
 

@@ -1,6 +1,6 @@
 import { PgOrm } from "@malkab/rxpg"
 
-import { RxPg } from "@malkab/rxpg";
+import { RxPg, QueryResult } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
@@ -96,6 +96,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       sourceTable,
       geomField,
       indexVariableKey,
+      indexVariable,
       discreteFields,
       variableNameTemplate,
       variableDescriptionTemplate,
@@ -109,6 +110,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       sourceTable: string;
       geomField: string;
       indexVariableKey?: string;
+      indexVariable?: Variable;
       discreteFields: string[];
       variableNameTemplate: string;
       variableDescriptionTemplate: string;
@@ -126,7 +128,8 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
-      indexVariableKey: indexVariableKey
+      indexVariableKey: indexVariableKey,
+      indexVariable: indexVariable
     });
 
     this._variableNameTemplate = variableNameTemplate;
@@ -220,7 +223,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       rxo.last(),
 
       // Set the index variable
-      rxo.concatMap((o: Variable) => this.setIndexVariableKey(cellPg)),
+      rxo.concatMap((o: Variable) => this.setIndexVariableKey$(cellPg)),
 
       rxo.map((o: any) => this)
 
@@ -251,9 +254,6 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
     // Full coverage flag
     let fullCoverage = false;
 
-    // Set the grid of the cell
-    cell.grid = this.grid;
-
     if (log) log.logInfo({
       message: `start cell (${cell.epsg},${cell.zoom},${cell.x},${cell.y})`,
       methodName: "computeCell$",
@@ -264,25 +264,44 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
     // Analysis SQL: returns the percentage of the area of the cell covered
     // by each category
     const sql: string = `
-      with a as (
+      with geom_cell as (
+        select st_geomfromewkt('${cell.ewkt}') as geom_cell
+      ),
+      geom_cell_area as (
+        select st_area(geom_cell)::numeric as geom_cell_area from geom_cell
+      ),
+      a as (
         select
           ${this.discreteFields.join(",")},
-          ${this.geomField} as geom,
-          st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}')) as geom_inter,
-          st_area(st_intersection(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))) as a
-        from ${this.sourceTable}
-        where st_intersects(${this.geomField}, st_geomfromewkt('${cell.ewkt}'))
+          st_intersection(${this.geomField}, geom_cell) as geom_inter
+        from ${this.sourceTable}, geom_cell
+        where st_intersects(${this.geomField}, geom_cell)
+      ),
+      complete as (
+        select st_union(geom_inter) as complete_geom
+        from a
       )
       select
         ${this.discreteFields.join(",")},
-        round((sum(a)::float / st_area(st_geomfromewkt('${cell.ewkt}')))::numeric, ${this.areaRound}) as a
-      from a
-      group by ${this.discreteFields.join(",")}
+        round((sum(st_area(geom_inter))::numeric / geom_cell_area)::numeric, ${this.areaRound}) as a,
+        round((st_area(complete_geom)::numeric / geom_cell_area)::numeric, ${this.areaRound}) as complete
+      from a, complete, geom_cell, geom_cell_area
+      group by ${this.discreteFields.join(",")}, geom_cell, complete, geom_cell_area
       order by a desc;`;
 
-    // Find overlapping polygons
-    return sourcePg.executeParamQuery$(sql)
+    // Get the dependencies
+    return this.getDependencies$(cellPg)
     .pipe(
+
+      // Find overlapping polygons
+      rxo.concatMap((o: any) => {
+
+        // Set the grid of the cell
+        cell.grid = this.grid;
+
+        return sourcePg.executeParamQuery$(sql);
+
+      }),
 
       rxo.catchError((e: Error) => {
 
@@ -302,7 +321,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       }),
 
       // Get variables matching the discrete terms for each overlapping polygon
-      rxo.concatMap((o: any) => {
+      rxo.concatMap((o: QueryResult) => {
 
         if (log) log.logInfo({
           message: `got ${o.rowCount} colliding polygons`,
@@ -314,18 +333,28 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
         // Keep these results
         areas = o.rows;
 
-        return rx.zip(...o.rows.map((x: any) => {
-
+        // Get variables
+        const vars: rx.Observable<Variable>[] = o.rows.map((x: any) => {
           return Variable.getByGridderTaskIdAndName$(
             cellPg, this.gridderTaskId,
             processTemplate(this.variableNameTemplate, x));
+        })
 
-        }))
+        // If there are results, add the index variable to the variables to be
+        // retrieved
+        if (o.rowCount>0)
+          vars.push(Variable.getByKey$(cellPg, <string>this._indexVariableKey));
+
+        // Get variables
+        return rx.zip(...vars);
 
       }),
 
       // Compose cell data member and update the cell
-      rxo.concatMap((o: any) => {
+      rxo.concatMap((o: Variable[]) => {
+
+        // Get the index var, this modifies the list of variables
+        const indexVar: Variable = <Variable>o.pop();
 
         if (log) log.logInfo({
           message: `got ${o.length} variables`,
@@ -336,6 +365,10 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
 
         const data: any = {};
         variables = <Variable[]>o;
+
+        // Add the index variable if there area any data
+        if (o.length > 0)
+          data[<string>indexVar.variableKey] = +areas[0].complete;
 
         // Add area value for each variable
         for(let i=0; i<areas.length; i++)

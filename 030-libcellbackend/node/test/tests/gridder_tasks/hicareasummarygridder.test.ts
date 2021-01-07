@@ -15,7 +15,7 @@ import {
 
 import * as rx from "rxjs";
 
-
+import * as rxo from "rxjs/operators";
 
 /**
  *
@@ -124,9 +124,18 @@ describe("gridderTaskDiscretePolyAreaSummaryHic computeCell$", function() {
 
     observables: [
 
-      rx.zip(...testCell.map((x: Cell) =>
-      gridderTaskDiscretePolyAreaSummaryHic.computeCell$(
-          pgConnCellRawData, pgConnCell, x, 4, logger)))
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyAreaSummaryHic")
+      .pipe(
+
+        rxo.concatMap((o: DiscretePolyAreaSummaryGridderTask) => {
+
+          return rx.zip(...testCell.map((x: Cell) =>
+            o.computeCell$(
+              pgConnCellRawData, pgConnCell, x, 5, logger)))
+
+        })
+
+      )
 
     ],
 

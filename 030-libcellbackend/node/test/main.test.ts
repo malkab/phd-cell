@@ -18,8 +18,8 @@ describe("libcellbackend", () => {
   // describe("\n\n  --- sourcepgconnection.test ---\n",
   //   () => require("./tests/sourcepgconnection.test"));
 
-  describe("\n\n  --- griddertask.test ---\n",
-    () => require("./tests/griddertask.test"));
+  // describe("\n\n  --- griddertask.test ---\n",
+  //   () => require("./tests/griddertask.test"));
 
   // describe("\n\n  --- variable.test ---\n",
   //   () => require("./tests/variable.test"));
@@ -36,15 +36,18 @@ describe("libcellbackend", () => {
   // describe("\n\n  --- commongridderjobmethods.test ---\n",
   //   () => require("./tests/commongridderjobmethods.test"));
 
-  // /**
-  //  *
-  //  * This is a set up test for the following ones. The GridderTask tests aren't
-  //  * atomic so it can be tested that they don't interfere with the variables
-  //  * and data vectors of one another.
-  //  *
-  //  */
-  // describe("\n\n  --- griddertasksetup.test ---\n",
-  //   () => require("./tests/gridder_tasks/griddertasksetup.test"));
+  describe("\n\n  --- utils.test ---\n",
+    () => require("./tests/utils.test"));
+
+  /**
+   *
+   * This is a set up test for the following ones. The GridderTask tests aren't
+   * atomic so it can be tested that they don't interfere with the variables
+   * and data vectors of one another.
+   *
+   */
+  describe("\n\n  --- griddertasksetup.test ---\n",
+    () => require("./tests/gridder_tasks/griddertasksetup.test"));
 
   // describe("\n\n  --- discretepolytopareagridder.test ---\n",
   //   () => require("./tests/gridder_tasks/discretepolytopareagridder.test"));
@@ -55,19 +58,22 @@ describe("libcellbackend", () => {
   // describe("\n\n  --- pointaggregationsgridder.test ---\n",
   //   () => require("./tests/gridder_tasks/pointaggregationsgridder.test"));
 
-  // describe("\n\n  --- pointidwgridder.test ---\n",
-  //   () => require("./tests/gridder_tasks/pointidwgridder.test"));
+  describe("\n\n  --- pointidwgridder.test ---\n",
+    () => require("./tests/gridder_tasks/pointidwgridder.test"));
 
   // describe("\n\n  --- hicareasummarygridder.test ---\n",
   //   () => require("./tests/gridder_tasks/hicareasummarygridder.test"));
 
-  // /**
-  //  *
-  //  * This is a set up test for the following ones. The GridderJob tests aren't
-  //  * atomic so it can be tested that they don't interfere with the variables
-  //  * and data vectors of one another.
-  //  *
-  //  */
+  describe("\n\n  --- mdtprocessinggridder.test ---\n",
+    () => require("./tests/gridder_tasks/mdtprocessinggridder.test"));
+
+  /**
+   *
+   * This is a set up test for the following ones. The GridderJob tests aren't
+   * atomic so it can be tested that they don't interfere with the variables
+   * and data vectors of one another.
+   *
+   */
   // describe("\n\n  --- gridderjobsetup.test ---\n",
   //   () => require("./tests/gridder_jobs/gridderjobsetup.test"));
 

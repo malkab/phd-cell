@@ -18,14 +18,16 @@ import { NodeLogger } from "@malkab/node-logger";
 
 import { Grid } from "../core/grid";
 
+import { mean } from "simple-statistics";
+
+import { round } from "mathjs";
+
 import { idw } from "../core/utils";
 
 /**
  *
- * Point interpolation by IDW Gridder Task.
- *
- * This Gridder Task generates an interpolation of a point cloud based on the
- * IDW method.
+ * MDT processing by either averaging colliding points if there are enough of
+ * or by interpolation by IDW.
  *
  * IDW is defined by three params:
  *
@@ -36,18 +38,21 @@ import { idw } from "../core/utils";
  * - **heightField:** the field containing the height of the points;
  * - **round:** round the final height to this number of decimals.
  *
+ * If **numberOfPoints** or more points collides the cell, the average of the
+ * data field is provided as the final data. If not, IDW is applied.
+ *
  * This GridderTask generates a single variable. The name and description for
  * this variable must be provided in the **variableName** and
  * **variableDescription** additional params.
  *
  */
-export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<PointIdwGridderTask> {
+export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOrm<MdtProcessingGridderTask> {
 
   // Dummy PgOrm
   // TODO: implement full ORM
-  public pgDelete$: (pg: RxPg) => rx.Observable<PointIdwGridderTask> = (pg) => rx.of();
-  public pgInsert$: (pg: RxPg) => rx.Observable<PointIdwGridderTask> = (pg) => rx.of();
-  public pgUpdate$: (pg: RxPg) => rx.Observable<PointIdwGridderTask> = (pg) => rx.of();
+  public pgDelete$: (pg: RxPg) => rx.Observable<MdtProcessingGridderTask> = (pg) => rx.of();
+  public pgInsert$: (pg: RxPg) => rx.Observable<MdtProcessingGridderTask> = (pg) => rx.of();
+  public pgUpdate$: (pg: RxPg) => rx.Observable<MdtProcessingGridderTask> = (pg) => rx.of();
 
   /**
    *
@@ -151,9 +156,9 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
 
     super({
       gridderTaskId: gridderTaskId,
-      gridderTaskType: EGRIDDERTASKTYPE.POINTIDWINTERPOLATION,
-      gridderTaskTypeName: "Interpolation of point cloud by IDW",
-      gridderTaskTypeDescription: "Produces an interpolation of a point cloud based on the Inverse Distance Weighting method.",
+      gridderTaskType: EGRIDDERTASKTYPE.MDTPROCESSING,
+      gridderTaskTypeName: "Processing of MDT data by averaging / IDW",
+      gridderTaskTypeDescription: "Processes MDT data by averaging height data if enough points collide the cell or interpolating by Inverse Distance Weighting method.",
       gridId: gridId,
       grid: grid,
       name: name,
@@ -281,9 +286,23 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
     // maxDistance
     let voidCell: boolean = false;
 
-    const sql: string = `
-      with center as (
-        select st_centroid(st_geomfromewkt('${cell.ewkt}')) as geom
+    // SQL for colliding points, first check for averaging
+    const sqlCollidingPoints: string = `
+      with geom_cell as (
+        select st_geomfromewkt('${cell.ewkt}') as geom
+      )
+      select ${this.heightField} as h
+      from ${this.sourceTable} a, geom_cell b
+      where st_intersects(a.${this.geomField}, b.geom);
+    `;
+
+    // SQL for nearest points, second check for IDW
+    const sqlNearPoints: string = `
+      with geom_cell as (
+        select st_geomfromewkt('${cell.ewkt}') as geom
+      ),
+      center as (
+        select st_centroid(geom) as geom from geom_cell
       ),
       nearest_points as (
         select
@@ -306,28 +325,54 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       rxo.concatMap((o: Variable[]) => {
 
         variableKey = <string>o[0].variableKey;
-        return sourcePg.executeParamQuery$(sql)
+        return sourcePg.executeParamQuery$(sqlCollidingPoints)
 
       }),
 
-      rxo.map((o: any) => {
+      rxo.concatMap((o: any) => {
 
-        // Check if any point was found within the maxDistance. If not, raise
-        // the void cell flag.
-        if (o.rowCount === 0) voidCell = true;
+        // Check if there are more points colliding the cell than numberOfPoints
+        if (o.rowCount >= this.numberOfPoints) {
 
-        // Calculate the IDW
-        h = idw(
-          o.rows.map((x: any) => x.h),
-          o.rows.map((x: any) => x.d),
-          this.power,
-          this.round
-        );
+          // Averaging
+          h = round(mean(o.rows.map((x: any) => x.h)), this.round);
+
+          return rx.of(h);
+
+        } else {
+
+          // Get nearest points for IDW
+          return sourcePg.executeParamQuery$(sqlNearPoints);
+
+        }
 
       }),
 
       // Update the cell if not void
       rxo.concatMap((o: any) => {
+
+        // Check if the recieved item is a QueryResult or h
+        if (o.rowCount !== undefined) {
+
+          // Check if any point was found within the maxDistance. If not, raise
+          // the void cell flag.
+          if (o.rowCount === 0) {
+
+            voidCell = true;
+
+          } else {
+
+            // Calculate the IDW
+            h = idw(
+              o.rows.map((x: any) => x.h),
+              o.rows.map((x: any) => x.d),
+              this.power,
+              this.round
+            );
+
+          }
+
+        }
 
         // Write the cell if not void
         if (!voidCell) {
