@@ -176,7 +176,6 @@ export function process$(params: any): rx.Observable<any> {
       return gridderTask;
     }),
 
-
     // Insert objects at the database
     rxo.concatMap((o: GridderTask) => rx.zip(
 
@@ -240,6 +239,8 @@ export function process$(params: any): rx.Observable<any> {
 
     // Compute the cell
     rxo.concatMap((o: any) => {
+
+      console.log("D: jj32k3");
 
       logger.logInfo({
         message: `added objects to the DB`,

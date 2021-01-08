@@ -35,6 +35,9 @@ import { Grid } from "../core/grid";
  * This Gridder Task drills down on the event of a single category dominating
  * the whole cell.
  *
+ * The index var stores the following cell stats:
+ * - area: total area covered by all classes in the cell.
+ *
  */
 export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements PgOrm.IPgOrm<DiscretePolyAreaSummaryGridderTask> {
 
@@ -368,7 +371,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
 
         // Add the index variable if there area any data
         if (o.length > 0)
-          data[<string>indexVar.variableKey] = +areas[0].complete;
+          data[<string>indexVar.variableKey] = { area: +areas[0].complete };
 
         // Add area value for each variable
         for(let i=0; i<areas.length; i++)

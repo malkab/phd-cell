@@ -24,7 +24,8 @@ describe("Read parameters from config file", function() {
       "gridderTask",
       "gridderJob",
       "cells",
-      "targetZoom"
+      "targetZoom",
+      "verbose"
     ]);
 
   });

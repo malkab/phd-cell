@@ -4,15 +4,16 @@ root: /home/git/malkab-phd/cell
 windows:
   - node: >
       clear ;
-      sleep 1 ;
       cd 030-libcellbackend/docker
 
   - psql-celldb: >
       clear ;
-      sleep 3 ;
       cd docker/010-dev
 
   - psql-cell_raw_data: >
       clear ;
-      sleep 5 ;
       cd docker/010-dev
+
+  - cell-db-compose: >
+      clear ;
+      cd 010-cell-db/docker

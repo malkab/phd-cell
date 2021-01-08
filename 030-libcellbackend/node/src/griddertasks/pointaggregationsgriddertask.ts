@@ -39,6 +39,9 @@ interface IPointAggregationsGridderTaskVariable {
  * This Gridder Task takes the set of points present in the cell and aggregates
  * their properties using the expressions provided in the variables member.
  *
+ * The index var for this Gridder Task stores the following stats:
+ * - nPoints: number of points in the cell.
+ *
  */
 export class PointAggregationsGridderTask extends GridderTask implements PgOrm.IPgOrm<PointAggregationsGridderTask> {
 
@@ -210,6 +213,10 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     let hasData: boolean = false;
 
     // Start of the SQL, taking into account the collision of the cell's geom.
+    // This is a little bit tricky since PostgreSQL functions don't accept more
+    // than 100 parameters, variables must be added in batchs of 50 (one
+    // parameter for the var name, another for the value). This is the head of
+    // the SQL, there can be more than one of these for many vars.
     let sql: string = `
       with a as (
         select *
@@ -223,6 +230,12 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
         jsonb_build_object(
     `;
 
+    // This is to store the SQL if there are too many vars
+    const sqlBatches: string[] = [];
+
+    // Number of batches
+    let nBatches: number = 1;
+
     // Get the dependencies
     return this.getDependencies$(cellPg)
     .pipe(
@@ -234,45 +247,85 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       // Compose the final SQL adding the variable names and expressions
       rxo.concatMap((o: Variable[]) => {
 
+        // Cache variables
         variables = o;
 
-        for(let i=0; i<this.variables.length; i++) {
+        // Check for SQL batches for many variables
+        // Get number of 50 vars batches
+        nBatches = Math.ceil(variables.length / 50);
 
-          sql += `'${variables[i].variableKey}', ${this.variables[i].expression},`;
+        // Process batches
+        for (let i = 0; i < nBatches; i++) {
+
+          // Slice variables and variables descriptions for the batch
+          const slicedVars: Variable[] = variables.slice(i * 50, (i+1)*50);
+          const slicedVarsDef: IPointAggregationsGridderTaskVariable[] =
+            this.variables.slice(i * 50, (i+1)*50);
+
+          // Create the SQL for the batch
+          let batchSql: string = sql;
+
+          for(let i=0; i<slicedVars.length; i++) {
+
+            batchSql +=
+              `'${slicedVars[i].variableKey}', ${slicedVarsDef[i].expression},`;
+
+          }
+
+          batchSql = batchSql.replace(/,+$/, "");
+          batchSql += `) as data, n_points from a, total group by n_points;`;
+
+          // Add to the batch
+          sqlBatches.push(batchSql);
 
         }
 
-        sql = sql.replace(/,+$/, "");
-        sql += `) as data, n_points from a, total group by n_points;`;
-
-        return sourcePg.executeParamQuery$(sql);
+        return rx.zip(...sqlBatches.map((o: string) =>
+          sourcePg.executeParamQuery$(o)));
 
       }),
 
       // Check results. If there are any data, update cell's data and update.
       rxo.concatMap((o: QueryResult) => {
 
-        if (o.rowCount > 0) {
+        // To store the observables results for the processing of each batch
+        const obs$: rx.Observable<Cell>[] = [];
 
-          // Set the hasData flag
-          hasData = true;
+        // Since all SQL batches must have the same row count if there were
+        // points colliding the cell, checking results of the first batch is
+        // enough to know if a drill down is needed and to write the index var
+        if(o[0].rowCount > 0) {
 
-          cell.data = o.rows[0].data;
-          cell.data[<string>(<Variable>this.indexVariable).variableKey] =
-            o.rows[0].n_points;
+          // Process each batch so it updates the cell
+          o.map((x: QueryResult) => {
 
-          return cell.pgUpdate$(cellPg);
+            // Set the hasData flag
+            hasData = true;
+
+            cell.data = x.rows[0].data;
+
+            // Set the index var
+            cell.data[<string>(<Variable>this.indexVariable).variableKey] =
+              { nPoints: x.rows[0].n_points };
+
+            obs$.push(cell.pgUpdate$(cellPg));
+
+          })
 
         } else {
 
-          return rx.of(cell);
+          obs$.push(rx.of(cell));
 
         }
 
+        return rx.concat(...obs$);
+
       }),
 
+      rxo.bufferCount(nBatches),
+
       // If there are data, check for sub cells to continue computations.
-      rxo.map((o: Cell) => {
+      rxo.map((o: any) => {
 
         if (hasData) {
 

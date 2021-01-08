@@ -4,15 +4,12 @@ root: /home/git/malkab-phd/cell
 windows:
   - node: >
       clear ;
-      sleep 0.5 ;
       cd 070-cellutilities/docker
 
   - cell-db-psql: >
       clear ;
-      sleep 0.5 ;
       cd docker/010-dev
 
   - cell-raw-data-psql: >
       clear ;
-      sleep 0.5 ;
       cd docker/010-dev

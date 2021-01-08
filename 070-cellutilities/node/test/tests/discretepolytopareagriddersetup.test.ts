@@ -22,7 +22,8 @@ describe("Read parameters from config file", function() {
       "sourcePg",
       "grid",
       "gridderTask",
-      "gridderJob"
+      "gridderJob",
+      "verbose"
     ]);
 
   });

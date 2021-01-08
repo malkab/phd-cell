@@ -23,11 +23,11 @@ describe("cell-utilities", () => {
   // describe("\n\n  --- discretepolytopareacoveringcells.test ---\n",
   //   () => require("./tests/discretepolytopareacoveringcells.test"));
 
-  // describe("\n\n  --- discretepolytopareagriddersetup.test ---\n",
-  //   () => require("./tests/discretepolytopareagriddersetup.test"));
+  describe("\n\n  --- discretepolytopareagriddersetup.test ---\n",
+    () => require("./tests/discretepolytopareagriddersetup.test"));
 
-  // describe("\n\n  --- discretepolytopareagridder.test ---\n",
-  //   () => require("./tests/discretepolytopareagridder.test"));
+  describe("\n\n  --- discretepolytopareagridder.test ---\n",
+    () => require("./tests/discretepolytopareagridder.test"));
 
   // DiscretePolyAreaSummary
 
@@ -53,13 +53,13 @@ describe("cell-utilities", () => {
 
   // PointIdwInterpolation
 
-  describe("\n\n  --- pointidwinterpolationcoveringcells.test ---\n",
-    () => require("./tests/pointidwinterpolationcoveringcells.test"));
+  // describe("\n\n  --- pointidwinterpolationcoveringcells.test ---\n",
+  //   () => require("./tests/pointidwinterpolationcoveringcells.test"));
 
-  describe("\n\n  --- pointidwinterpolationgriddersetup.test ---\n",
-    () => require("./tests/pointidwinterpolationgriddersetup.test"));
+  // describe("\n\n  --- pointidwinterpolationgriddersetup.test ---\n",
+  //   () => require("./tests/pointidwinterpolationgriddersetup.test"));
 
-  describe("\n\n  --- pointidwinterpolationgridder.test ---\n",
-    () => require("./tests/pointidwinterpolationgridder.test"));
+  // describe("\n\n  --- pointidwinterpolationgridder.test ---\n",
+  //   () => require("./tests/pointidwinterpolationgridder.test"));
 
 });
