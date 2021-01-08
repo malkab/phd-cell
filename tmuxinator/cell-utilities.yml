@@ -1,0 +1,15 @@
+name: cell-utilities
+root: /home/git/malkab-phd/cell
+
+windows:
+  - node: >
+      clear ;
+      cd 070-cellutilities/docker
+
+  - cell-db-psql: >
+      clear ;
+      cd docker/010-dev
+
+  - cell-raw-data-psql: >
+      clear ;
+      cd docker/010-dev

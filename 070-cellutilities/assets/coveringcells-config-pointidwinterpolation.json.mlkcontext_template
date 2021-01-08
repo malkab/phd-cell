@@ -1,0 +1,67 @@
+{
+
+  "cellPg": {
+    "host": "{{{MLKC_CELL_DB_HOST}}}",
+    "pass": "{{{MLKC_CELL_DB_PASS}}}",
+    "port": "{{{MLKC_CELL_DB_PORT}}}",
+    "user": "{{{MLKC_CELL_DB_USER}}}"
+  },
+
+  "sourcePg": {
+    "db": "cell_raw_data",
+    "host": "{{{MLKC_CELL_RAW_DATA_HOST}}}",
+    "pass": "{{{MLKC_CELL_RAW_DATA_PASS}}}",
+    "port": "{{{MLKC_CELL_RAW_DATA_PORT}}}",
+    "user": "{{{MLKC_CELL_RAW_DATA_USER}}}"
+  },
+
+  "grid": {
+    "description": "A grid based on the official EU one",
+    "gridId": "eu-grid",
+    "name": "eu-grid",
+    "originEpsg": "3035",
+    "originX": 2700000,
+    "originY": 1500000,
+    "zoomLevels": [
+      {"name": "100 km", "size": 100000},
+      {"name": "50 km", "size": 50000},
+      {"name": "10 km", "size": 10000},
+      {"name": "5 km", "size": 5000},
+      {"name": "1 km", "size": 1000},
+      {"name": "500 m", "size": 500},
+      {"name": "250 m", "size": 250},
+      {"name": "125 m", "size": 125},
+      {"name": "25 m", "size": 25},
+      {"name": "5 m", "size": 5}
+    ]
+  },
+
+  "gridderTask": {
+    "gridderTaskId": "gridderTaskPointIdwMdt",
+    "gridderTaskType": "POINTIDWINTERPOLATION",
+    "name": "Interpolación MDT con IDW",
+    "description": "Interpolación del Modelo Digital del Terreno (MDT) mediante el método Inverse Distance Weighting.",
+    "sourceTable": "mdt.mdt",
+    "geomField": "geom",
+    "maxDistance": 200,
+    "numberOfPoints": 2,
+    "heightField": "h",
+    "round": 1,
+    "power": 2,
+    "variableName": "MDT según IDW",
+    "variableDescription": "Interpolación del MDT de 100 metros mediante IDW"
+  },
+
+  "gridderJob": {
+    "gridderJobId": "gridderJobPointIdwMdt",
+    "gridderTaskId": "gridderTaskPointIdwMdt",
+    "maxZoomLevel": 0,
+    "minZoomLevel": 0,
+    "sqlAreaRetrieval": "select geom from context.andalucia"
+  },
+
+  "zoom": 0,
+
+  "verbose": true
+
+}

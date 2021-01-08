@@ -1,9 +1,18 @@
-import { DiscretePolyAreaSummaryGridderTaskBackend } from './discretepolyareasummarygriddertaskbackend';
-import { DiscretePolyTopAreaGridderTaskBackend } from './discretepolytopareagriddertaskbackend';
+import { DiscretePolyAreaSummaryGridderTask } from './discretepolyareasummarygriddertask';
 
-import { GridderTasks as gt } from 'libcell';
+import { DiscretePolyTopAreaGridderTask } from './discretepolytopareagriddertask';
+
+import { PointAggregationsGridderTask } from './pointaggregationsgriddertask';
+
+import { MdtProcessingGridderTask } from './mdtprocessinggriddertask';
+
+import { PointIdwGridderTask } from './pointidwgriddertask';
 
 import { RxPg, PgOrm } from '@malkab/rxpg';
+
+import { EGRIDDERTASKTYPE } from "./egriddertasktype";
+
+import { GridderTask } from "./griddertask";
 
 import * as rx from "rxjs";
 
@@ -12,19 +21,41 @@ import * as rx from "rxjs";
  * Factory for creating GridderTasks specialized classes.
  *
  */
-export function gridderTaskFactory(params: any): rx.Observable<
-DiscretePolyAreaSummaryGridderTaskBackend |
-DiscretePolyTopAreaGridderTaskBackend> {
+export function gridderTaskFactory$(params: any): rx.Observable<
+  DiscretePolyAreaSummaryGridderTask |
+  DiscretePolyTopAreaGridderTask |
+  PointAggregationsGridderTask |
+  PointIdwGridderTask |
+  MdtProcessingGridderTask
+> {
 
-  if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY) {
 
-    return rx.of(new DiscretePolyAreaSummaryGridderTaskBackend(params));
+    return rx.of(new DiscretePolyAreaSummaryGridderTask({ ...params }));
 
   };
 
-  if (params.gridderTaskType === gt.EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
 
-    return rx.of(new DiscretePolyTopAreaGridderTaskBackend(params));
+    return rx.of(new DiscretePolyTopAreaGridderTask({ ...params }));
+
+  }
+
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.POINTAGGREGATIONS) {
+
+    return rx.of(new PointAggregationsGridderTask({ ...params }));
+
+  }
+
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.POINTIDWINTERPOLATION) {
+
+    return rx.of(new PointIdwGridderTask({ ...params }));
+
+  }
+
+  if (params.gridderTaskType === EGRIDDERTASKTYPE.MDTPROCESSING) {
+
+    return rx.of(new MdtProcessingGridderTask({ ...params }));
 
   }
 
@@ -32,9 +63,14 @@ DiscretePolyTopAreaGridderTaskBackend> {
 
 }
 
-export function get$(pg: RxPg, id: string): rx.Observable<any> {
+/**
+ *
+ * Gets a GridderTask by ID.
+ *
+ */
+export function gridderTaskGet$(pg: RxPg, gridderTaskId: string): rx.Observable<any> {
 
-  return PgOrm.select$<gt.GridderTask>({
+  return PgOrm.select$<GridderTask>({
     pg: pg,
     sql: `
       select
@@ -42,16 +78,15 @@ export function get$(pg: RxPg, id: string): rx.Observable<any> {
         gridder_task_type as "gridderTaskType",
         name,
         description,
-        pg_connection_id as "pgConnectionId",
         source_table as "sourceTable",
-        name_template as "nameTemplate",
-        description_template as "descriptionTemplate",
-        additional_params as "additionalParams"
+        geom_field as "geomField",
+        additional_params as "additionalParams",
+        index_variable_key as "indexVariableKey"
       from cell_meta.gridder_task where gridder_task_id = $1;`,
-    params: () => [ id ],
-    type: gt.GridderTask,
-    newFunction: (params: any) =>
-      gridderTaskFactory({
+    params: () => [ gridderTaskId ],
+    type: GridderTask,
+    newFunction$: (params: any) =>
+      gridderTaskFactory$({
         ...params,
         ...params.additionalParams
       })

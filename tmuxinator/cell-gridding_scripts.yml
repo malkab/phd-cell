@@ -1,0 +1,8 @@
+name: cell-gridding_scripts
+root: /home/git/malkab-phd/cell
+
+windows:
+  - scripts: >
+      clear ;
+      sleep 0.2 ;
+      cd 080-gridding_scripts

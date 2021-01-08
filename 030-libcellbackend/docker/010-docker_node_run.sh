@@ -20,14 +20,14 @@ NODE_VERSION=12.16.3
 # Env mode: production / development.
 NODE_ENV=development
 # Node memory.
-NODE_MEMORY=8GB
+NODE_MEMORY=$NODE_MEMORY
 # Null for an interactive shell session, the EXEC is passed to /bin/bash with
 # the -c option. Can be used to run Node scripts with "node whatever" or run npm
 # targets with "npm run whatever".
 EXEC=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost".
-NETWORK=host
+NETWORK=$MLKC_CELL_NETWORK
 # Jupyter mode: runs a Jupyter server with Javascript support if a version with
 # this capability is used. Jupyter exports automatically the 8888 port.
 JUPYTER=false
@@ -43,6 +43,7 @@ CONTAINER_HOST_NAME=cell-libcellbackend_dev
 # repos are shared with the container.
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
+  $(pwd)/docker_logs/:/logs/
   ~/.npmrc:/root/.npmrc
   ~/.npmrc:/home/node/.npmrc
 )
@@ -173,6 +174,18 @@ fi
 eval  $DOCKER_COMMAND \
         -e "NODE_ENV=${NODE_ENV}" \
         -e "NODE_MEMORY=${NODE_MEMORY}" \
+        -e "MLKC_CELL_DB_HOST=${MLKC_CELL_DB_HOST}" \
+        -e "MLKC_CELL_DB_USER=${MLKC_CELL_DB_USER}" \
+        -e "MLKC_CELL_DB_PASS=${MLKC_CELL_DB_PASS}" \
+        -e "MLKC_CELL_DB_USER_CELL_MASTER=${MLKC_CELL_DB_USER_CELL_MASTER}" \
+        -e "MLKC_CELL_DB_PASS_CELL_MASTER=${MLKC_CELL_DB_PASS_CELL_MASTER}" \
+        -e "MLKC_CELL_DB_PORT=${MLKC_CELL_DB_PORT}" \
+        -e "MLKC_CELL_RAW_DATA_HOST=${MLKC_CELL_RAW_DATA_HOST}" \
+        -e "MLKC_CELL_RAW_DATA_USER=${MLKC_CELL_RAW_DATA_USER}" \
+        -e "MLKC_CELL_RAW_DATA_PASS=${MLKC_CELL_RAW_DATA_PASS}" \
+        -e "MLKC_CELL_RAW_DATA_USER_CELL_READONLY=${MLKC_CELL_RAW_DATA_USER_CELL_READONLY}" \
+        -e "MLKC_CELL_RAW_DATA_PASS_CELL_READONLY=${MLKC_CELL_RAW_DATA_PASS_CELL_READONLY}" \
+        -e "MLKC_CELL_RAW_DATA_PORT=${MLKC_CELL_RAW_DATA_PORT}" \
         $NETWORK \
         $CONTAINER_NAME \
         $CONTAINER_HOST_NAME \

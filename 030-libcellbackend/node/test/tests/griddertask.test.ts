@@ -4,13 +4,24 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import { CatalogBackend, PgConnection, GridderTasks as gt } from "../../src/index";
+import {
+  Grid, SourcePgConnection, GridderTask, gridderTaskGet$, Cell, GridderJob,
+  DiscretePolyTopAreaGridderTask, DiscretePolyAreaSummaryGridderTask
+} from "../../src/index";
 
-import { clearDatabase$, catScen, catProv, catMuni, catNucp, catNucPobNivel, cellPg, provinceDiscretePolyTopAreaGridderTask, provinceDiscretePolyAreaSummaryGridderTask } from "./common";
+import {
+  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu, testCell,
+  gridderTaskDiscretePolyTopAreaMunicipio, pgConnCellRawData, logger,
+  gridderTaskDiscretePolyAreaSummaryMunicipio, gridderJobDefault,
+  gridderJobDiscretePolyTopAreaMunicipio, gridderTaskDefault,
+  gridderJobDiscretePolyAreaSummaryMunicipio
+} from "./common";
 
-import * as rxo from "rxjs/operators";
+import { EGRIDDERTASKTYPE } from "../../src/griddertasks/egriddertasktype";
 
 import * as rx from "rxjs";
+
+import * as rxo from "rxjs/operators";
 
 /**
  *
@@ -23,49 +34,25 @@ describe("Initial database clearance", function() {
 
     testCaseName: "Initial database clearance",
 
-    observable: clearDatabase$,
-
-    assertions: [ (o: boolean) => expect(o).to.be.true ]
-
-  })
-
-})
-
-/**
- *
- * GridderTask tests.
- *
- */
-describe("GridderTask ORM", function() {
-
-})
-
-/**
- *
- * DiscretePolyTopAreaGridderTaskBackend tests.
- *
- */
-describe("DiscretePolyTopAreaGridderTaskBackend ORM", function() {
-
-  rxMochaTests({
-
-    testCaseName: "DiscretePolyTopAreaGridderTaskBackend ORM",
-
-    observable: rx.concat(
-
-      provinceDiscretePolyTopAreaGridderTask.pgInsert$(cellPg),
-
-      gt.get$(cellPg, "provinceDiscretePolyTopArea")
-
-    ),
+    observables: [ clearDatabase$ ],
 
     assertions: [
 
-      (o: gt.DiscretePolyTopAreaGridderTaskBackend) =>
-        expect(o.name).to.be.equal("Provincia: máxima área"),
+      (o: boolean) => expect(o).to.be.true,
 
-      (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.discreteFields).to.deep.equal([ "provincia" ])
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true,
+
+      (o: boolean) => expect(o).to.be.true
 
     ],
 
@@ -77,30 +64,545 @@ describe("DiscretePolyTopAreaGridderTaskBackend ORM", function() {
 
 /**
  *
- * DiscretePolyAreaSummaryGridderTaskBackend tests.
+ * SourcePgConnection pgInsert$.
  *
  */
-describe("DiscretePolyAreaSummaryGridderTaskBackend ORM", function() {
+describe("SourcePgConnection pgInsert$", function() {
 
   rxMochaTests({
 
-    testCaseName: "DiscretePolyAreaSummaryGridderTaskBackend ORM",
+    testCaseName: "SourcePgConnection pgInsert$",
 
-    observable: rx.concat(
+    observables: [ pgConnectionCellRawData.pgInsert$(pgConnCell) ],
 
-      provinceDiscretePolyAreaSummaryGridderTask.pgInsert$(cellPg),
+    assertions: [
+      (o: SourcePgConnection) => expect(o.name).to.be.equal("Cell Raw Data") ],
 
-      gt.get$(cellPg, "provinceDiscreteAreaSummary")
+    verbose: false,
 
-    ),
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * Grid pgInsert$.
+ *
+ */
+describe("Grid pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Grid pgInsert$",
+
+    observables: [ gridEu.pgInsert$(pgConnCell) ],
 
     assertions: [
 
-      (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.name).to.be.equal("Desglose de área de provincias"),
+      (o: Grid) => expect(o.gridId).to.be.equal("eu-grid")
 
-      (o: gt.DiscretePolyAreaSummaryGridderTaskBackend) =>
-        expect(o.discreteFields).to.deep.equal([ "provincia" ])
+    ]
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask Top Area pgInsert$.
+ *
+ */
+describe("GridderTask Top Area pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Top Area pgInsert$",
+
+    observables: [ gridderTaskDiscretePolyTopAreaMunicipio.pgInsert$(pgConnCell) ],
+
+    assertions: [
+
+      (o: DiscretePolyTopAreaGridderTask) =>
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderJob Top Area pgInsert$.
+ *
+ */
+describe("GridderJob Top Area pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderJob Top Area pgInsert$",
+
+    observables: [ gridderJobDiscretePolyTopAreaMunicipio.pgInsert$(pgConnCell) ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask Top Area get$.
+ *
+ */
+describe("GridderTask Top Area get$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Top Area get$",
+
+    observables: [ gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyTopAreaMunicipio") ],
+
+    assertions: [
+
+      (o: GridderTask) => {
+
+        expect(o.name).to.equal("Municipio máxima área");
+        expect(o.gridderTaskType)
+          .to.equal(EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA);
+        expect(o.indexVariableKey).to.be.undefined;
+
+      }
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask computeCell$ before setup$.
+ *
+ */
+describe("GridderTask computeCell$ before setup$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask computeCell$ before setup$",
+
+    timeout: 300000,
+
+    observables: [
+
+      gridderTaskDiscretePolyTopAreaMunicipio.computeCell$(
+        pgConnCellRawData, pgConnCell, testCell[0], 4, logger)
+
+    ],
+
+    assertions: [
+
+      (o: Error) =>
+        expect(o.message)
+          .to.be.equal("GridderTask gridderTaskDiscretePolyTopAreaMunicipio of type DISCRETEPOLYTOPAREA has no index Variable, set it up first")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask Area Summary setup$.
+ *
+ */
+describe("GridderTask Top Area setup$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Top Area setup$",
+
+    observables: [
+
+      gridderTaskDiscretePolyTopAreaMunicipio.setup$(pgConnCellRawData, pgConnCell),
+
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyTopAreaMunicipio")
+
+    ],
+
+    assertions: [
+
+      (o: DiscretePolyTopAreaGridderTask) => {
+        expect(o.name).to.be.equal("Municipio máxima área");
+        expect(o.indexVariableKey).to.be.equal("a");
+      },
+
+      (o: DiscretePolyTopAreaGridderTask) => {
+        expect(o.name).to.be.equal("Municipio máxima área");
+        expect(o.indexVariableKey).to.be.equal("a");
+      }
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask computeCell$.
+ *
+ */
+describe("GridderTask Top Area computeCell$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Top Area computeCell$",
+
+    timeout: 300000,
+
+    observables: [
+
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyTopAreaMunicipio")
+      .pipe(
+
+        rxo.concatMap((o: GridderTask) => rx.zip(...testCell.map((x: Cell) =>
+          gridderTaskDiscretePolyTopAreaMunicipio.computeCell$(
+            pgConnCellRawData, pgConnCell, x, 4, logger))))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: Cell[][]) => {
+
+        expect(o.map((x: Cell[]) => x.length), "Child cells")
+          .to.be.deep.equal([ 0, 4, 4, 0, 4, 0, 0, 0 ]);
+
+      }
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask Area Summary pgInsert$.
+ *
+ */
+describe("GridderTask Area Summary pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Area Summary pgInsert$",
+
+    observables: [ gridderTaskDiscretePolyAreaSummaryMunicipio.pgInsert$(pgConnCell) ],
+
+    assertions: [
+
+      (o: DiscretePolyAreaSummaryGridderTask) =>
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDiscretePolyAreaSummaryMunicipio")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderJob Area Summary pgInsert$.
+ *
+ */
+describe("GridderJob Area Summary pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderJob Area Summary pgInsert$",
+
+    observables: [ gridderJobDiscretePolyAreaSummaryMunicipio.pgInsert$(pgConnCell) ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDiscretePolyAreaSummaryMunicipio")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask Area Summary setup$.
+ *
+ */
+describe("GridderTask Area Summary setup$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Area Summary setup$",
+
+    observables: [ gridderTaskDiscretePolyAreaSummaryMunicipio.setup$(pgConnCellRawData, pgConnCell) ],
+
+    assertions: [
+
+      (o: DiscretePolyAreaSummaryGridderTask) => expect(o.name).to.be.equal("Desglose de área de municipios")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * GridderTask Area Summary computeCell$.
+ *
+ */
+describe("GridderTask Area Summary computeCell$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderTask Area Summary computeCell$",
+
+    timeout: 300000,
+
+    observables: [
+
+      gridderTaskGet$(pgConnCell, "gridderTaskDiscretePolyAreaSummaryMunicipio")
+      .pipe(
+
+        rxo.concatMap((o: GridderTask) => rx.zip(...testCell.map((x: Cell) =>
+          o.computeCell$(pgConnCellRawData, pgConnCell, x, 4, logger))))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: Cell[][]) => {
+
+        expect(o.map((x: Cell[]) => x.length), "Child cells")
+          .to.be.deep.equal([ 0, 4, 4, 0, 4, 0, 0, 0 ]);
+
+      }
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * Add the gridderJobDefault and the gridderTaskDefault to get coverages
+ * for zooms 0 and 1.
+ *
+ */
+describe("gridderTaskDefault pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "gridderTaskDefault pgInsert$",
+
+    observables: [ gridderTaskDefault.pgInsert$(pgConnCell) ],
+
+    assertions: [
+
+      (o: DiscretePolyAreaSummaryGridderTask) =>
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDefault")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+describe("GridderJobDefault pgInsert$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "GridderJobDefault pgInsert$",
+
+    observables: [ gridderJobDefault.pgInsert$(pgConnCell) ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o.gridderTaskId, "Check ID")
+          .to.be.equal("gridderTaskDefault")
+
+    ],
+
+    verbose: false,
+
+    active: true
+
+  })
+
+})
+
+/**
+ *
+ * Get and area retrieval.
+ *
+ */
+describe("Get and area retrieval", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Get and area retrieval",
+
+    observables: [
+
+      GridderJob.get$(pgConnCell, "defaultGridderJob")
+      .pipe(
+
+        rxo.concatMap((o: GridderJob) =>
+          o.getArea$(pgConnCellRawData, pgConnCell, gridEu))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o.gridderJobId).to.be.equal("defaultGridderJob")
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Get coverage of target area at zoom 0.
+ *
+ */
+describe("Get coverage of target area at zoom 0", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Get coverage of target area at zoom 0",
+
+    observables: [
+
+      GridderJob.get$(pgConnCell, "defaultGridderJob")
+      .pipe(
+
+        rxo.concatMap((o: GridderJob) =>
+          o.getCoveringCells$(pgConnCell, gridEu, 0))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o).to.be.equal(20)
+
+    ],
+
+    verbose: false
+
+  })
+
+})
+
+/**
+ *
+ * Get coverage of target area at zoom 1.
+ *
+ */
+describe("Get coverage of target area at zoom 1", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Get coverage of target area at zoom 1",
+
+    observables: [
+
+      GridderJob.get$(pgConnCell, "defaultGridderJob")
+      .pipe(
+
+        rxo.concatMap((o: GridderJob) =>
+          o.getCoveringCells$(pgConnCell, gridEu, 1))
+
+      )
+
+    ],
+
+    assertions: [
+
+      (o: GridderJob) =>
+        expect(o).to.be.equal(54)
 
     ],
 

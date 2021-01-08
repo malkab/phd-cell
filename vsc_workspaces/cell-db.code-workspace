@@ -11,6 +11,12 @@
 		},
 		{
 			"path": "../tmuxinator"
+		},
+		{
+			"path": "../qgis"
+		},
+		{
+			"path": "../assets"
 		}
 	]
 }

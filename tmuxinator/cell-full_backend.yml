@@ -1,0 +1,81 @@
+name: cell-full_backend
+root: /home/git/malkab-phd/cell
+
+startup_window: sunnsaas_v1-full_backend/full_backend
+
+windows:
+  - full_backend:
+      layout: ec8a,211x61,0,0{111x61,0,0[111x30,0,0,25,111x30,0,31,30],99x61,112,0[99x15,112,0,31,99x14,112,16,32,99x15,112,31,33,99x14,112,47,34]}
+      panes:
+        - api: >
+            clear ;
+            sleep 3 ;
+            . mlkcontext common ;
+            cd 010_api/docker
+        - controller: >
+            clear ;
+            sleep 4 ;
+            . mlkcontext common ;
+            cd 020_controller/docker
+        - worker_0: >
+            clear ;
+            sleep 5 ;
+            . mlkcontext common ;
+            cd 030_worker/docker
+        - worker_1: >
+            clear ;
+            sleep 6 ;
+            . mlkcontext common ;
+            cd 030_worker/docker
+        - worker_2: >
+            clear ;
+            sleep 7 ;
+            . mlkcontext common ;
+            cd 030_worker/docker
+        - worker_3: >
+            clear ;
+            sleep 8 ;
+            . mlkcontext common ;
+            cd 030_worker/docker
+  - compilation:
+      layout: fb56,317x73,0,0[317x23,0,0,23,317x24,0,24,24,317x24,0,49,26]
+      panes:
+        - api: >
+            clear ;
+            sleep 20 ;
+            . mlkcontext common ;
+            cd 010_api/docker
+        - controller: >
+            clear ;
+            sleep 22 ;
+            . mlkcontext common ;
+            cd 020_controller/docker
+        - worker: >
+            clear ;
+            sleep 24 ;
+            . mlkcontext common ;
+            cd 030_worker/docker
+  - cell-psql: >
+      clear ;
+      sleep 10 ;
+      . mlkcontext common ;
+      cd 010-cell-db/docker ;
+      ./110-pg-psql.sh
+  - cell-redis-cli: >
+      clear ;
+      sleep 12 ;
+      . mlkcontext common ;
+      cd 010-cell-db/docker ;
+      ./120-redis-cli.sh
+  - cell-db: >
+      clear ;
+      sleep 0.2 ;
+      . mlkcontext common ;
+      cd 010-cell-db/docker ;
+      ./010-compose_up.sh ;
+      exit
+  - main-docker: >
+      clear ;
+      sleep 15 ;
+      . mlkcontext common ;
+      cd docker/010-dev

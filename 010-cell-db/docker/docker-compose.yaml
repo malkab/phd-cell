@@ -6,34 +6,52 @@ networks:
     name: ${MLKC_CELL_NETWORK}
 
 services:
-  cell-postgis:
+  cell-db-postgis-dev:
     image: malkab/postgis:gargantuan_giraffe
-    container_name: cell-postgis
+    container_name: cell-db-postgis-dev
     shm_size: '2gb'
 
     environment:
-      - PASSWORD=${MLKC_CELL_DB_PASSWORD}
+      - PASSWORD=${MLKC_CELL_DB_PASS}
 
     networks:
       - cell
 
     ports:
-      - "${MLKC_CELL_DB_OUTER_PORT}:5432"
+      - "${MLKC_CELL_DB_DOCKER_EXTERNAL_PORT}:5432"
 
     volumes:
-      - ./000-localhost-volumes/cell-postgis:/data
+      - ./000-localhost-volumes/cell-db-postgis:/data
       - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
-  cell-redis:
+  cell-raw-data-postgis-dev:
+    image: malkab/postgis:gargantuan_giraffe
+    container_name: cell-raw-data-postgis-dev
+    shm_size: '2gb'
+
+    environment:
+      - PASSWORD=${MLKC_CELL_RAW_DATA_PASS}
+
+    networks:
+      - cell
+
+    ports:
+      - "${MLKC_CELL_RAW_DATA_DOCKER_EXTERNAL_PORT}:5432"
+
+    volumes:
+      - ./000-localhost-volumes/cell-raw-data-postgis:/data
+      - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
+
+  cell-redis-dev:
     image: redis:5.0
-    container_name: cell-redis
+    container_name: cell-redis-dev
     shm_size: '2gb'
 
     networks:
       - cell
 
     ports:
-      - "${MLKC_CELL_REDIS_OUTER_PORT}:6379"
+      - "${MLKC_CELL_REDIS_DOCKER_EXTERNAL_PORT}:6379"
 
     volumes:
       - ./000-localhost-volumes/cell-redis:/data

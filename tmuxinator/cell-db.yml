@@ -3,16 +3,14 @@ root: /home/git/malkab-phd/cell
 
 windows:
 
-  - cell-db/psql-cell: >
-      clear ;
-      sleep 2 ;
-      cd 010-cell-db/docker ;
-      . mlkcontext common ;
-      ./110-pg-psql.sh
-
   - compose: >
       clear ;
       sleep 0.2 ;
       cd 010-cell-db/docker ;
       . mlkcontext common ;
       ./010-compose_up.sh
+
+  - psql-celldb: >
+      clear ;
+      sleep 2 ;
+      cd docker/010-dev
