@@ -65,10 +65,6 @@ describe("MdtProcessingGridderTask get$", function() {
 
         expect(o.name).to.be.equal("Interpolación MDT por media de alturas e IDW");
 
-        expect(o.gridId, "gridId").to.be.equal("eu-grid");
-
-        expect(o.grid).to.be.undefined;
-
       }
 
     ],

@@ -65,10 +65,6 @@ describe("gridderTaskDiscretePolyAreaSummaryHic get$", function() {
         expect(o.name)
           .to.be.equal("Desglose de área de Hábitats de Interés Comunitario (HIC)");
 
-        expect(o.gridId, "gridId").to.be.equal("eu-grid");
-
-        expect(o.grid).to.be.undefined;
-
       }
 
     ],

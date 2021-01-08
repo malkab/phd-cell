@@ -166,8 +166,6 @@ export const gridEu: Grid = new Grid({
 export const gridderTaskDefault: DiscretePolyAreaSummaryGridderTask =
 new DiscretePolyAreaSummaryGridderTask({
   gridderTaskId: "gridderTaskDefault",
-  gridId: "eu-grid",
-  grid: gridEu,
   name: "Name Default",
   description: "Description Default",
   sourceTable: "hic.hic_view",
@@ -289,8 +287,6 @@ testCell.push(new Cell({
 export const gridderTaskDiscretePolyTopAreaMunicipio: DiscretePolyTopAreaGridderTask =
 new DiscretePolyTopAreaGridderTask({
   gridderTaskId: "gridderTaskDiscretePolyTopAreaMunicipio",
-  gridId: "eu-grid",
-  grid: gridEu,
   name : "Municipio máxima área",
   description: "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
   sourceTable: "context.municipio",
@@ -317,8 +313,6 @@ export const gridderJobDiscretePolyTopAreaMunicipio: GridderJob = new GridderJob
 export const gridderTaskDiscretePolyAreaSummaryMunicipio: DiscretePolyAreaSummaryGridderTask =
 new DiscretePolyAreaSummaryGridderTask({
   gridderTaskId: "gridderTaskDiscretePolyAreaSummaryMunicipio",
-  gridId: "eu-grid",
-  grid: gridEu,
   name: "Desglose de área de municipios",
   description: "Área de cada municipio en la celda, incluyendo su provincia",
   sourceTable: "context.municipio",
@@ -344,8 +338,6 @@ export const gridderJobDiscretePolyAreaSummaryMunicipio: GridderJob = new Gridde
 export const gridderTaskPointAggregationsPoblacion: PointAggregationsGridderTask =
 new PointAggregationsGridderTask({
   gridderTaskId: "gridderTaskPointAggregationsPoblacion",
-  gridId: "eu-grid",
-  grid: gridEu,
   name: "Estadísticas de población",
   description: "Estadísticas de población",
   sourceTable: "poblacion.poblacion",
@@ -860,8 +852,6 @@ export const gridderJobPointAggregationsPoblacion: GridderJob = new GridderJob({
 export const gridderTaskPointIdwMdt: PointIdwGridderTask =
 new PointIdwGridderTask({
   gridderTaskId: "gridderTaskPointIdwMdt",
-  gridId: "eu-grid",
-  grid: gridEu,
   name: "Interpolación MDT con IDW",
   description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método Inverse Distance Weighting.",
   sourceTable: "mdt.mdt",
@@ -891,8 +881,6 @@ export const gridderJobPointIdwMdt: GridderJob = new GridderJob({
 export const gridderTaskMdtProcessing: MdtProcessingGridderTask =
 new MdtProcessingGridderTask({
   gridderTaskId: "gridderTaskMdtProcessing",
-  gridId: "eu-grid",
-  grid: gridEu,
   name: "Interpolación MDT por media de alturas e IDW",
   description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método de media de alturas si la densidad de puntos de alturas es lo suficientemente alta en la celda o por interpolación Inverse Distance Weighting si no.",
   sourceTable: "mdt.mdt",
@@ -922,8 +910,6 @@ export const gridderJobMdtProcessing: GridderJob = new GridderJob({
 export const gridderTaskDiscretePolyAreaSummaryHic: DiscretePolyAreaSummaryGridderTask =
 new DiscretePolyAreaSummaryGridderTask({
   gridderTaskId: "gridderTaskDiscretePolyAreaSummaryHic",
-  gridId: "eu-grid",
-  grid: gridEu,
   name: "Desglose de área de Hábitats de Interés Comunitario (HIC)",
   description: "Área de cada categoría de Hábitats de Interés Comunitario (HIC)",
   sourceTable: "hic.hic_view",

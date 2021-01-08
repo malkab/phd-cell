@@ -191,7 +191,9 @@ describe("GridderTask Top Area get$", function() {
 
       }
 
-    ]
+    ],
+
+    verbose: false
 
   })
 

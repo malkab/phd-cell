@@ -63,23 +63,6 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
 
   /**
    *
-   * The grid ID.
-   *
-   */
-  protected _gridId: string;
-  get gridId(): string { return this._gridId }
-
-  /**
-   *
-   * The grid.
-   *
-   */
-  protected _grid: Grid | undefined;
-  get grid(): Grid | undefined { return this._grid };
-  set grid(grid: Grid | undefined) { this._grid = grid };
-
-  /**
-   *
    * Source table.
    *
    */
@@ -145,8 +128,6 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       gridderTaskType,
       gridderTaskTypeName,
       gridderTaskTypeDescription,
-      gridId,
-      grid = undefined,
       name,
       description,
       sourceTable,
@@ -158,8 +139,6 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       gridderTaskType: EGRIDDERTASKTYPE;
       gridderTaskTypeName: string;
       gridderTaskTypeDescription: string;
-      gridId: string;
-      grid?: Grid;
       name: string;
       description: string;
       sourceTable: string;
@@ -172,8 +151,6 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
     this._gridderTaskType = gridderTaskType;
     this._gridderTaskTypeName = gridderTaskTypeName;
     this._gridderTaskTypeDescription = gridderTaskTypeDescription;
-    this._gridId = gridId;
-    this._grid = grid;
     this._name = name;
     this._description = description;
     this._sourceTable=  sourceTable;
@@ -214,25 +191,6 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
   rx.Observable<GridderTask> {
 
     throw new Error("setup$ must be implemented in child classes");
-
-  }
-
-  /**
-   *
-   * Get the grid of this GridderTask.
-   *
-   */
-  public getGrid$(cellPg: RxPg): rx.Observable<GridderTask> {
-
-    return Grid.get$(cellPg, this.gridId)
-    .pipe(
-
-      rxo.map((o: Grid) => {
-        this.grid = o;
-        return this;
-      })
-
-    )
 
   }
 
@@ -319,7 +277,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    */
   public getDependencies$(cellPg: RxPg): rx.Observable<GridderTask> {
 
-    return rx.zip(this.getGrid$(cellPg), this.getIndexVariable$(cellPg))
+    return rx.zip(this.getIndexVariable$(cellPg))
     .pipe(
 
       rxo.map((o: any) => o[0])

@@ -120,8 +120,6 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
    */
   constructor({
       gridderTaskId,
-      gridId,
-      grid = undefined,
       name,
       description,
       sourceTable,
@@ -137,8 +135,6 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       round = 1
     }: {
       gridderTaskId: string;
-      gridId: string;
-      grid?: Grid;
       name: string;
       description: string;
       sourceTable: string;
@@ -159,8 +155,6 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       gridderTaskType: EGRIDDERTASKTYPE.MDTPROCESSING,
       gridderTaskTypeName: "Processing of MDT data by averaging / IDW",
       gridderTaskTypeDescription: "Processes MDT data by averaging height data if enough points collide the cell or interpolating by Inverse Distance Weighting method.",
-      gridId: gridId,
-      grid: grid,
       name: name,
       description: description,
       sourceTable: sourceTable,
@@ -182,11 +176,10 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
+        values ($1, $2, $3, $4, $5, $6, $7);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
-          this.gridId,
           this.name,
           this.description,
           this.sourceTable,
@@ -318,10 +311,14 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       limit ${this.numberOfPoints};
     `;
 
-    // Get the variable
-    return Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)
+    // Get cell grid
+    return cell.getGrid$(cellPg)
     .pipe(
 
+      // Get the variable
+      rxo.concatMap((o: Cell) => Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
+
+      // Execute colliding points
       rxo.concatMap((o: Variable[]) => {
 
         variableKey = <string>o[0].variableKey;

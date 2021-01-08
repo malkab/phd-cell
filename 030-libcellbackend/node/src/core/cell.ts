@@ -159,8 +159,6 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
     }
   }
 
-
-
   /**
    *
    * Lower left corner.
@@ -244,7 +242,6 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
    *
    */
   get data(): any { return this._data; }
-
   set data(data: any) { this._data = data; }
 
   /**
@@ -260,7 +257,6 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
    *
    */
   set offset(offset: number) { this._offset = offset; }
-
   get offset(): number { return this._offset; }
 
   /**
@@ -659,6 +655,27 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
       return rx.of(this);
 
     }
+
+  }
+
+  /**
+   *
+   * Get the grid object from the DB.
+   *
+   */
+  public getGrid$(pg: RxPg): rx.Observable<Cell> {
+
+    return Grid.get$(pg, this.gridId)
+    .pipe(
+
+      rxo.map((o: Grid) => {
+
+        this._grid = o;
+        return this;
+
+      })
+
+    )
 
   }
 

@@ -103,8 +103,6 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
    */
   constructor({
       gridderTaskId,
-      gridId,
-      grid = undefined,
       name,
       description,
       sourceTable,
@@ -117,8 +115,6 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       categoryTemplate
     }: {
       gridderTaskId: string;
-      gridId: string;
-      grid?: Grid;
       name: string;
       description: string;
       sourceTable: string;
@@ -136,8 +132,6 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       gridderTaskType: EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA,
       gridderTaskTypeName: "Discrete variable on polygon based on top area",
       gridderTaskTypeDescription: "Given a vector of discrete variables, create a variable with the value of the category covering most area.",
-      gridId: gridId,
-      grid: grid,
       name: name,
       description: description,
       sourceTable: sourceTable,
@@ -156,11 +150,10 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
-          this.gridId,
           this.name,
           this.description,
           this.sourceTable,
@@ -235,14 +228,12 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
     return this.getDependencies$(cellPg)
     .pipe(
 
-      rxo.concatMap((o: GridderTask) => {
+      // Get cell grid
+      rxo.concatMap((o: GridderTask) => cell.getGrid$(cellPg)),
 
-        // Set the grid of the cell
-        cell.grid = this.grid;
-
-        return Variable.getByGridderTaskId$(cellPg, this.gridderTaskId);
-
-      }),
+      // Get variable
+      rxo.concatMap((o: Cell) =>
+        Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
 
       rxo.concatMap((o: Variable[]) => {
 

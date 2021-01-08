@@ -72,8 +72,6 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
    */
   constructor({
       gridderTaskId,
-      gridId,
-      grid = undefined,
       name,
       description,
       sourceTable,
@@ -83,8 +81,6 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       variables
     }: {
       gridderTaskId: string;
-      gridId: string;
-      grid?: Grid;
       name: string;
       description: string;
       sourceTable: string;
@@ -99,8 +95,6 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       gridderTaskType: EGRIDDERTASKTYPE.POINTAGGREGATIONS,
       gridderTaskTypeName: "Discrete variable on polygon area summary",
       gridderTaskTypeDescription: "Given a vector of discrete variables, create as many variables as categories present in the cell presenting the area covered by this category in the cell.",
-      gridId: gridId,
-      grid: grid,
       name: name,
       description: description,
       sourceTable: sourceTable,
@@ -116,11 +110,10 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
-          this.gridId,
           this.name,
           this.description,
           this.sourceTable,
@@ -240,9 +233,12 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     return this.getDependencies$(cellPg)
     .pipe(
 
+      // Get cell grid
+      rxo.concatMap((o: GridderTask) => cell.getGrid$(cellPg)),
+
       // Get the variables for this GridderTask in the same order they are coded
       // in the variables member
-      rxo.concatMap((o: GridderTask) => rx.zip(...variableObs$)),
+      rxo.concatMap((o: Cell) => rx.zip(...variableObs$)),
 
       // Compose the final SQL adding the variable names and expressions
       rxo.concatMap((o: Variable[]) => {

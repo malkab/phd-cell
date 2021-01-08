@@ -171,7 +171,6 @@ export function process$(params: any): rx.Observable<any> {
     // Configure the GridderTask and the GridderJob
     rxo.map((o: GridderTask) => {
       gridderTask = o;
-      gridderTask.grid = grid;
       gridderJob.gridderTask = gridderTask;
       return gridderTask;
     }),
@@ -240,16 +239,20 @@ export function process$(params: any): rx.Observable<any> {
     // Compute the cell
     rxo.concatMap((o: any) => {
 
-      console.log("D: jj32k3");
-
       logger.logInfo({
         message: `added objects to the DB`,
         methodName: "process$",
         moduleName: "coveringcells"
       });
 
-      return gridderJob.computeCells$(cellPgConn, cellRawDataConn,
-        cells, params.targetZoom, logger);
+      return gridderJob.getGridderTask$(cellPgConn)
+      .pipe(
+
+        rxo.concatMap((o: GridderJob) =>
+          o.computeCells$(cellPgConn, cellRawDataConn,
+            cells, params.targetZoom, logger))
+
+      );
 
     }),
 

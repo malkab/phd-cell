@@ -64,10 +64,6 @@ describe("PointAggregationsGridderTask get$", function() {
 
         expect(o.name).to.be.equal("Estadísticas de población");
 
-        expect(o.gridId, "gridId").to.be.equal("eu-grid");
-
-        expect(o.grid).to.be.undefined;
-
         expect(o.variables[0]).to.be.deep.equal({
           "description": "Población total del año 2002.",
           "expression": "sum(ptot02)",

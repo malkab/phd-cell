@@ -76,7 +76,6 @@ export function gridderTaskGet$(pg: RxPg, gridderTaskId: string): rx.Observable<
       select
         gridder_task_id as "gridderTaskId",
         gridder_task_type as "gridderTaskType",
-        grid_id as "gridId",
         name,
         description,
         source_table as "sourceTable",

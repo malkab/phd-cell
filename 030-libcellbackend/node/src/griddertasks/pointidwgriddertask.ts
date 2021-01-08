@@ -115,8 +115,6 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
    */
   constructor({
       gridderTaskId,
-      gridId,
-      grid = undefined,
       name,
       description,
       sourceTable,
@@ -132,8 +130,6 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       round = 1
     }: {
       gridderTaskId: string;
-      gridId: string;
-      grid?: Grid;
       name: string;
       description: string;
       sourceTable: string;
@@ -154,8 +150,6 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       gridderTaskType: EGRIDDERTASKTYPE.POINTIDWINTERPOLATION,
       gridderTaskTypeName: "Interpolation of point cloud by IDW",
       gridderTaskTypeDescription: "Produces an interpolation of a point cloud based on the Inverse Distance Weighting method.",
-      gridId: gridId,
-      grid: grid,
       name: name,
       description: description,
       sourceTable: sourceTable,
@@ -177,11 +171,10 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
+        values ($1, $2, $3, $4, $5, $6, $7);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
-          this.gridId,
           this.name,
           this.description,
           this.sourceTable,
@@ -300,8 +293,10 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
     `;
 
     // Get the variable
-    return Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)
+    return cell.getGrid$(cellPg)
     .pipe(
+
+      rxo.concatMap((o: Cell) => Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
 
       rxo.concatMap((o: Variable[]) => {
 

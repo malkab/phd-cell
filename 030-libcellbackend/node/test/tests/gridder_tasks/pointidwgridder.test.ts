@@ -63,10 +63,6 @@ describe("PointIdwGridderTask get$", function() {
 
         expect(o.name).to.be.equal("Interpolación MDT con IDW");
 
-        expect(o.gridId, "gridId").to.be.equal("eu-grid");
-
-        expect(o.grid).to.be.undefined;
-
       }
 
     ],

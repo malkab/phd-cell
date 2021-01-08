@@ -92,8 +92,6 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
    */
   constructor({
       gridderTaskId,
-      gridId,
-      grid = undefined,
       name,
       description,
       sourceTable,
@@ -106,8 +104,6 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       areaRound = 2
     }: {
       gridderTaskId: string;
-      gridId: string;
-      grid?: Grid;
       name: string;
       description: string;
       sourceTable: string;
@@ -125,8 +121,6 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       gridderTaskType: EGRIDDERTASKTYPE.DISCRETEPOLYAREASUMMARY,
       gridderTaskTypeName: "Discrete variable on polygon area summary",
       gridderTaskTypeDescription: "Given a vector of discrete variables, create as many variables as categories present in the cell presenting the area covered by this category in the cell.",
-      gridId: gridId,
-      grid: grid,
       name: name,
       description: description,
       sourceTable: sourceTable,
@@ -145,11 +139,10 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       pgInsert$: {
         sql: () => `
         insert into cell_meta.gridder_task
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+        values ($1, $2, $3, $4, $5, $6, $7, $8);`,
         params$: () => rx.of([
           this.gridderTaskId,
           this.gridderTaskType,
-          this.gridId,
           this.name,
           this.description,
           this.sourceTable,
@@ -296,15 +289,11 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
     return this.getDependencies$(cellPg)
     .pipe(
 
+      // Get cell grid
+      rxo.concatMap((o: GridderTask) => cell.getGrid$(cellPg)),
+
       // Find overlapping polygons
-      rxo.concatMap((o: any) => {
-
-        // Set the grid of the cell
-        cell.grid = this.grid;
-
-        return sourcePg.executeParamQuery$(sql);
-
-      }),
+      rxo.concatMap((o: any) => sourcePg.executeParamQuery$(sql)),
 
       rxo.catchError((e: Error) => {
 

@@ -23,7 +23,8 @@ describe("Read parameters from config file", function() {
       "grid",
       "gridderTask",
       "gridderJob",
-      "zoom"
+      "zoom",
+      "verbose"
     ]);
 
   });

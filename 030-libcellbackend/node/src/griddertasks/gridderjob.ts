@@ -6,7 +6,7 @@ import * as rxo from "rxjs/operators";
 
 import { NodeLogger } from '@malkab/node-logger';
 
-import { gridderTaskGet$ } from "./griddertaskfactory";
+import { gridderTaskFactory$, gridderTaskGet$ } from "./griddertaskfactory";
 
 import { Cell } from "../core/cell";
 
@@ -233,8 +233,6 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
 
         rxo.concatMap((o: Cell) => {
 
-          o.grid = this.gridderTask?.grid;
-
           return (<GridderTask>this.gridderTask)
             .computeCell$(sourcePg, cellPg, o, targetZoom, log);
 
@@ -289,14 +287,12 @@ export class GridderJob implements PgOrm.IPgOrm<GridderJob> {
     return gridderTaskGet$(pg, this.gridderTaskId)
     .pipe(
 
-      rxo.concatMap((o: GridderTask) => {
+      rxo.map((o: GridderTask) => {
 
-        this._gridderTask = o;
-        return o.getGrid$(pg);
+        this.gridderTask = o;
+        return this
 
-      }),
-
-      rxo.map((o: GridderTask) => this)
+      })
 
     )
 

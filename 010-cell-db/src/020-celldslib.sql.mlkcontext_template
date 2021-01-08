@@ -95,7 +95,6 @@ create table cell_meta.cell_version(
 create table cell_meta.gridder_task(
   gridder_task_id varchar(64) primary key,
   gridder_task_type varchar(64),
-  grid_id varchar(64) references cell_meta.grid(grid_id),
   -- This is the name of the specific GridderTask
   name varchar(150),
   -- This is the description of the specific GridderTask
