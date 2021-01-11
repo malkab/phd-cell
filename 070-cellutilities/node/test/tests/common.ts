@@ -27,7 +27,6 @@ const cellPg: RxPg = new RxPg({
  */
 export const clearDatabase$: rx.Observable<boolean> = cellPg.executeParamQuery$(`
   delete from cell_data.data;
-  delete from cell_meta.gridder_job;
   delete from cell_meta.catalog;
   delete from cell_meta.variable;
   delete from cell_meta.gridder_task;
@@ -48,43 +47,36 @@ export const clearDatabase$: rx.Observable<boolean> = cellPg.executeParamQuery$(
  */
 
 // DISCRETEPOLYTOPAREA
-export const discretePolyTopAreaCoveringCellsConfig: any =
-  readJsonSync([ "/config/coveringcells-config-discretepolytoparea.json" ]);
-
 export const discretePolyTopAreaGridderConfig: any =
-  readJsonSync([ "/config/gridder-config-discretepolytoparea.json" ]);
+  readJsonSync([ "/config/gridder/gridder-config-discretepolytoparea.json" ]);
 
 export const discretePolyTopAreaGridderSetUpConfig: any =
-  readJsonSync([ "/config/griddersetup-config-discretepolytoparea.json" ]);
-
+  readJsonSync([ "/config/griddersetup/griddersetup-config-discretepolytoparea.json" ]);
 
 // DISCRETEPOLYAREASUMMARY
-export const discretePolyAreaSummaryCoveringCellsConfig: any =
-  readJsonSync([ "/config/coveringcells-config-discretepolyareasummary.json" ]);
-
 export const discretePolyAreaSummaryGridderConfig: any =
-  readJsonSync([ "/config/gridder-config-discretepolyareasummary.json" ]);
+  readJsonSync([ "/config/gridder/gridder-config-discretepolyareasummary.json" ]);
 
 export const discretePolyAreaSummaryGridderSetUpConfig: any =
-  readJsonSync([ "/config/griddersetup-config-discretepolyareasummary.json" ]);
-
+  readJsonSync([ "/config/griddersetup/griddersetup-config-discretepolyareasummary.json" ]);
 
 // POINTAGGREGATIONS
-export const pointAggregationsCoveringCellsConfig: any =
-  readJsonSync([ "/config/coveringcells-config-pointaggregations.json" ]);
-
 export const pointAggregationsGridderConfig: any =
-  readJsonSync([ "/config/gridder-config-pointaggregations.json" ]);
+  readJsonSync([ "/config/gridder/gridder-config-pointaggregations.json" ]);
 
 export const pointAggregationsGridderSetUpConfig: any =
-  readJsonSync([ "/config/griddersetup-config-pointaggregations.json" ]);
+  readJsonSync([ "/config/griddersetup/griddersetup-config-pointaggregations.json" ]);
 
 // POINTIDWINTERPOLATION
-export const pointIdwInterpolationCoveringCellsConfig: any =
-  readJsonSync([ "/config/coveringcells-config-pointidwinterpolation.json" ]);
-
 export const pointIdwInterpolationGridderConfig: any =
-  readJsonSync([ "/config/gridder-config-pointidwinterpolation.json" ]);
+  readJsonSync([ "/config/gridder/gridder-config-pointidwinterpolation.json" ]);
 
 export const pointIdwInterpolationGridderSetUpConfig: any =
-  readJsonSync([ "/config/griddersetup-config-pointidwinterpolation.json" ]);
+  readJsonSync([ "/config/griddersetup/griddersetup-config-pointidwinterpolation.json" ]);
+
+// MDTPROCESSING
+export const mdtProcessingGridderConfig: any =
+  readJsonSync([ "/config/gridder/gridder-config-mdtprocessing.json" ]);
+
+export const mdtProcessingGridderSetUpConfig: any =
+  readJsonSync([ "/config/griddersetup/griddersetup-config-mdtprocessing.json" ]);

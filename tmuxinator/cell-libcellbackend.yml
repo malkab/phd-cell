@@ -6,14 +6,13 @@ windows:
       clear ;
       cd 030-libcellbackend/docker
 
-  - psql-celldb: >
-      clear ;
-      cd docker/010-dev
-
-  - psql-cell_raw_data: >
+  - psql: >
       clear ;
       cd docker/010-dev
 
   - cell-db-compose: >
       clear ;
-      cd 010-cell-db/docker
+      sleep 0.2 ;
+      cd 010-cell-db/docker ;
+      . mlkcontext common ;
+      ./010-compose_up.sh

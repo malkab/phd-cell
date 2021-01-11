@@ -292,6 +292,13 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       limit ${this.numberOfPoints};
     `;
 
+    if (log) log.logInfo({
+      message: `${this.logHeader(cell)}: compute start`,
+      methodName: "computeCell$",
+      moduleName: "PointIdwGridderTask",
+      payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+    })
+
     // Get the variable
     return cell.getGrid$(cellPg)
     .pipe(
@@ -309,7 +316,27 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
 
         // Check if any point was found within the maxDistance. If not, raise
         // the void cell flag.
-        if (o.rowCount === 0) voidCell = true;
+        if (o.rowCount < this.numberOfPoints) {
+
+          voidCell = true;
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: not enough points within max distance (${o.rowCount} points)`,
+            methodName: "computeCell$",
+            moduleName: "PointIdwGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
+
+        } else {
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: enough points within max distance (${o.rowCount} points)`,
+            methodName: "computeCell$",
+            moduleName: "PointIdwGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
+
+        }
 
         // Calculate the IDW
         h = idw(
@@ -344,9 +371,23 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
 
         if (cell.zoom < targetZoom) {
 
-          return cell.getSubCells(cell.zoom+1);
+          const c: Cell[] = cell.getSubCells(cell.zoom+1);
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
+            methodName: "computeCell$",
+            moduleName: "PointIdwGridderTask"
+          })
+
+          return c;
 
         } else {
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: end of gridding stack`,
+            methodName: "computeCell$",
+            moduleName: "PointIdwGridderTask"
+          })
 
           return [];
 

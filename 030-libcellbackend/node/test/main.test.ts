@@ -33,9 +33,6 @@ describe("libcellbackend", () => {
   describe("\n\n  --- cell.test ---\n",
     () => require("./tests/cell.test"));
 
-  describe("\n\n  --- commongridderjobmethods.test ---\n",
-    () => require("./tests/commongridderjobmethods.test"));
-
   describe("\n\n  --- utils.test ---\n",
     () => require("./tests/utils.test"));
 
@@ -69,27 +66,25 @@ describe("libcellbackend", () => {
 
   /**
    *
-   * This is a set up test for the following ones. The GridderJob tests aren't
-   * atomic so it can be tested that they don't interfere with the variables
-   * and data vectors of one another.
+   * This is a set up test for the following ones. They aren't atomic.
    *
    */
-  describe("\n\n  --- gridderjobsetup.test ---\n",
-    () => require("./tests/gridder_jobs/gridderjobsetup.test"));
+  describe("\n\n  --- griddertasksetup.test ---\n",
+    () => require("./tests/gridder_tasks/griddertasksetup.test"));
 
-  describe("\n\n  --- discretepolytopareagridderjob.test ---\n",
-    () => require("./tests/gridder_jobs/discretepolytopareagridderjob.test"));
+  describe("\n\n  --- discretepolytopareabatch.test ---\n",
+    () => require("./tests/batch_cells_gridder_tasks/discretepolytopareabatch.test"));
 
-  describe("\n\n  --- discretepolyareasummarygridderjob.test ---\n",
-    () => require("./tests/gridder_jobs/discretepolyareasummarygridderjob.test"));
+  describe("\n\n  --- discretepolyareasummarybatch.test ---\n",
+    () => require("./tests/batch_cells_gridder_tasks/discretepolyareasummarybatch.test"));
 
-  describe("\n\n  --- pointsaggregationsgridderjob.test ---\n",
-    () => require("./tests/gridder_jobs/pointsaggregationsgridderjob.test"));
+  describe("\n\n  --- pointsaggregationsbatch.test ---\n",
+    () => require("./tests/batch_cells_gridder_tasks/pointsaggregationsbatch.test"));
 
-  describe("\n\n  --- pointidwgridderjob.test ---\n",
-    () => require("./tests/gridder_jobs/pointidwgridderjob.test"));
+  describe("\n\n  --- pointidwbatch.test ---\n",
+    () => require("./tests/batch_cells_gridder_tasks/pointidwbatch.test"));
 
-  describe("\n\n  --- mdtprocessinggridderjob.test ---\n",
-    () => require("./tests/gridder_jobs/mdtprocessinggridderjob.test"));
+  describe("\n\n  --- mdtprocessingbatch.test ---\n",
+    () => require("./tests/batch_cells_gridder_tasks/mdtprocessingbatch.test"));
 
 });

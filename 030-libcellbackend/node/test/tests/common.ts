@@ -1,5 +1,5 @@
 import {
-  Cell, SourcePgConnection, Variable, Grid, GridderJob,
+  Cell, SourcePgConnection, Variable, Grid,
   DiscretePolyTopAreaGridderTask,
   DiscretePolyAreaSummaryGridderTask, MdtProcessingGridderTask,
   PointAggregationsGridderTask,
@@ -118,7 +118,6 @@ export const pgConnCellRawData: RxPg = pgConnectionCellRawData.open();
  */
 export const clearDatabase$: rx.Observable<boolean> = pgConnCell.executeParamQuery$(`
   delete from cell_data.data;
-  delete from cell_meta.gridder_job;
   delete from cell_meta.catalog;
   delete from cell_meta.variable;
   delete from cell_meta.gridder_task;
@@ -173,14 +172,6 @@ new DiscretePolyAreaSummaryGridderTask({
   discreteFields: [ "descripcion" ],
   variableNameTemplate: "Área HIC {{{descripcion}}}",
   variableDescriptionTemplate: "Área del Hábitat de Interés Comunitario {{{descripcion}}}"
-})
-
-export const gridderJobDefault: GridderJob = new GridderJob({
-  gridderJobId: "defaultGridderJob",
-  gridderTaskId: "gridderTaskDefault",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.andalucia"
 })
 
 /**
@@ -297,14 +288,6 @@ new DiscretePolyTopAreaGridderTask({
   categoryTemplate: "{{{municipio}}} ({{{provincia}}})"
 });
 
-export const gridderJobDiscretePolyTopAreaMunicipio: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobDiscretePolyTopAreaMunicipio",
-  gridderTaskId: "gridderTaskDiscretePolyTopAreaMunicipio",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
-})
-
 /**
  *
  * Municipio DiscretePolyAreaSummary.
@@ -322,14 +305,6 @@ new DiscretePolyAreaSummaryGridderTask({
   variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}",
 })
 
-export const gridderJobDiscretePolyAreaSummaryMunicipio: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobDiscretePolyAreaSummaryMunicipio",
-  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryMunicipio",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
-})
-
 /**
  *
  * Población PointAggregations.
@@ -342,7 +317,7 @@ new PointAggregationsGridderTask({
   description: "Estadísticas de población",
   sourceTable: "poblacion.poblacion",
   geomField: "geom",
-  variables: [
+  variableDefinitions: [
     {
       "name": "Población total 2002",
       "description": "Población total del año 2002.",
@@ -836,14 +811,6 @@ new PointAggregationsGridderTask({
   ]
 })
 
-export const gridderJobPointAggregationsPoblacion: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobPointAggregationsPoblacion",
-  gridderTaskId: "gridderTaskPointAggregationsPoblacion",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
-})
-
 /**
  *
  * MDT PointIdw.
@@ -856,21 +823,13 @@ new PointIdwGridderTask({
   description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método Inverse Distance Weighting.",
   sourceTable: "mdt.mdt",
   geomField: "geom",
-  maxDistance: 200,
+  maxDistance: 500,
   numberOfPoints: 16,
   heightField: "h",
   round: 1,
   power: 2,
   variableName: "MDT según IDW",
   variableDescription: "Interpolación del MDT de 100 metros mediante IDW"
-})
-
-export const gridderJobPointIdwMdt: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobPointIdwMdt",
-  gridderTaskId: "gridderTaskPointIdwMdt",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
 })
 
 /**
@@ -885,21 +844,13 @@ new MdtProcessingGridderTask({
   description: "Interpolación del Modelo Digital del Terreno (MDT) mediante el método de media de alturas si la densidad de puntos de alturas es lo suficientemente alta en la celda o por interpolación Inverse Distance Weighting si no.",
   sourceTable: "mdt.mdt",
   geomField: "geom",
-  maxDistance: 200,
+  maxDistance: 500,
   numberOfPoints: 16,
   heightField: "h",
   round: 1,
   power: 2,
   variableName: "Procesamiento MDT",
   variableDescription: "Procesamiento del MDT de 100 metros mediante media / interpolación IDW"
-})
-
-export const gridderJobMdtProcessing: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobMdtProcessing",
-  gridderTaskId: "gridderTaskMdtProcessing",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.provincia where provincia = 'Huelva'"
 })
 
 /**
@@ -917,14 +868,6 @@ new DiscretePolyAreaSummaryGridderTask({
   discreteFields: [ "descripcion" ],
   variableNameTemplate: "Área HIC {{{descripcion}}}",
   variableDescriptionTemplate: "Área del Hábitat de Interés Comunitario {{{descripcion}}}"
-})
-
-export const gridderJobDiscretePolyAreaSummaryHic: GridderJob = new GridderJob({
-  gridderJobId: "gridderJobDiscretePolyAreaSummaryHic",
-  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryHic",
-  maxZoomLevel: 0,
-  minZoomLevel: 2,
-  sqlAreaRetrieval: "select geom from context.andalucia"
 })
 
 /**

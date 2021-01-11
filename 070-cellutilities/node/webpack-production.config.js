@@ -8,7 +8,6 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 module.exports = {
   entry: {
-    coveringcells: './src/coveringcells.ts',
     gridder: './src/gridder.ts',
     griddersetup: './src/griddersetup.ts'
   },

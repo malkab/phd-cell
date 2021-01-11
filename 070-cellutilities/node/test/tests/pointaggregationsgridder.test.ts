@@ -22,7 +22,6 @@ describe("Read parameters from config file", function() {
       "sourcePg",
       "grid",
       "gridderTask",
-      "gridderJob",
       "cells",
       "targetZoom",
       "verbose"
@@ -40,6 +39,8 @@ describe("Read parameters from config file", function() {
 describe("Run script", function() {
 
   rxMochaTests({
+
+    timeout: 3000000,
 
     testCaseName: "Run script",
 

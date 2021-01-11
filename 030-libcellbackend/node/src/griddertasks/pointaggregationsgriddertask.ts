@@ -56,8 +56,8 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
    * The template name of the variables to be created.
    *
    */
-  private _variables: IPointAggregationsGridderTaskVariable[];
-  get variables(): IPointAggregationsGridderTaskVariable[] { return this._variables }
+  private _variableDefinitions: IPointAggregationsGridderTaskVariable[];
+  get variableDefinitions(): IPointAggregationsGridderTaskVariable[] { return this._variableDefinitions }
 
   /**
    *
@@ -78,7 +78,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       geomField,
       indexVariableKey,
       indexVariable,
-      variables
+      variableDefinitions
     }: {
       gridderTaskId: string;
       name: string;
@@ -87,7 +87,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       geomField: string;
       indexVariableKey?: string;
       indexVariable?: Variable;
-      variables: IPointAggregationsGridderTaskVariable[];
+      variableDefinitions: IPointAggregationsGridderTaskVariable[];
   }) {
 
     super({
@@ -103,7 +103,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       indexVariable: indexVariable
     });
 
-    this._variables = variables;
+    this._variableDefinitions = variableDefinitions;
 
     PgOrm.generateDefaultPgOrmMethods(this, {
 
@@ -119,7 +119,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
           this.sourceTable,
           this.geomField,
           {
-            variables: this._variables
+            variableDefinitions: this._variableDefinitions
           },
           this.indexVariableKey
         ])
@@ -153,14 +153,15 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     // To store the variables
     let variables: Variable[];
 
-    variables = this.variables.map((o: IPointAggregationsGridderTaskVariable) => {
+    variables =
+      this.variableDefinitions.map((o: IPointAggregationsGridderTaskVariable) => {
 
-      return new Variable({
-        gridderTaskId: this.gridderTaskId,
-        name: o.name,
-        description: o.description,
-        gridderTask: this
-      })
+        return new Variable({
+          gridderTaskId: this.gridderTaskId,
+          name: o.name,
+          description: o.description,
+          gridderTask: this
+        })
 
     })
 
@@ -196,12 +197,6 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     // GridderTask.
     let variables: Variable[];
 
-    // To get the variables
-    let variableObs$: rx.Observable<Variable>[] =
-      this.variables.map((o: IPointAggregationsGridderTaskVariable) =>
-        Variable.getByGridderTaskIdAndName$(cellPg, this.gridderTaskId,
-          o.name))
-
     // A flag to signal points where colliding the cell to drill down
     let hasData: boolean = false;
 
@@ -229,44 +224,63 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
     // Number of batches
     let nBatches: number = 1;
 
+    if (log) log.logInfo({
+      message: `${this.logHeader(cell)}: compute start`,
+      methodName: "computeCell$",
+      moduleName: "PointAggregationsGridderTask",
+      payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+    })
+
     // Get the dependencies
-    return this.getDependencies$(cellPg)
+    return this.getVariables$(cellPg)
     .pipe(
 
       // Get cell grid
-      rxo.concatMap((o: GridderTask) => cell.getGrid$(cellPg)),
+      rxo.concatMap((o: GridderTask) => {
 
-      // Get the variables for this GridderTask in the same order they are coded
-      // in the variables member
-      rxo.concatMap((o: Cell) => rx.zip(...variableObs$)),
+        // To write less
+        variables = (<Variable[]>this._variables);
+        return cell.getGrid$(cellPg)
+
+      }),
 
       // Compose the final SQL adding the variable names and expressions
-      rxo.concatMap((o: Variable[]) => {
-
-        // Cache variables
-        variables = o;
+      rxo.concatMap((o: Cell) => {
 
         // Check for SQL batches for many variables
         // Get number of 50 vars batches
         nBatches = Math.ceil(variables.length / 50);
 
+        if (log) log.logInfo({
+          message: `${this.logHeader(cell)}: ${nBatches} variable batches`,
+          methodName: "computeCell$",
+          moduleName: "PointAggregationsGridderTask",
+          payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+        })
+
         // Process batches
         for (let i = 0; i < nBatches; i++) {
 
-          // Slice variables and variables descriptions for the batch
-          const slicedVars: Variable[] = variables.slice(i * 50, (i+1)*50);
+          // Slice variable definitions. Variable definitions has an order set
+          // by the user that may not be the same as the order of the vars
+          // retrieved from the DB
           const slicedVarsDef: IPointAggregationsGridderTaskVariable[] =
-            this.variables.slice(i * 50, (i+1)*50);
+            this.variableDefinitions.slice(i * 50, (i+1)*50);
 
           // Create the SQL for the batch
           let batchSql: string = sql;
 
-          for(let i=0; i<slicedVars.length; i++) {
+          // Iterate the sliced variable definitions
+          slicedVarsDef.map((x: IPointAggregationsGridderTaskVariable) => {
+
+            // Get the matching variable retrieved from the DB
+            const v: Variable = variables.filter((y: Variable) =>
+              y.name === x.name)[0];
 
             batchSql +=
-              `'${slicedVars[i].variableKey}', ${slicedVarsDef[i].expression},`;
+              `'${v.variableKey}', ${x.expression},`;
 
-          }
+          })
 
           batchSql = batchSql.replace(/,+$/, "");
           batchSql += `) as data, n_points from a, total group by n_points;`;
@@ -292,6 +306,13 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
         // enough to know if a drill down is needed and to write the index var
         if(o[0].rowCount > 0) {
 
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: ${o[0].rows[0].n_points} colliding points`,
+            methodName: "computeCell$",
+            moduleName: "PointAggregationsGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
+
           // Process each batch so it updates the cell
           o.map((x: QueryResult) => {
 
@@ -310,6 +331,13 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
 
         } else {
 
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: no colliding points`,
+            methodName: "computeCell$",
+            moduleName: "PointAggregationsGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
+
           obs$.push(rx.of(cell));
 
         }
@@ -318,24 +346,32 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
 
       }),
 
-      rxo.bufferCount(nBatches),
+      // Get the last result, if not, subcells are returned twice, making
+      // everything really slow
+      rxo.last(),
 
       // If there are data, check for sub cells to continue computations.
       rxo.map((o: any) => {
 
-        if (hasData) {
+        if (hasData && cell.zoom < targetZoom ) {
 
-          if (cell.zoom < targetZoom ) {
+          const c: Cell[] = cell.getSubCells(cell.zoom+1);
 
-            return cell.getSubCells(cell.zoom+1);
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
+            methodName: "computeCell$",
+            moduleName: "PointAggregationsGridderTask"
+          })
 
-          } else {
-
-            return [];
-
-          }
+          return c;
 
         } else {
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: end of gridding stack`,
+            methodName: "computeCell$",
+            moduleName: "PointAggregationsGridderTask"
+          })
 
           return [];
 

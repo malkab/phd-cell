@@ -37,51 +37,20 @@
   },
 
   "gridderTask": {
-    "gridderTaskId": "gridderTaskPointIdwMdt",
-    "gridderTaskType": "POINTIDWINTERPOLATION",
-    "name": "Interpolación MDT con IDW",
-    "description": "Interpolación del Modelo Digital del Terreno (MDT) mediante el método Inverse Distance Weighting.",
+    "gridderTaskId": "gridderTaskMdtProcessing",
+    "gridderTaskType": "MDTPROCESSING",
+    "name": "Interpolación MDT por media de alturas e IDW",
+    "description": "Interpolación del Modelo Digital del Terreno (MDT) mediante el método de media de alturas si la densidad de puntos de alturas es lo suficientemente alta en la celda o por interpolación Inverse Distance Weighting si no.",
     "sourceTable": "mdt.mdt",
     "geomField": "geom",
     "maxDistance": 200,
-    "numberOfPoints": 2,
+    "numberOfPoints": 16,
     "heightField": "h",
     "round": 1,
     "power": 2,
-    "variableName": "MDT según IDW",
-    "variableDescription": "Interpolación del MDT de 100 metros mediante IDW"
+    "variableName": "Procesamiento MDT",
+    "variableDescription": "Procesamiento del MDT de 100 metros mediante media / interpolación IDW"
   },
-
-  "gridderJob": {
-    "gridderJobId": "gridderJobPointIdwMdt",
-    "gridderTaskId": "gridderTaskPointIdwMdt",
-    "maxZoomLevel": 0,
-    "minZoomLevel": 0,
-    "sqlAreaRetrieval": "select geom from context.andalucia"
-  },
-
-  "cells": [
-    {
-      "gridId": "eu-grid",
-      "zoom": 1,
-      "x": 1,
-      "y": 6
-    },
-    {
-      "gridId": "eu-grid",
-      "zoom": 1,
-      "x": 2,
-      "y": 6
-    },
-    {
-      "gridId": "eu-grid",
-      "zoom": 1,
-      "x": 2,
-      "y": 5
-    }
-  ],
-
-  "targetZoom": 3,
 
   "verbose": true
 

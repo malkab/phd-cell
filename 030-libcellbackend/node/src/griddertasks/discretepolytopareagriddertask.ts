@@ -20,8 +20,6 @@ import { EGRIDDERTASKTYPE } from './egriddertasktype';
 
 import { NodeLogger } from "@malkab/node-logger";
 
-import { Grid } from "../core/grid";
-
 /**
  *
  * Top Area Polygon Discrete Gridder Task.
@@ -218,32 +216,26 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
     let key: string | undefined;
 
     if (log) log.logInfo({
-      message: `start cell (${cell.epsg},${cell.zoom},${cell.x},${cell.y})`,
+      message: `${this.logHeader(cell)}: compute start`,
       methodName: "computeCell$",
       moduleName: "DiscretePolyTopAreaGridderTask",
       payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
     })
 
     // Get the dependencies
-    return this.getDependencies$(cellPg)
+    return this.getVariables$(cellPg)
     .pipe(
 
       // Get cell grid
       rxo.concatMap((o: GridderTask) => cell.getGrid$(cellPg)),
 
-      // Get variable
-      rxo.concatMap((o: Cell) =>
-        Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
+      rxo.concatMap((o: Cell) => {
 
-      rxo.concatMap((o: Variable[]) => {
-
-        if (o.length === 0) throw new Error("cannot retrieve variable, run GridderTask.setup$()");
-
-        variable = o[0];
-        variable.gridderTask = this;
+        // To write less
+        variable = (<Variable[]>this.variables)[0];
 
         if (log) log.logInfo({
-          message: `got variable ${variable.name} (${variable.variableKey})`,
+          message: `${this.logHeader(cell)}: got variable ${variable.name} (${variable.variableKey})`,
           methodName: "computeCell$",
           moduleName: "DiscretePolyTopAreaGridderTask",
           payload: { variableName: variable.name, variableKey: variable.variableKey }
@@ -261,7 +253,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
         o.variable = variable;
 
         if (log) log.logInfo({
-          message: `got catalog ${catalog.gridderTaskId}/${catalog.variableKey}: ${catalog.nItems} items`,
+          message: `${this.logHeader(cell)}: got catalog ${catalog.gridderTaskId}/${catalog.variableKey}: ${catalog.nItems} items`,
           methodName: "computeCell$",
           moduleName: "DiscretePolyTopAreaGridderTask",
           payload: {
@@ -300,10 +292,10 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
           if (o.rows.length > 0) {
 
             if (log) log.logInfo({
-              message: `SQL processed, results ${o.rows.length}`,
+              message: `${this.logHeader(cell)}: SQL processed (${o.rows.length} results)`,
               methodName: "computeCell$",
               moduleName: "DiscretePolyTopAreaGridderTask",
-              payload: { results: o.rows.length }
+              payload: { results: o.rows.length, result: o.rows[0] }
             })
 
             // Check for full coverage
@@ -311,7 +303,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
 
             // Get key from the catalog
             key = catalog.backward
-            .get(processTemplate(this.categoryTemplate, o.rows[0]));
+              .get(processTemplate(this.categoryTemplate, o.rows[0]));
 
             let sql: string = `select cell__setcell((
               '${cell.gridId}', ${cell.epsg}, ${cell.zoom}, ${cell.x},
@@ -324,7 +316,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
           } else {
 
             if (log) log.logInfo({
-              message: `SQL processed, void cell`,
+              message: `${this.logHeader(cell)}: SQL processed (void cell)`,
               methodName: "computeCell$",
               moduleName: "DiscretePolyTopAreaGridderTask",
               payload: { results: o.rows.length }
@@ -346,7 +338,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
           if (fullCoverage && cell.zoom < targetZoom) {
 
             if (log) log.logInfo({
-              message: `processing full coverage`,
+              message: `${this.logHeader(cell)}: processing full coverage`,
               methodName: "computeCell$",
               moduleName: "DiscretePolyTopAreaGridderTask"
             })
@@ -402,7 +394,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
           const c: Cell[] = cell.getSubCells(cell.zoom+1);
 
           if (log) log.logInfo({
-            message: `returning ${c.length} subcells`,
+            message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
             methodName: "computeCell$",
             moduleName: "DiscretePolyTopAreaGridderTask"
           })
@@ -412,7 +404,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
         } else {
 
           if (log) log.logInfo({
-            message: `end of gridding stack`,
+            message: `${this.logHeader(cell)}: end of gridding stack`,
             methodName: "computeCell$",
             moduleName: "DiscretePolyTopAreaGridderTask"
           })

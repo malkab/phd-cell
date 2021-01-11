@@ -48,14 +48,6 @@
     "variableDescriptionTemplate": "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
   },
 
-  "gridderJob": {
-    "gridderJobId": "gridderJobAreaSummary",
-    "gridderTaskId": "municipioDiscreteAreaSummary",
-    "maxZoomLevel": 0,
-    "minZoomLevel": 2,
-    "sqlAreaRetrieval": "select geom from context.andalucia"
-  },
-
   "cells": [
     {
       "gridId": "eu-grid",

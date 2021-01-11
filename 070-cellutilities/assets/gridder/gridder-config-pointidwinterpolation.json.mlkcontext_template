@@ -52,13 +52,28 @@
     "variableDescription": "Interpolación del MDT de 100 metros mediante IDW"
   },
 
-  "gridderJob": {
-    "gridderJobId": "gridderJobPointIdwMdt",
-    "gridderTaskId": "gridderTaskPointIdwMdt",
-    "maxZoomLevel": 0,
-    "minZoomLevel": 0,
-    "sqlAreaRetrieval": "select geom from context.andalucia"
-  },
+  "cells": [
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 1,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 5
+    }
+  ],
+
+  "targetZoom": 3,
 
   "verbose": true
 

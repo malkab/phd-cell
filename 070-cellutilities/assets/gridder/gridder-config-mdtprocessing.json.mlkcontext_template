@@ -37,24 +37,19 @@
   },
 
   "gridderTask": {
-    "gridderTaskId": "municipioDiscretePolyTopArea",
-    "gridderTaskType": "DISCRETEPOLYTOPAREA",
-    "name": "Municipio máxima área",
-    "description": "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
-    "sourceTable": "context.municipio",
+    "gridderTaskId": "gridderTaskMdtProcessing",
+    "gridderTaskType": "MDTPROCESSING",
+    "name": "Interpolación MDT por media de alturas e IDW",
+    "description": "Interpolación del Modelo Digital del Terreno (MDT) mediante el método de media de alturas si la densidad de puntos de alturas es lo suficientemente alta en la celda o por interpolación Inverse Distance Weighting si no.",
+    "sourceTable": "mdt.mdt",
     "geomField": "geom",
-    "discreteFields": [ "provincia", "municipio" ],
-    "variableName": "Municipio: máxima área",
-    "variableDescription": "Nombre del municipio y su provincia del municipio que ocupa la mayor área de la celda.",
-    "categoryTemplate": "{{{municipio}}} ({{{provincia}}})"
-  },
-
-  "gridderJob": {
-    "gridderJobId": "gridderJobTopArea",
-    "gridderTaskId": "municipioDiscretePolyTopArea",
-    "maxZoomLevel": 0,
-    "minZoomLevel": 2,
-    "sqlAreaRetrieval": "select geom from context.andalucia"
+    "maxDistance": 200,
+    "numberOfPoints": 16,
+    "heightField": "h",
+    "round": 1,
+    "power": 2,
+    "variableName": "Procesamiento MDT",
+    "variableDescription": "Procesamiento del MDT de 100 metros mediante media / interpolación IDW"
   },
 
   "cells": [

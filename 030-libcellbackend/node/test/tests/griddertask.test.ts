@@ -5,16 +5,15 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  Grid, SourcePgConnection, GridderTask, gridderTaskGet$, Cell, GridderJob,
+  Grid, SourcePgConnection, GridderTask, gridderTaskGet$, Cell,
   DiscretePolyTopAreaGridderTask, DiscretePolyAreaSummaryGridderTask
 } from "../../src/index";
 
 import {
   clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu, testCell,
   gridderTaskDiscretePolyTopAreaMunicipio, pgConnCellRawData, logger,
-  gridderTaskDiscretePolyAreaSummaryMunicipio, gridderJobDefault,
-  gridderJobDiscretePolyTopAreaMunicipio, gridderTaskDefault,
-  gridderJobDiscretePolyAreaSummaryMunicipio
+  gridderTaskDiscretePolyAreaSummaryMunicipio,
+  gridderTaskDefault
 } from "./common";
 
 import { EGRIDDERTASKTYPE } from "../../src/griddertasks/egriddertasktype";
@@ -37,8 +36,6 @@ describe("Initial database clearance", function() {
     observables: [ clearDatabase$ ],
 
     assertions: [
-
-      (o: boolean) => expect(o).to.be.true,
 
       (o: boolean) => expect(o).to.be.true,
 
@@ -125,35 +122,6 @@ describe("GridderTask Top Area pgInsert$", function() {
     assertions: [
 
       (o: DiscretePolyTopAreaGridderTask) =>
-        expect(o.gridderTaskId, "Check ID")
-          .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
-
-    ],
-
-    verbose: false,
-
-    active: true
-
-  })
-
-})
-
-/**
- *
- * GridderJob Top Area pgInsert$.
- *
- */
-describe("GridderJob Top Area pgInsert$", function() {
-
-  rxMochaTests({
-
-    testCaseName: "GridderJob Top Area pgInsert$",
-
-    observables: [ gridderJobDiscretePolyTopAreaMunicipio.pgInsert$(pgConnCell) ],
-
-    assertions: [
-
-      (o: GridderJob) =>
         expect(o.gridderTaskId, "Check ID")
           .to.be.equal("gridderTaskDiscretePolyTopAreaMunicipio")
 
@@ -352,35 +320,6 @@ describe("GridderTask Area Summary pgInsert$", function() {
 
 /**
  *
- * GridderJob Area Summary pgInsert$.
- *
- */
-describe("GridderJob Area Summary pgInsert$", function() {
-
-  rxMochaTests({
-
-    testCaseName: "GridderJob Area Summary pgInsert$",
-
-    observables: [ gridderJobDiscretePolyAreaSummaryMunicipio.pgInsert$(pgConnCell) ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o.gridderTaskId, "Check ID")
-          .to.be.equal("gridderTaskDiscretePolyAreaSummaryMunicipio")
-
-    ],
-
-    verbose: false,
-
-    active: true
-
-  })
-
-})
-
-/**
- *
  * GridderTask Area Summary setup$.
  *
  */
@@ -475,138 +414,6 @@ describe("gridderTaskDefault pgInsert$", function() {
     verbose: false,
 
     active: true
-
-  })
-
-})
-
-describe("GridderJobDefault pgInsert$", function() {
-
-  rxMochaTests({
-
-    testCaseName: "GridderJobDefault pgInsert$",
-
-    observables: [ gridderJobDefault.pgInsert$(pgConnCell) ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o.gridderTaskId, "Check ID")
-          .to.be.equal("gridderTaskDefault")
-
-    ],
-
-    verbose: false,
-
-    active: true
-
-  })
-
-})
-
-/**
- *
- * Get and area retrieval.
- *
- */
-describe("Get and area retrieval", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Get and area retrieval",
-
-    observables: [
-
-      GridderJob.get$(pgConnCell, "defaultGridderJob")
-      .pipe(
-
-        rxo.concatMap((o: GridderJob) =>
-          o.getArea$(pgConnCellRawData, pgConnCell, gridEu))
-
-      )
-
-    ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o.gridderJobId).to.be.equal("defaultGridderJob")
-
-    ],
-
-    verbose: false
-
-  })
-
-})
-
-/**
- *
- * Get coverage of target area at zoom 0.
- *
- */
-describe("Get coverage of target area at zoom 0", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Get coverage of target area at zoom 0",
-
-    observables: [
-
-      GridderJob.get$(pgConnCell, "defaultGridderJob")
-      .pipe(
-
-        rxo.concatMap((o: GridderJob) =>
-          o.getCoveringCells$(pgConnCell, gridEu, 0))
-
-      )
-
-    ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o).to.be.equal(20)
-
-    ],
-
-    verbose: false
-
-  })
-
-})
-
-/**
- *
- * Get coverage of target area at zoom 1.
- *
- */
-describe("Get coverage of target area at zoom 1", function() {
-
-  rxMochaTests({
-
-    testCaseName: "Get coverage of target area at zoom 1",
-
-    observables: [
-
-      GridderJob.get$(pgConnCell, "defaultGridderJob")
-      .pipe(
-
-        rxo.concatMap((o: GridderJob) =>
-          o.getCoveringCells$(pgConnCell, gridEu, 1))
-
-      )
-
-    ],
-
-    assertions: [
-
-      (o: GridderJob) =>
-        expect(o).to.be.equal(54)
-
-    ],
-
-    verbose: false
 
   })
 

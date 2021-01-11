@@ -1,5 +1,5 @@
 import {
-  Cell, Grid, SourcePgConnection, GridderTask, GridderJob,
+  Cell, Grid, SourcePgConnection, GridderTask,
   gridderTaskFactory$
 } from "@malkab/libcellbackend";
 
@@ -139,13 +139,6 @@ export function process$(params: any): rx.Observable<any> {
 
   /**
    *
-   * GridderJob.
-   *
-   */
-  const gridderJob: any = new GridderJob(params.gridderJob);
-
-  /**
-   *
    * GridderTask.
    *
    */
@@ -155,11 +148,9 @@ export function process$(params: any): rx.Observable<any> {
   return gridderTaskFactory$(params.gridderTask)
   .pipe(
 
-    // Configure the GridderTask and the GridderJob
+    // Configure the GridderTask
     rxo.map((o: GridderTask) => {
       gridderTask = o;
-      gridderTask.grid = grid;
-      gridderJob.gridderTask = gridderTask;
       return gridderTask;
     }),
 
@@ -207,20 +198,6 @@ export function process$(params: any): rx.Observable<any> {
         return rx.of(`error adding gridder task: ${e.message}`);
 
       })),
-
-      // GridderJob
-      gridderJob.pgInsert$(cellPgConn)
-      .pipe(rxo.catchError((e: Error) => {
-
-        logger.logError({
-          message: `error adding gridder job: ${e.message}`,
-          methodName: "process$",
-          moduleName: "griddersetup"
-        });
-
-        return rx.of(`error adding gridder job: ${e.message}`);
-
-      }))
 
     )),
 

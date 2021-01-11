@@ -12,8 +12,6 @@ import { EGRIDDERTASKTYPE } from "./egriddertasktype";
 
 import { NodeLogger } from "@malkab/node-logger";
 
-import { Grid } from "../core/grid";
-
 import { Variable } from "../core/variable";
 
 /**
@@ -117,6 +115,14 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    */
   protected _indexVariable: Variable | undefined;
   get indexVariable(): Variable | undefined { return this._indexVariable }
+
+  /**
+   *
+   * To cache variables.
+   *
+   */
+  protected _variables: Variable[] | undefined;
+  get variables(): Variable[] | undefined { return this._variables }
 
   /**
    *
@@ -247,20 +253,36 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
    * this GridderTask.
    *
    */
-  public getIndexVariable$(cellPg: RxPg): rx.Observable<GridderTask> {
+  public getVariables$(cellPg: RxPg): rx.Observable<GridderTask> {
 
     return Variable.getByKey$(cellPg, <string>this.indexVariableKey)
     .pipe(
 
       rxo.catchError((o: Error) => {
 
-        return rx.throwError(new Error(`GridderTask ${this.gridderTaskId} of type ${this.gridderTaskType} has no index Variable, set it up first`));
+        return rx.throwError(new Error(`Error retrieving index variable for GridderTask ${this.gridderTaskId} of type ${this.gridderTaskType}: ${o.message}`));
 
       }),
 
       rxo.map((o: Variable) => {
 
         this._indexVariable = o;
+        return this;
+
+      }),
+
+      rxo.concatMap((o: GridderTask) =>
+        Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
+
+      rxo.catchError((o: Error) => {
+
+        return rx.throwError(new Error(`Error retrieving variables for GridderTask ${this.gridderTaskId} of type ${this.gridderTaskType}: ${o.message}`));
+
+      }),
+
+      rxo.map((o: Variable[]) => {
+
+        this._variables = o;
         return this;
 
       })
@@ -271,18 +293,88 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
 
   /**
    *
-   * Gets dependencies: Grid and index variable, setting them in the right
-   * members.
+   * Inserts the cells covering the area in a given zoom. Returns the number of
+   * cells generated.
    *
    */
-  public getDependencies$(cellPg: RxPg): rx.Observable<GridderTask> {
+  // public getCoveringCells$(pg: RxPg, grid: Grid, zoom: number): rx.Observable<number> {
 
-    return rx.zip(this.getIndexVariable$(cellPg))
+  //   const sql: string = `
+  //     with a as (
+  //       select st_transform(area, ${grid.epsg}) as area
+  //       from cell_meta.gridder_job
+  //       where gridder_job_id = '${this.gridderJobId}'
+  //     )
+  //     select
+  //       cell__setcell(cell__getcoverage('${grid.gridId}', ${zoom}, area)) as cell
+  //     from a;`;
+
+  //   return pg.executeParamQuery$(sql).pipe(
+
+  //     rxo.map((o: any) => o.rowCount)
+
+  //   )
+
+  // }
+
+  /**
+   *
+   * Starts the job on a gicen cell, without resorting to the workers,
+   * command-line local mode.
+   *
+   * @param cellPg
+   * The cell PG DB connection.
+   *
+   * @param sourcePg
+   * The source data PG connection.
+   *
+   * @param cell
+   * The cell to process.
+   *
+   * @param targetZoom
+   * The zoom to drill down to.
+   *
+   * @param fullCoverageDrillDown
+   * The zoom where the full coverage drill down must take place.
+   */
+  public computeCellsBatch$(
+    sourcePg: RxPg,
+    cellPg: RxPg,
+    cells: Cell[],
+    targetZoom: number,
+    log?: NodeLogger
+  ): rx.Observable<any> {
+
+    return rx.of(...cells)
     .pipe(
 
-      rxo.map((o: any) => o[0])
+      rxo.concatMap((o: Cell) => {
+
+        return this.computeCell$(sourcePg, cellPg, o, targetZoom, log);
+
+      }),
+
+      rxo.concatMap((o: Cell[]) =>
+        this.computeCellsBatch$(sourcePg, cellPg, o, targetZoom, log))
 
     )
+
+  }
+
+  /**
+   *
+   * A little helper function for logging to return a header in the form:
+   *
+   * [ ID ] [ TYPE ] [ Optional cell for computeCell$ logging ]
+   *
+   */
+  public logHeader(cell?: Cell): string {
+
+    let header: string = `${this.gridderTaskId} ${this.gridderTaskType}`;
+
+    if (cell) header += ` (${cell.epsg},${cell.zoom},${cell.x},${cell.y})`;
+
+    return header;
 
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "@malkab/libcellbackend",
-  "version": "1.0.22",
+  "version": "1.0.24",
   "description": "Backend library for Cell to use at API, Controller, and Worker",
   "scope": "@malkab",
   "author": {

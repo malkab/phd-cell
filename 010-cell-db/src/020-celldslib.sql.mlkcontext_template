@@ -149,22 +149,6 @@ cell_meta.variable(gridder_task_id, variable_key);
 alter table cell_meta.catalog
 add unique(variable_key, value);
 
-/**
-
-  GridderJob: the application of GridderTask to an area and between two zoom
-  levels. The area geom column allows for any EPSG because areas here will be
-  transformed to the EPSG of a given grid.
-
-*/
-create table cell_meta.gridder_job(
-  gridder_job_id varchar(64) primary key,
-  gridder_task_id varchar(64) references cell_meta.gridder_task(gridder_task_id),
-  max_zoom_level integer,
-  min_zoom_level integer,
-  sql_area_retrieval text,
-  area geometry(multipolygon)
-);
-
 /*
 
     Main cell_data table
@@ -755,11 +739,27 @@ language sql;
 
 /**
 
+  Returns the index variable key for a GridderTask.
+
+*/
+create or replace function cell__getindexvariablekeybygriddertaskid(
+  _griddertaskid varchar(64)
+) returns varchar as
+$$
+
+  select index_variable_key
+  from cell_meta.gridder_task
+  where gridder_task_id = $1;
+
+$$
+language sql;
+
+/**
+
   Drops a Gridder Task and all its dependencies, but not the data from the
   cell vectors (use cell__deletecelldatavectorvars for that):
 
   - all Variables in cell_meta.variable;
-  - all Gridder Jobs in cell_meta.gridder_job;
   - the Gridder Task itself at cell_meta.gridder_task.
 
   If the Gridder Task referenced by the ID exists, the function will
@@ -772,9 +772,6 @@ create or replace function cell__deletegriddertask(
 $$
 
   delete from cell_meta.variable
-  where gridder_task_id = $1;
-
-  delete from cell_meta.gridder_job
   where gridder_task_id = $1;
 
   delete from cell_meta.gridder_task

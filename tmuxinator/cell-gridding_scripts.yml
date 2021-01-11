@@ -1,8 +1,14 @@
 name: cell-gridding_scripts
-root: /home/git/malkab-phd/cell
+root: /home/malkab/Dropbox/tags/00-current/phd/050-workpackages/scientific/2020-12-18-gridding_scripts
 
 windows:
   - scripts: >
+      clear
+
+  - cell-db-psql: >
       clear ;
-      sleep 0.2 ;
-      cd 080-gridding_scripts
+      cd /home/git/malkab-phd/cell/docker/010-dev
+
+  - cell-raw-data-psql: >
+      clear ;
+      cd /home/git/malkab-phd/cell/docker/010-dev

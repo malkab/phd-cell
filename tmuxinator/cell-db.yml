@@ -10,7 +10,10 @@ windows:
       . mlkcontext common ;
       ./010-compose_up.sh
 
-  - psql-celldb: >
+  - cell-db-psql: >
       clear ;
-      sleep 2 ;
+      cd docker/010-dev
+
+  - cell-raw-data-psql: >
+      clear ;
       cd docker/010-dev

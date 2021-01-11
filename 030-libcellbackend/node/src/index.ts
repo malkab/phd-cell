@@ -22,8 +22,6 @@ export * from "./griddertasks/griddertask";
 
 export * from "./griddertasks/griddertaskfactory";
 
-export * from "./griddertasks/gridderjob";
-
 export * from "./core/coordinate";
 
 export * from "./core/utils";

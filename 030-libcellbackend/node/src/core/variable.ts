@@ -32,15 +32,6 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
 
   /**
    *
-   * The Gridder Task.
-   *
-   */
-  private _gridderTask: GridderTask | undefined;
-  get gridderTask(): GridderTask | undefined { return this._gridderTask }
-  set gridderTask(gridderTask: GridderTask | undefined) { this._gridderTask = gridderTask }
-
-  /**
-   *
    * Name.
    *
    */
@@ -83,7 +74,6 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
   }) {
 
     this._gridderTaskId = gridderTaskId;
-    this._gridderTask = gridderTask;
     this._variableKey = variableKey;
     this._name = name;
     this._description = description;

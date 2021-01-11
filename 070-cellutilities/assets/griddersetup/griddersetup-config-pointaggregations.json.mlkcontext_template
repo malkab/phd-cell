@@ -43,7 +43,7 @@
     "description": "Estadísticas de población",
     "sourceTable": "poblacion.poblacion",
     "geomField": "geom",
-    "variables": [
+    "variableDefinitions": [
       {
         "name": "Población total 2002",
         "description": "Población total del año 2002.",
@@ -536,37 +536,6 @@
       }
     ]
   },
-
-  "gridderJob": {
-    "gridderJobId": "gridderJobPointAggregationsPoblacion",
-    "gridderTaskId": "gridderTaskPointAggregationsPoblacion",
-    "maxZoomLevel": 0,
-    "minZoomLevel": 0,
-    "sqlAreaRetrieval": "select geom from context.andalucia"
-  },
-
-  "cells": [
-    {
-      "gridId": "eu-grid",
-      "zoom": 1,
-      "x": 1,
-      "y": 6
-    },
-    {
-      "gridId": "eu-grid",
-      "zoom": 1,
-      "x": 2,
-      "y": 6
-    },
-    {
-      "gridId": "eu-grid",
-      "zoom": 1,
-      "x": 2,
-      "y": 5
-    }
-  ],
-
-  "targetZoom": 3,
 
   "verbose": true
 

@@ -6,10 +6,13 @@ windows:
       clear ;
       cd 070-cellutilities/docker
 
-  - cell-db-psql: >
+  - psql: >
       clear ;
       cd docker/010-dev
 
-  - cell-raw-data-psql: >
+  - cell-db-compose: >
       clear ;
-      cd docker/010-dev
+      sleep 0.2 ;
+      cd 010-cell-db/docker ;
+      . mlkcontext common ;
+      ./010-compose_up.sh

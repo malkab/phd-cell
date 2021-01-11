@@ -35,8 +35,6 @@ describe("Initial database clearance", function() {
 
       (o: boolean) => expect(o).to.be.true,
 
-      (o: boolean) => expect(o).to.be.true,
-
       (o: boolean) => expect(o).to.be.true
 
     ],

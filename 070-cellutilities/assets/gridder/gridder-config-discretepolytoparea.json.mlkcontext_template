@@ -37,24 +37,40 @@
   },
 
   "gridderTask": {
-    "gridderTaskId": "municipioDiscreteAreaSummary",
-    "gridderTaskType": "DISCRETEPOLYAREASUMMARY",
-    "name": "Desglose de área de municipios",
-    "description": "Área de cada municipio en la celda, incluyendo su provincia",
+    "gridderTaskId": "municipioDiscretePolyTopArea",
+    "gridderTaskType": "DISCRETEPOLYTOPAREA",
+    "name": "Municipio máxima área",
+    "description": "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
     "sourceTable": "context.municipio",
     "geomField": "geom",
     "discreteFields": [ "provincia", "municipio" ],
-    "variableNameTemplate": "Área {{{municipio}}} ({{{provincia}}})",
-    "variableDescriptionTemplate": "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
+    "variableName": "Municipio: máxima área",
+    "variableDescription": "Nombre del municipio y su provincia del municipio que ocupa la mayor área de la celda.",
+    "categoryTemplate": "{{{municipio}}} ({{{provincia}}})"
   },
 
-  "gridderJob": {
-    "gridderJobId": "gridderJobAreaSummary",
-    "gridderTaskId": "municipioDiscreteAreaSummary",
-    "maxZoomLevel": 0,
-    "minZoomLevel": 2,
-    "sqlAreaRetrieval": "select geom from context.andalucia"
-  },
+  "cells": [
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 1,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 5
+    }
+  ],
+
+  "targetZoom": 3,
 
   "verbose": true
 

@@ -18,8 +18,6 @@ import { EGRIDDERTASKTYPE } from './egriddertasktype';
 
 import { NodeLogger } from "@malkab/node-logger";
 
-import { Grid } from "../core/grid";
-
 /**
  *
  * Area Summary Polygon Discrete Gridder Task.
@@ -251,7 +249,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
     let fullCoverage = false;
 
     if (log) log.logInfo({
-      message: `start cell (${cell.epsg},${cell.zoom},${cell.x},${cell.y})`,
+      message: `${this.logHeader(cell)}: compute start`,
       methodName: "computeCell$",
       moduleName: "DiscretePolyAreaSummaryGridderTask",
       payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
@@ -286,11 +284,18 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       order by a desc;`;
 
     // Get the dependencies
-    return this.getDependencies$(cellPg)
+    return this.getVariables$(cellPg)
     .pipe(
 
       // Get cell grid
-      rxo.concatMap((o: GridderTask) => cell.getGrid$(cellPg)),
+      rxo.concatMap((o: GridderTask) => {
+
+        // To write less
+        variables = <Variable[]>this.variables;
+
+        return cell.getGrid$(cellPg);
+
+      }),
 
       // Find overlapping polygons
       rxo.concatMap((o: any) => sourcePg.executeParamQuery$(sql)),
@@ -298,7 +303,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       rxo.catchError((e: Error) => {
 
         if (log) log.logError({
-          message: `error processing geometries: ${e.message}`,
+          message: `${this.logHeader(cell)}: error processing geometries: ${e.message}`,
           methodName: "computeCell$",
           moduleName: "DiscretePolyAreaSummaryGridderTask",
           payload: {
@@ -316,7 +321,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       rxo.concatMap((o: QueryResult) => {
 
         if (log) log.logInfo({
-          message: `got ${o.rowCount} colliding polygons`,
+          message: `${this.logHeader(cell)}: got ${o.rowCount} colliding polygons`,
           methodName: "computeCell$",
           moduleName: "DiscretePolyAreaSummaryGridderTask",
           payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
@@ -349,7 +354,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
         const indexVar: Variable = <Variable>o.pop();
 
         if (log) log.logInfo({
-          message: `got ${o.length} variables`,
+          message: `${this.logHeader(cell)}: got ${o.length} variables`,
           methodName: "computeCell$",
           moduleName: "DiscretePolyAreaSummaryGridderTask",
           payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
@@ -384,7 +389,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
             fullCoverage = true;
 
             if (log) log.logInfo({
-              message: `processing full coverage`,
+              message: `${this.logHeader(cell)}: processing full coverage`,
               methodName: "computeCell$",
               moduleName: "DiscretePolyAreaSummaryGridderTask",
               payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
@@ -431,7 +436,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
         if (fullCoverage || areas.length === 0) {
 
           if (log) log.logInfo({
-            message: `end of gridding stack`,
+            message: `${this.logHeader(cell)}: end of gridding stack`,
             methodName: "computeCell$",
             moduleName: "DiscretePolyAreaSummaryGridderTask",
             payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
@@ -446,7 +451,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
             const sc: Cell[] = cell.getSubCells(cell.zoom + 1);
 
             if (log) log.logInfo({
-              message: `returning ${sc.length} subcells`,
+              message: `${this.logHeader(cell)}: returning ${sc.length} subcells`,
               methodName: "computeCell$",
               moduleName: "DiscretePolyAreaSummaryGridderTask",
               payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
@@ -457,7 +462,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
           } else {
 
             if (log) log.logInfo({
-              message: `end of gridding stack`,
+              message: `${this.logHeader(cell)}: end of gridding stack`,
               methodName: "computeCell$",
               moduleName: "DiscretePolyAreaSummaryGridderTask",
               payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }

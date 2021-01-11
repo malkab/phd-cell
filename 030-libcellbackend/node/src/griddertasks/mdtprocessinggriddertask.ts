@@ -254,30 +254,17 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
     log?: NodeLogger
   ): rx.Observable<Cell[]> {
 
-    // Check if the index variable is set
-    if (this._indexVariableKey === undefined) {
-
-      if (log) log.logInfo({
-        message: `GridderTask ${this.gridderTaskId} of type ${this.gridderTaskType} is not set up`,
-        methodName: "computeCell$",
-        moduleName: "PointIdwGridderTask"
-      })
-
-      return rx.throwError(
-        new Error(
-          `GridderTask ${this.gridderTaskId} of type ${this.gridderTaskType} is not set up`));
-
-    }
-
     // To store the final interpolated result
-    let h: number = 0;
+    let h: number | undefined = undefined;
 
     // To store the key of the variable
     let variableKey: string;
 
-    // The flag to signal a void cell, that is, no point found within
-    // maxDistance
-    let voidCell: boolean = false;
+    // The flag to signal no colliding points with the cell
+    let noCollisions: boolean = false;
+
+    // The flag to signal not enough points found within maxDistance
+    let notEnoughPointsMaxDistance: boolean = false;
 
     // SQL for colliding points, first check for averaging
     const sqlCollidingPoints: string = `
@@ -311,17 +298,24 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       limit ${this.numberOfPoints};
     `;
 
+    if (log) log.logInfo({
+      message: `${this.logHeader(cell)}: compute start`,
+      methodName: "computeCell$",
+      moduleName: "MdtProcessingGridderTask",
+      payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+    })
+
     // Get cell grid
     return cell.getGrid$(cellPg)
     .pipe(
 
       // Get the variable
-      rxo.concatMap((o: Cell) => Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
+      rxo.concatMap((o: Cell) => this.getVariables$(cellPg)),
 
       // Execute colliding points
-      rxo.concatMap((o: Variable[]) => {
+      rxo.concatMap((o: GridderTask) => {
 
-        variableKey = <string>o[0].variableKey;
+        variableKey = <string>(<Variable[]>this.variables)[0].variableKey;
         return sourcePg.executeParamQuery$(sqlCollidingPoints)
 
       }),
@@ -329,7 +323,14 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       rxo.concatMap((o: any) => {
 
         // Check if there are more points colliding the cell than numberOfPoints
-        if (o.rowCount >= this.numberOfPoints) {
+        if (o.rowCount > 0) {
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: colliding points for averaging (${o.rowCount} points)`,
+            methodName: "computeCell$",
+            moduleName: "MdtProcessingGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
 
           // Averaging
           h = round(mean(o.rows.map((x: any) => x.h)), this.round);
@@ -338,6 +339,15 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
 
         } else {
 
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: no colliding points for averaging (${o.rowCount} points)`,
+            methodName: "computeCell$",
+            moduleName: "MdtProcessingGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
+
+          noCollisions = true;
+
           // Get nearest points for IDW
           return sourcePg.executeParamQuery$(sqlNearPoints);
 
@@ -345,19 +355,33 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
 
       }),
 
-      // Update the cell if not void
+      // Calculate IDW if h is yet undefined
       rxo.concatMap((o: any) => {
 
         // Check if the recieved item is a QueryResult or h
-        if (o.rowCount !== undefined) {
+        if (o.rowCount !== undefined && h === undefined) {
 
           // Check if any point was found within the maxDistance. If not, raise
           // the void cell flag.
-          if (o.rowCount === 0) {
+          if (o.rowCount < this.numberOfPoints) {
 
-            voidCell = true;
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: not enough points within distance for IDW (${o.rowCount} points)`,
+              methodName: "computeCell$",
+              moduleName: "MdtProcessingGridderTask",
+              payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+            })
+
+            notEnoughPointsMaxDistance = true;
 
           } else {
+
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: calculating IDW (${o.rowCount} points)`,
+              methodName: "computeCell$",
+              moduleName: "MdtProcessingGridderTask",
+              payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+            })
 
             // Calculate the IDW
             h = idw(
@@ -371,8 +395,15 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
 
         }
 
-        // Write the cell if not void
-        if (!voidCell) {
+        // Write the cell if h has been calculated
+        if (h !== undefined) {
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: setting final h ${h}`,
+            methodName: "computeCell$",
+            moduleName: "MdtProcessingGridderTask",
+            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+          })
 
           cell.data[variableKey] = h;
           return cell.pgUpdate$(cellPg);
@@ -391,9 +422,23 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
 
         if (cell.zoom < targetZoom) {
 
-          return cell.getSubCells(cell.zoom+1);
+          const c: Cell[] = cell.getSubCells(cell.zoom+1);
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
+            methodName: "computeCell$",
+            moduleName: "MdtProcessingGridderTask"
+          })
+
+          return c;
 
         } else {
+
+          if (log) log.logInfo({
+            message: `${this.logHeader(cell)}: end of gridding stack`,
+            methodName: "computeCell$",
+            moduleName: "MdtProcessingGridderTask"
+          })
 
           return [];
 

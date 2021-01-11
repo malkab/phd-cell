@@ -5,15 +5,13 @@ import { expect } from "chai";
 import { rxMochaTests } from "@malkab/ts-utils";
 
 import {
-  PointAggregationsGridderTask, gridderTaskGet$, Cell
+  PointAggregationsGridderTask, gridderTaskGet$,
 } from "../../../src/index";
 
 import {
-  pgConnCell, pgConnCellRawData,
-  testCell, logger, gridderTaskPointAggregationsPoblacion
+  gridderTaskPointAggregationsPoblacion, pgConnCell, pgConnCellRawData,
+  testCell, logger
 } from "../common";
-
-import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
@@ -32,8 +30,7 @@ describe("PointAggregationsGridderTask pgInsert$", function() {
 
     assertions: [
 
-      (o: PointAggregationsGridderTask) =>
-        expect(o.name).to.be.equal("Estadísticas de población")
+      (o: PointAggregationsGridderTask) => expect(o.name).to.be.equal("Estadísticas de población")
 
     ],
 
@@ -63,12 +60,6 @@ describe("PointAggregationsGridderTask get$", function() {
       (o: PointAggregationsGridderTask) => {
 
         expect(o.name).to.be.equal("Estadísticas de población");
-
-        expect(o.variableDefinitions[0]).to.be.deep.equal({
-          "description": "Población total del año 2002.",
-          "expression": "sum(ptot02)",
-          "name": "Población total 2002"
-        });
 
       }
 
@@ -111,14 +102,14 @@ describe("PointAggregationsGridderTask setup$", function() {
 
 /**
  *
- * computeCell$.
+ * Run batch.
  *
  */
-describe("PointAggregationsGridderTask computeCell$", function() {
+describe("PointAggregationsGridderTask computeCellsBatch$", function() {
 
   rxMochaTests({
 
-    testCaseName: "PointAggregationsGridderTask computeCell$",
+    testCaseName: "PointAggregationsGridderTask computeCellsBatch$",
 
     timeout: 300000,
 
@@ -127,27 +118,21 @@ describe("PointAggregationsGridderTask computeCell$", function() {
       gridderTaskGet$(pgConnCell, "gridderTaskPointAggregationsPoblacion")
       .pipe(
 
-        rxo.concatMap((o: PointAggregationsGridderTask) =>
-          rx.zip(...testCell.map((x: Cell) =>
-            o.computeCell$(
-              pgConnCellRawData, pgConnCell, x, 5, logger))))
+        rxo.concatMap((o: PointAggregationsGridderTask) => {
+
+          return o.computeCellsBatch$(
+            pgConnCellRawData, pgConnCell, testCell, 5, logger)
+
+        })
+
 
       )
 
     ],
 
-    assertions: [
+    assertions: [],
 
-      (o: Cell[][]) => {
-
-        expect(o.map((x: Cell[]) => x.length), "Child cells")
-          .to.be.deep.equal([ 4, 4, 4, 0, 0, 0, 0, 0 ]);
-
-      }
-
-    ],
-
-    verbose: false,
+    verbose: true,
 
     active: true
 
