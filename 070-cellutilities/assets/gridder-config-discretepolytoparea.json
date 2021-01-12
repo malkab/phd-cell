@@ -1,0 +1,85 @@
+{
+
+  "cellPg": {
+    "host": "37north.io",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "sourcePg": {
+    "db": "cell_raw_data",
+    "host": "37north.io",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "grid": {
+    "description": "A grid based on the official EU one",
+    "gridId": "eu-grid",
+    "name": "eu-grid",
+    "originEpsg": "3035",
+    "originX": 2700000,
+    "originY": 1500000,
+    "zoomLevels": [
+      {"name": "100 km", "size": 100000},
+      {"name": "50 km", "size": 50000},
+      {"name": "10 km", "size": 10000},
+      {"name": "5 km", "size": 5000},
+      {"name": "1 km", "size": 1000},
+      {"name": "500 m", "size": 500},
+      {"name": "250 m", "size": 250},
+      {"name": "125 m", "size": 125},
+      {"name": "25 m", "size": 25},
+      {"name": "5 m", "size": 5}
+    ]
+  },
+
+  "gridderTask": {
+    "gridderTaskId": "municipioDiscretePolyTopArea",
+    "gridderTaskType": "DISCRETEPOLYTOPAREA",
+    "name": "Municipio máxima área",
+    "description": "Teselado de municipios con sus provincias por máxima área usando el algoritmo DiscretePolyTopAreaGridderTask",
+    "sourceTable": "context.municipio",
+    "geomField": "geom",
+    "discreteFields": [ "provincia", "municipio" ],
+    "variableName": "Municipio: máxima área",
+    "variableDescription": "Nombre del municipio y su provincia del municipio que ocupa la mayor área de la celda.",
+    "categoryTemplate": "{{{municipio}}} ({{{provincia}}})"
+  },
+
+  "gridderJob": {
+    "gridderJobId": "gridderJobTopArea",
+    "gridderTaskId": "municipioDiscretePolyTopArea",
+    "maxZoomLevel": 0,
+    "minZoomLevel": 2,
+    "sqlAreaRetrieval": "select geom from context.andalucia"
+  },
+
+  "cells": [
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 1,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 5
+    }
+  ],
+
+  "targetZoom": 3,
+
+  "verbose": true
+
+}

@@ -1,0 +1,63 @@
+{
+
+  "cellPg": {
+    "host": "37north.io",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "sourcePg": {
+    "db": "cell_raw_data",
+    "host": "37north.io",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "grid": {
+    "description": "A grid based on the official EU one",
+    "gridId": "eu-grid",
+    "name": "eu-grid",
+    "originEpsg": "3035",
+    "originX": 2700000,
+    "originY": 1500000,
+    "zoomLevels": [
+      {"name": "100 km", "size": 100000},
+      {"name": "50 km", "size": 50000},
+      {"name": "10 km", "size": 10000},
+      {"name": "5 km", "size": 5000},
+      {"name": "1 km", "size": 1000},
+      {"name": "500 m", "size": 500},
+      {"name": "250 m", "size": 250},
+      {"name": "125 m", "size": 125},
+      {"name": "25 m", "size": 25},
+      {"name": "5 m", "size": 5}
+    ]
+  },
+
+  "gridderTask": {
+    "gridderTaskId": "municipioDiscreteAreaSummary",
+    "gridderTaskType": "DISCRETEPOLYAREASUMMARY",
+    "name": "Desglose de área de municipios",
+    "description": "Área de cada municipio en la celda, incluyendo su provincia",
+    "sourceTable": "context.municipio",
+    "geomField": "geom",
+    "discreteFields": [ "provincia", "municipio" ],
+    "variableNameTemplate": "Área {{{municipio}}} ({{{provincia}}})",
+    "variableDescriptionTemplate": "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
+  },
+
+  "gridderJob": {
+    "gridderJobId": "gridderJobAreaSummary",
+    "gridderTaskId": "municipioDiscreteAreaSummary",
+    "maxZoomLevel": 0,
+    "minZoomLevel": 0,
+    "sqlAreaRetrieval": "select geom from context.andalucia"
+  },
+
+  "zoom": 0,
+
+  "verbose": true
+
+}

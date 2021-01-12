@@ -1,0 +1,80 @@
+{
+
+  "cellPg": {
+    "host": "37north.io",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "sourcePg": {
+    "db": "cell_raw_data",
+    "host": "37north.io",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "grid": {
+    "description": "A grid based on the official EU one",
+    "gridId": "eu-grid",
+    "name": "eu-grid",
+    "originEpsg": "3035",
+    "originX": 2700000,
+    "originY": 1500000,
+    "zoomLevels": [
+      {"name": "100 km", "size": 100000},
+      {"name": "50 km", "size": 50000},
+      {"name": "10 km", "size": 10000},
+      {"name": "5 km", "size": 5000},
+      {"name": "1 km", "size": 1000},
+      {"name": "500 m", "size": 500},
+      {"name": "250 m", "size": 250},
+      {"name": "125 m", "size": 125},
+      {"name": "25 m", "size": 25},
+      {"name": "5 m", "size": 5}
+    ]
+  },
+
+  "gridderTask": {
+    "gridderTaskId": "gridderTaskPointAggregationsPoblacion",
+    "gridderTaskType": "POINTAGGREGATIONS",
+    "name": "Estadísticas de población",
+    "description": "Estadísticas de población",
+    "sourceTable": "poblacion.poblacion",
+    "geomField": "geom",
+    "variables": [
+      {
+        "name": "Población total 2002",
+        "description": "Población total del año 2002.",
+        "expression": "sum(ptot02)"
+      },
+      {
+        "name": "Población hombres 2020",
+        "description": "Población de hombres del año 2002.",
+        "expression": "sum(ph02)"
+      },
+      {
+        "name": "Población mujeres 2002",
+        "description": "Población de mujeres del año 2002.",
+        "expression": "sum(pm02)"
+      },
+      {
+        "name": "Índice de dependencia total 2002",
+        "description": "Índice de dependencia total de 2002. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001502)::float + sum(e6502)::float) / sum(e166402)::float)::numeric, 2)"
+      }
+    ]
+  },
+
+  "gridderJob": {
+    "gridderJobId": "gridderJobPointAggregationsPoblacion",
+    "gridderTaskId": "gridderTaskPointAggregationsPoblacion",
+    "maxZoomLevel": 0,
+    "minZoomLevel": 0,
+    "sqlAreaRetrieval": "select geom from context.andalucia"
+  },
+
+  "verbose": true
+
+}
