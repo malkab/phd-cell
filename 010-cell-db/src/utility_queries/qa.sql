@@ -36,7 +36,7 @@ create materialized view qa.qa as
 select *
 from cell__getcellsbyvarkeys(
   ARRAY[cell__getindexvariablekeybygriddertaskid(:'griddertaskid')], false,
-    6, null);
+    5, null);
 
 -- create materialized view qa.qa as
 -- select *
