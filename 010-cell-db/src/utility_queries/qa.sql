@@ -24,25 +24,25 @@ to cell_readonly;
 -- \set griddertaskid provinciaDiscreteAreaSummary
 -- \set griddertaskid seccionCensalDiscreteAreaSummary
 -- \set griddertaskid gridderTaskPointAggregationsPoblacion
--- \set griddertaskid gridderTaskMdtProcessing
-\set griddertaskid gridderTaskPointAggregationsPoblacion
+\set griddertaskid gridderTaskMdtProcessing
+-- \set griddertaskid gridderTaskPointAggregationsPoblacion
 
 -- Zoom, just for alignment
 \set z 1
 \set x 8
 \set y 3
 
-create materialized view qa.qa as
-select *
-from cell__getcellsbyvarkeys(
-  cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
-    7, null);
-
 -- create materialized view qa.qa as
 -- select *
 -- from cell__getcellsbyvarkeys(
 --   cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
---     null, cell__cellgeom(cell__defaultcell(:z, :x, :y)));
+--     9, null);
+
+create materialized view qa.qa as
+select *
+from cell__getcellsbyvarkeys(
+  cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
+    9, cell__cellgeom(cell__defaultcell(:z, :x, :y)));
 
 grant select on all tables in schema qa to cell_readonly;
 
