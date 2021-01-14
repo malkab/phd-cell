@@ -1,17 +1,18 @@
 # Added by mlkcontext
 # -------------------
-010-cell-db/src/010-create_db.sql
-010-cell-db/src/020-celldslib.sql
-010-cell-db/src/050-add_metadata.sql
-070-cellutilities/assets/gridder/gridder-config-discretepolyareasummary.json
-070-cellutilities/assets/gridder/gridder-config-discretepolytoparea.json
-070-cellutilities/assets/gridder/gridder-config-mdtprocessing.json
-070-cellutilities/assets/gridder/gridder-config-pointaggregations.json
-070-cellutilities/assets/gridder/gridder-config-pointidwinterpolation.json
-070-cellutilities/assets/griddersetup/griddersetup-config-discretepolyareasummary.json
-070-cellutilities/assets/griddersetup/griddersetup-config-discretepolytoparea.json
-070-cellutilities/assets/griddersetup/griddersetup-config-mdtprocessing.json
-070-cellutilities/assets/griddersetup/griddersetup-config-pointaggregations.json
-070-cellutilities/assets/griddersetup/griddersetup-config-pointidwinterpolation.json
 assets/postgres_config/postgresql.conf
 assets/redis_config/redis.conf
+010-cell-db/src/050-add_metadata.sql
+010-cell-db/src/010-create_db.sql
+010-cell-db/src/020-celldslib.sql
+070-cellutilities/assets/gridder/gridder-config-pointidwinterpolation.json
+070-cellutilities/assets/gridder/gridder-config-pointaggregations.json
+070-cellutilities/assets/gridder/gridder-config-mdtprocessing.json
+070-cellutilities/assets/gridder/gridder-config-discretepolyareasummary.json
+070-cellutilities/assets/gridder/gridder-config-discretepolytoparea.json
+070-cellutilities/assets/griddersetup/griddersetup-config-discretepolyareasummary.json
+070-cellutilities/assets/griddersetup/griddersetup-config-mdtprocessing.json
+070-cellutilities/assets/griddersetup/griddersetup-config-pointidwinterpolation.json
+070-cellutilities/assets/griddersetup/griddersetup-config-discretepolytoparea.json
+070-cellutilities/assets/griddersetup/griddersetup-config-pointaggregations.json
+# -------------------
