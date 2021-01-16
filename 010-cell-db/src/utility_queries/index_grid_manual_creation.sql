@@ -5,19 +5,19 @@
   set them to null.
 
 */
-\set griddertaskid eennppDiscreteAreaSummary
+\set griddertaskid seccionCensalDiscreteAreaSummary
 \set zoom 7
 
 -- insert into cell_meta.variable
 -- values(
 --   :'griddertaskid',
---   '33333',
---   'Index var nucleosPoblacionDiscreteAreaSummary',
---   'Index variable for GridderTask nucleosPoblacionDiscreteAreaSummary.'
+--   '44444',
+--   'Index var seccionCensalDiscreteAreaSummary',
+--   'Index variable for GridderTask seccionCensalDiscreteAreaSummary.'
 -- );
 
 -- update cell_meta.gridder_task
--- set index_variable_key = '33333'
+-- set index_variable_key = '44444'
 -- where gridder_task_id = :'griddertaskid';
 
 with cells as (
@@ -27,6 +27,6 @@ with cells as (
     null)
 )
 update cell_data.data a
-set data = a.data || '{ "33333": null }'::jsonb
+set data = a.data || '{ "44444": null }'::jsonb
 from cells b
 where a.zoom = b.zoom and a.x = b.x and a.y = b.y;

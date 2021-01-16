@@ -22,9 +22,9 @@ to cell_readonly;
 -- \set griddertaskid eennppDiscreteAreaSummary
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
 -- \set griddertaskid provinciaDiscreteAreaSummary
--- \set griddertaskid seccionCensalDiscreteAreaSummary
+\set griddertaskid seccionCensalDiscreteAreaSummary
 -- \set griddertaskid gridderTaskPointAggregationsPoblacion
-\set griddertaskid gridderTaskMdtProcessing
+-- \set griddertaskid gridderTaskMdtProcessing
 -- \set griddertaskid gridderTaskPointAggregationsPoblacion
 
 -- Zoom, just for alignment
@@ -35,8 +35,8 @@ to cell_readonly;
 create materialized view qa.qa as
 select *
 from cell__getcellsbyvarkeys(
-  cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
-    4, null);
+  ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[], false,
+    6, null);
 
 -- create materialized view qa.qa as
 -- select *

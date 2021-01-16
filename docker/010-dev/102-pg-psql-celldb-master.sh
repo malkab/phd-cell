@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2020-09-29
+# Version 2021-01-16
 
 # -----------------------------------------------------------------
 #
@@ -12,16 +12,16 @@
 # psql session or run a SQL script with the same client.
 #
 # -----------------------------------------------------------------
-
-# Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=
-# The network to connect to. Remember that when attaching to the network
-# of an existing container (using container:name) the HOST is
-# "localhost"
+# Check mlkcontext to check. If void, no check will be performed. If NOTNULL,
+# any activated context will do, but will fail if no context was activated.
+MATCH_MLKCONTEXT=NOTNULL
+# The network to connect to. Remember that when attaching to the network of an
+# existing container (using container:name) the HOST is "localhost". Also the
+# host network can be connected using just "host".
 NETWORK=$MLKC_CELL_DB_NETWORK
-# These two options are mutually excluyent. Use null at both for
-# an interactive psql session. In case of passing a script, files
-# must exist at a mounted volume at the VOLUMES section.
+# These two options are mutually excluyent. Use null at both for an interactive
+# psql session. In case of passing a script, files must exist at a mounted
+# volume at the VOLUMES section.
 SCRIPT=
 COMMAND=
 # Container name
@@ -42,14 +42,14 @@ USER=$MLKC_CELL_DB_USER_CELL_MASTER
 PASS=$MLKC_CELL_DB_PASS_CELL_MASTER
 # The DB
 DB=cell
-# Declare volumes, a line per volume, complete in source:destination
-# form. No strings needed, $(pwd)/../data/:/ext_src/ works perfectly
+# Declare volumes, a line per volume, complete in source:destination form. No
+# strings needed, $(pwd)/../data/:/ext_src/ works perfectly.
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
 )
-# Output to files. This will run the script silently and
-# output results and errors to out.txt and error.txt. Use only
-# if running a script or command (-f -c SCRIPT parameter).
+# Output to files. This will run the script silently and output results and
+# errors to out.txt and error.txt. Use only if running a script or command (-f
+# -c SCRIPT parameter).
 OUTPUT_FILES=false
 
 
@@ -58,20 +58,10 @@ OUTPUT_FILES=false
 
 # ---
 
-echo -------------
-echo WORKING AT $(mlkcontext)
-echo -------------
+# Check mlkcontext is present at the system
+if command -v mlkcontext &> /dev/null ; then
 
-# Check mlkcontext
-if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
-
-  if [ ! "$(mlkcontext)" = "$MATCH_MLKCONTEXT" ] ; then
-
-    echo Please initialise context $MATCH_MLKCONTEXT
-
-    exit 1
-
-  fi
+  if ! mlkcontext -c $MATCH_MLKCONTEXT ; then exit 1 ; fi
 
 fi
 
