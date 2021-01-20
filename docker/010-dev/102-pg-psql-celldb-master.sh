@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2021-01-16
+# Version 2021-01-20
 
 # -----------------------------------------------------------------
 #
@@ -24,10 +24,9 @@ NETWORK=$MLKC_CELL_DB_NETWORK
 # volume at the VOLUMES section.
 SCRIPT=
 COMMAND=
-# Container name
-CONTAINER_NAME=
-# Container host name
-CONTAINER_HOST_NAME=
+# Container identifier root. This is used for both the container name (adding an
+# UID to avoid clashing) and the container host name (without UID).
+ID_ROOT=celldb_psql_master
 # Work dir
 WORKDIR=$(pwd)/../../010-cell-db/src
 # The version of Docker PG image to use
@@ -64,6 +63,10 @@ if command -v mlkcontext &> /dev/null ; then
   if ! mlkcontext -c $MATCH_MLKCONTEXT ; then exit 1 ; fi
 
 fi
+
+# Manage identifier
+CONTAINER_HOST_NAME="${ID_ROOT}_${MATCH_MLKCONTEXT}"
+CONTAINER_NAME="${CONTAINER_HOST_NAME}_$(uuidgen)"
 
 if [ ! -z "${NETWORK}" ] ; then NETWORK="--network=${NETWORK}" ; fi
 

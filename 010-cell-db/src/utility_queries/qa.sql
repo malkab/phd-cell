@@ -40,7 +40,7 @@ to cell_readonly;
 -- select *
 -- from cell__getcellsbyvarkeys(
 --   ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[],
---     false, 7, null);
+--     false, 4, null);
 
 /**
 
@@ -51,7 +51,7 @@ to cell_readonly;
 -- select *
 -- from cell__getcellsbyvarkeys(
 --   cell__getvariablekeysbygriddertaskid(:'griddertaskid'), false,
---     9, cell__cellgeom(cell__defaultcell(:z, :x, :y)));
+--     4, cell__cellgeom(cell__defaultcell(:z, :x, :y)));
 
 /**
 
