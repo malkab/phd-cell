@@ -69,8 +69,8 @@ describe("libcellbackend", () => {
    * This is a set up test for the following ones. They aren't atomic.
    *
    */
-  describe("\n\n  --- griddertasksetup.test ---\n",
-    () => require("./tests/gridder_tasks/griddertasksetup.test"));
+  describe("\n\n  --- griddertaskbatchsetup.test ---\n",
+    () => require("./tests/batch_cells_gridder_tasks/griddertaskbatchsetup.test"));
 
   describe("\n\n  --- discretepolytopareabatch.test ---\n",
     () => require("./tests/batch_cells_gridder_tasks/discretepolytopareabatch.test"));

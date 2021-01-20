@@ -200,11 +200,11 @@ describe("drillDownClone$ again to add more data", function() {
  * center.
  *
  */
-describe("center", function() {
+describe("Center", function() {
 
   rxMochaTests({
 
-    testCaseName: "center",
+    testCaseName: "Center",
 
     observables: [ rx.of(testCell[1].center) ],
 
@@ -220,6 +220,144 @@ describe("center", function() {
       }
 
     ]
+
+  })
+
+})
+
+/**
+ *
+ * Clone.
+ *
+ */
+describe("Clone", function() {
+
+  it("Cell clone", function() {
+
+    const c: Cell = testCell[0].clone();
+
+    expect(c.asString).to.be.equal(testCell[0].asString);
+    expect(c.offset).to.be.equal(testCell[0].offset);
+
+  })
+
+})
+
+/**
+ *
+ * Offset.
+ *
+ */
+describe("Offset", function() {
+
+  const c: Cell = testCell[1];
+
+  it("Positive offset", function() {
+
+    const center: Coordinate = testCell[1].center;
+
+    // Without offset
+
+    expect(center.epsg, "Center EPSG").to.be.equal("3035");
+    expect(center.x, "Center x").to.be.equal(2965000);
+    expect(center.y, "Center y").to.be.equal(1825000);
+
+    let corners: any = c.corners;
+
+    expect(corners.lowerLeft.epsg, "lowerLeft EPSG").to.be.equal("3035");
+    expect(corners.lowerLeft.x, "lowerLeft x").to.be.equal(2960000);
+    expect(corners.lowerLeft.y, "lowerLeft y").to.be.equal(1820000);
+
+    expect(corners.upperLeft.epsg, "upperLeft EPSG").to.be.equal("3035");
+    expect(corners.upperLeft.x, "upperLeft x").to.be.equal(2960000);
+    expect(corners.upperLeft.y, "upperLeft y").to.be.equal(1830000);
+
+    expect(corners.upperRight.epsg, "upperRight EPSG").to.be.equal("3035");
+    expect(corners.upperRight.x, "upperRight x").to.be.equal(2970000);
+    expect(corners.upperRight.y, "upperRight y").to.be.equal(1830000);
+
+    expect(corners.lowerRight.epsg, "lowerRight EPSG").to.be.equal("3035");
+    expect(corners.lowerRight.x, "lowerRight x").to.be.equal(2970000);
+    expect(corners.lowerRight.y, "lowerRight y").to.be.equal(1820000);
+
+    c.offset = 10;
+
+    corners = c.corners;
+
+    expect(center.epsg, "Positive center EPSG").to.be.equal("3035");
+    expect(center.x, "Positive center x").to.be.equal(2965000);
+    expect(center.y, "Positive center y").to.be.equal(1825000);
+
+    expect(corners.lowerLeft.epsg, "Positive lowerLeft EPSG").to.be.equal("3035");
+    expect(corners.lowerLeft.x, "Positive lowerLeft x").to.be.equal(2960000-10);
+    expect(corners.lowerLeft.y, "Positive lowerLeft y").to.be.equal(1820000-10);
+
+    expect(corners.upperLeft.epsg, "Positive upperLeft EPSG").to.be.equal("3035");
+    expect(corners.upperLeft.x, "Positive upperLeft x").to.be.equal(2960000-10);
+    expect(corners.upperLeft.y, "Positive upperLeft y").to.be.equal(1830000+10);
+
+    expect(corners.upperRight.epsg, "Positive upperRight EPSG").to.be.equal("3035");
+    expect(corners.upperRight.x, "Positive upperRight x").to.be.equal(2970000+10);
+    expect(corners.upperRight.y, "Positive upperRight y").to.be.equal(1830000+10);
+
+    expect(corners.lowerRight.epsg, "Positive lowerRight EPSG").to.be.equal("3035");
+    expect(corners.lowerRight.x, "Positive lowerRight x").to.be.equal(2970000+10);
+    expect(corners.lowerRight.y, "Positive lowerRight y").to.be.equal(1820000-10);
+
+  })
+
+  it("Negative offset", function() {
+
+    c.offset = 0;
+    const center: Coordinate = testCell[1].center;
+
+    // Without offset
+
+    expect(center.epsg, "center EPSG").to.be.equal("3035");
+    expect(center.x, "center x").to.be.equal(2965000);
+    expect(center.y, "center y").to.be.equal(1825000);
+
+    let corners: any = c.corners;
+
+    expect(corners.lowerLeft.epsg, "lowerLeft EPSG").to.be.equal("3035");
+    expect(corners.lowerLeft.x, "lowerLeft x").to.be.equal(2960000);
+    expect(corners.lowerLeft.y, "lowerLeft y").to.be.equal(1820000);
+
+    expect(corners.upperLeft.epsg, "upperLeft EPSG").to.be.equal("3035");
+    expect(corners.upperLeft.x, "upperLeft x").to.be.equal(2960000);
+    expect(corners.upperLeft.y, "upperLeft y").to.be.equal(1830000);
+
+    expect(corners.upperRight.epsg, "upperRight EPSG").to.be.equal("3035");
+    expect(corners.upperRight.x, "upperRight x").to.be.equal(2970000);
+    expect(corners.upperRight.y, "upperRight y").to.be.equal(1830000);
+
+    expect(corners.lowerRight.epsg, "lowerRight EPSG").to.be.equal("3035");
+    expect(corners.lowerRight.x, "lowerRight x").to.be.equal(2970000);
+    expect(corners.lowerRight.y, "lowerRight y").to.be.equal(1820000);
+
+    c.offset = -10;
+
+    corners = c.corners;
+
+    expect(center.epsg, "Negative center EPSG").to.be.equal("3035");
+    expect(center.x, "Negative center x").to.be.equal(2965000);
+    expect(center.y, "Negative center y").to.be.equal(1825000);
+
+    expect(corners.lowerLeft.epsg, "Negative lowerLeft EPSG").to.be.equal("3035");
+    expect(corners.lowerLeft.x, "Negative lowerLeft x").to.be.equal(2960000+10);
+    expect(corners.lowerLeft.y, "Negative lowerLeft y").to.be.equal(1820000+10);
+
+    expect(corners.upperLeft.epsg, "Negative upperLeft EPSG").to.be.equal("3035");
+    expect(corners.upperLeft.x, "Negative upperLeft x").to.be.equal(2960000+10);
+    expect(corners.upperLeft.y, "Negative upperLeft y").to.be.equal(1830000-10);
+
+    expect(corners.upperRight.epsg, "Negative upperRight EPSG").to.be.equal("3035");
+    expect(corners.upperRight.x, "Negative upperRight x").to.be.equal(2970000-10);
+    expect(corners.upperRight.y, "Negative upperRight y").to.be.equal(1830000-10);
+
+    expect(corners.lowerRight.epsg, "Negative lowerRight EPSG").to.be.equal("3035");
+    expect(corners.lowerRight.x, "Negative lowerRight x").to.be.equal(2970000-10);
+    expect(corners.lowerRight.y, "Negative lowerRight y").to.be.equal(1820000+10);
 
   })
 

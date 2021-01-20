@@ -265,7 +265,7 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
     }
 
     // To store the final interpolated result
-    let h: number = 0;
+    let h: number | undefined = undefined;
 
     // To store the key of the variable
     let variableKey: string;
@@ -274,9 +274,28 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
     // maxDistance
     let voidCell: boolean = false;
 
+    // Add offset to the cell equal to the maxDistance x2 to check if it's void
+    // and thus has no posibility that any internal point has points at target
+    // distance
+    cell.offset = this.maxDistance * 2;
+
+    const voidCellSql: string = `
+      with geom_cell as (
+        select st_geomfromewkt('${cell.ewkt}') as geom
+      )
+      select count(*) as n_colliding_points
+      from
+        geom_cell a inner join
+        ${this.sourceTable} b on
+        st_intersects(b.${this.geomField}, a.geom);
+    `;
+
     const sql: string = `
-      with center as (
-        select st_centroid(st_geomfromewkt('${cell.ewkt}')) as geom
+      with geom_cell as (
+        select st_geomfromewkt('${cell.ewkt}') as geom
+      ),
+      center as (
+        select st_centroid(geom) as geom from geom_cell
       ),
       nearest_points as (
         select
@@ -303,12 +322,23 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
     return cell.getGrid$(cellPg)
     .pipe(
 
+      // Get GridderTask variables
       rxo.concatMap((o: Cell) => Variable.getByGridderTaskId$(cellPg, this.gridderTaskId)),
 
+      // Check for void cell
       rxo.concatMap((o: Variable[]) => {
 
         variableKey = <string>o[0].variableKey;
-        return sourcePg.executeParamQuery$(sql)
+        return sourcePg.executeParamQuery$(voidCellSql)
+
+      }),
+
+      rxo.concatMap((o: any) => {
+
+        if((+o.rows[0].n_colliding_points) < this.numberOfPoints)
+          voidCell = true;
+
+        return sourcePg.executeParamQuery$(sql);
 
       }),
 
@@ -317,8 +347,6 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
         // Check if any point was found within the maxDistance. If not, raise
         // the void cell flag.
         if (o.rowCount < this.numberOfPoints) {
-
-          voidCell = true;
 
           if (log) log.logInfo({
             message: `${this.logHeader(cell)}: not enough points within max distance (${o.rowCount} points)`,
@@ -336,15 +364,15 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
             payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
           })
 
-        }
+          // Calculate the IDW
+          h = idw(
+            o.rows.map((x: any) => x.h),
+            o.rows.map((x: any) => x.d),
+            this.power,
+            this.round
+          );
 
-        // Calculate the IDW
-        h = idw(
-          o.rows.map((x: any) => x.h),
-          o.rows.map((x: any) => x.d),
-          this.power,
-          this.round
-        );
+        }
 
       }),
 
@@ -352,7 +380,7 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       rxo.concatMap((o: any) => {
 
         // Write the cell if not void
-        if (!voidCell) {
+        if (h !== undefined) {
 
           cell.data[variableKey] = h;
           return cell.pgUpdate$(cellPg);
@@ -365,21 +393,34 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
 
       }),
 
-      // Return child cells, always. Even if a cell is not in range of the cloud
-      // point, child cells may be.
+      // Return child cells if not void
       rxo.map((o: any) => {
 
-        if (cell.zoom < targetZoom) {
+        if(voidCell === false) {
 
-          const c: Cell[] = cell.getSubCells(cell.zoom+1);
+          if (cell.zoom < targetZoom) {
 
-          if (log) log.logInfo({
-            message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
-            methodName: "computeCell$",
-            moduleName: "PointIdwGridderTask"
-          })
+            const c: Cell[] = cell.getSubCells(cell.zoom+1);
 
-          return c;
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
+              methodName: "computeCell$",
+              moduleName: "PointIdwGridderTask"
+            })
+
+            return c;
+
+          } else {
+
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: end of gridding stack`,
+              methodName: "computeCell$",
+              moduleName: "PointIdwGridderTask"
+            })
+
+            return [];
+
+          }
 
         } else {
 

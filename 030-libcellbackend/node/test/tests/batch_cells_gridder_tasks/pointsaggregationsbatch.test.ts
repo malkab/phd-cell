@@ -132,7 +132,7 @@ describe("PointAggregationsGridderTask computeCellsBatch$", function() {
 
     assertions: [],
 
-    verbose: true,
+    verbose: false,
 
     active: true
 

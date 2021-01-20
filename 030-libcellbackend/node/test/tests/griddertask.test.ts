@@ -191,7 +191,7 @@ describe("GridderTask computeCell$ before setup$", function() {
 
       (o: Error) =>
         expect(o.message)
-          .to.be.equal("GridderTask gridderTaskDiscretePolyTopAreaMunicipio of type DISCRETEPOLYTOPAREA has no index Variable, set it up first")
+          .to.be.equal("Error retrieving variables for GridderTask gridderTaskDiscretePolyTopAreaMunicipio of type DISCRETEPOLYTOPAREA: Error retrieving index variable for GridderTask gridderTaskDiscretePolyTopAreaMunicipio of type DISCRETEPOLYTOPAREA: RxPg ORM Variable select$ method params [] not found error: not found")
 
     ],
 

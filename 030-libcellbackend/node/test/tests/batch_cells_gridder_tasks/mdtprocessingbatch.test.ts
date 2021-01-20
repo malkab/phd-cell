@@ -133,7 +133,7 @@ describe("MdtProcessingGridderTask computeCellsBatch$", function() {
 
     assertions: [],
 
-    verbose: true,
+    verbose: false,
 
     active: true
 

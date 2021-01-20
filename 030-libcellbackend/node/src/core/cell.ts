@@ -679,4 +679,23 @@ export class Cell implements PgOrm.IPgOrm<Cell> {
 
   }
 
+  /**
+   *
+   * Clones the cell.
+   *
+   */
+  public clone(): Cell {
+
+    return new Cell({
+      gridId: this.gridId,
+      x: this.x,
+      y: this.y,
+      zoom: this.zoom,
+      data: this.data,
+      grid: this.grid,
+      offset: this.offset
+    })
+
+  }
+
 }

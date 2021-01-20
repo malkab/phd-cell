@@ -35,8 +35,6 @@ describe("DiscretePolyTopAreaGridderTask pgInsert$", function() {
 
     ],
 
-    verbose: false,
-
     active: true
 
   })
@@ -133,7 +131,7 @@ describe("DiscretePolyTopAreaGridderTask computeCellsBatch$", function() {
 
     assertions: [],
 
-    verbose: true,
+    verbose: false,
 
     active: true
 

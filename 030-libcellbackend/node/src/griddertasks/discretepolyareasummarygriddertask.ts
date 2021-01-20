@@ -272,15 +272,15 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
         where st_intersects(${this.geomField}, geom_cell)
       ),
       complete as (
-        select st_union(geom_inter) as complete_geom
+        select sum(st_area(geom_inter)) as total_area
         from a
       )
       select
         ${this.discreteFields.join(",")},
         round((sum(st_area(geom_inter))::numeric / geom_cell_area)::numeric, ${this.areaRound}) as a,
-        round((st_area(complete_geom)::numeric / geom_cell_area)::numeric, ${this.areaRound}) as complete
+        round((total_area / geom_cell_area)::numeric, ${this.areaRound}) as complete
       from a, complete, geom_cell, geom_cell_area
-      group by ${this.discreteFields.join(",")}, geom_cell, complete, geom_cell_area
+      group by ${this.discreteFields.join(",")}, geom_cell, total_area, geom_cell_area
       order by a desc;`;
 
     // Get the dependencies

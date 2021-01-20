@@ -15,14 +15,14 @@ grant usage on schema qa
 to cell_readonly;
 
 -- Select the Gridder Task ID
--- \set griddertaskid hicAreaSummary
+\set griddertaskid hicAreaSummary
 -- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid municipioDiscretePolyTopArea
 -- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid eennppDiscreteAreaSummary
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
 -- \set griddertaskid provinciaDiscreteAreaSummary
-\set griddertaskid seccionCensalDiscreteAreaSummary
+-- \set griddertaskid seccionCensalDiscreteAreaSummary
 -- \set griddertaskid gridderTaskPointAggregationsPoblacion
 -- \set griddertaskid gridderTaskMdtProcessing
 
@@ -36,11 +36,11 @@ to cell_readonly;
   Get cells by optional zoom, full extent
 
 */
-create materialized view qa.qa as
-select *
-from cell__getcellsbyvarkeys(
-  ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[],
-    false, 5, null);
+-- create materialized view qa.qa as
+-- select *
+-- from cell__getcellsbyvarkeys(
+--   ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[],
+--     false, 7, null);
 
 /**
 
@@ -58,13 +58,24 @@ from cell__getcellsbyvarkeys(
   Get cells where the index var is unset, at a zoom
 
 */
--- create materialized view qa.qa as
+create materialized view qa.qa as
+select *
+from cell_data.data
+where
+  zoom = 4 and
+  data -> cell__getindexvariablekeybygriddertaskid(:'griddertaskid') = 'null';
+
+/**
+
+  Select cells based on query.
+
+*/
+-- create materialized view qa.seleccion as
 -- select *
 -- from cell_data.data
--- where
---   zoom = 0 and
---   data -> cell__getindexvariablekeybygriddertaskid(:'griddertaskid') = 'null';
+-- where (data -> '5555' ->> 'area')::float > 1;
 
+-- Permissions
 grant select on all tables in schema qa to cell_readonly;
 
 commit;

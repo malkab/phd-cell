@@ -133,7 +133,7 @@ describe("DiscretePolyAreaSummaryGridderTask computeCellsBatch$", function() {
 
     assertions: [],
 
-    verbose: true,
+    verbose: false,
 
     active: true
 

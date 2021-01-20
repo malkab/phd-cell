@@ -254,17 +254,33 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
     log?: NodeLogger
   ): rx.Observable<Cell[]> {
 
+    // Void cell
+    let voidCell: boolean = false;
+
     // To store the final interpolated result
     let h: number | undefined = undefined;
 
     // To store the key of the variable
     let variableKey: string;
 
-    // The flag to signal no colliding points with the cell
-    let noCollisions: boolean = false;
-
     // The flag to signal not enough points found within maxDistance
     let notEnoughPointsMaxDistance: boolean = false;
+
+    // Cell with offset
+    const offsetCell: Cell = cell.clone();
+    offsetCell.offset = this.maxDistance * 2;
+
+    // SQL for detecting a void cell with offset
+    const voidCellSql: string = `
+      with geom_cell as (
+        select st_geomfromewkt('${offsetCell.ewkt}') as geom
+      )
+      select count(*) as n_colliding_points
+      from
+        geom_cell a inner join
+        ${this.sourceTable} b on
+        st_intersects(b.${this.geomField}, a.geom);
+    `;
 
     // SQL for colliding points, first check for averaging
     const sqlCollidingPoints: string = `
@@ -312,44 +328,66 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       // Get the variable
       rxo.concatMap((o: Cell) => this.getVariables$(cellPg)),
 
-      // Execute colliding points
+      // Execute void cell SQL
       rxo.concatMap((o: GridderTask) => {
 
         variableKey = <string>(<Variable[]>this.variables)[0].variableKey;
-        return sourcePg.executeParamQuery$(sqlCollidingPoints)
+        return sourcePg.executeParamQuery$(voidCellSql);
+
+      }),
+
+      // Execute colliding points
+      rxo.concatMap((o: any) => {
+
+        if((+o.rows[0].n_colliding_points) === 0) {
+
+          voidCell = true;
+          return rx.of(voidCell);
+
+        } else {
+
+          return sourcePg.executeParamQuery$(sqlCollidingPoints);
+
+        }
 
       }),
 
       rxo.concatMap((o: any) => {
 
-        // Check if there are more points colliding the cell than numberOfPoints
-        if (o.rowCount > 0) {
+        if (voidCell === false) {
 
-          if (log) log.logInfo({
-            message: `${this.logHeader(cell)}: colliding points for averaging (${o.rowCount} points)`,
-            methodName: "computeCell$",
-            moduleName: "MdtProcessingGridderTask",
-            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
-          })
+          // Check if there are more points colliding the cell than numberOfPoints
+          if (o.rowCount > 0) {
 
-          // Averaging
-          h = round(mean(o.rows.map((x: any) => x.h)), this.round);
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: colliding points for averaging (${o.rowCount} points)`,
+              methodName: "computeCell$",
+              moduleName: "MdtProcessingGridderTask",
+              payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+            })
 
-          return rx.of(h);
+            // Averaging
+            h = round(mean(o.rows.map((x: any) => x.h)), this.round);
+
+            return rx.of(h);
+
+          } else {
+
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: no colliding points for averaging (${o.rowCount} points)`,
+              methodName: "computeCell$",
+              moduleName: "MdtProcessingGridderTask",
+              payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
+            })
+
+            // Get nearest points for IDW
+            return sourcePg.executeParamQuery$(sqlNearPoints);
+
+          }
 
         } else {
 
-          if (log) log.logInfo({
-            message: `${this.logHeader(cell)}: no colliding points for averaging (${o.rowCount} points)`,
-            methodName: "computeCell$",
-            moduleName: "MdtProcessingGridderTask",
-            payload: { cell: cell.apiSafeSerial, targetZoom: targetZoom }
-          })
-
-          noCollisions = true;
-
-          // Get nearest points for IDW
-          return sourcePg.executeParamQuery$(sqlNearPoints);
+          return rx.of(voidCell);
 
         }
 
@@ -420,17 +458,31 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       // point, child cells may be.
       rxo.map((o: any) => {
 
-        if (cell.zoom < targetZoom) {
+        if (voidCell === false) {
 
-          const c: Cell[] = cell.getSubCells(cell.zoom+1);
+          if (cell.zoom < targetZoom) {
 
-          if (log) log.logInfo({
-            message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
-            methodName: "computeCell$",
-            moduleName: "MdtProcessingGridderTask"
-          })
+            const c: Cell[] = cell.getSubCells(cell.zoom+1);
 
-          return c;
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: returning ${c.length} subcells`,
+              methodName: "computeCell$",
+              moduleName: "MdtProcessingGridderTask"
+            })
+
+            return c;
+
+          } else {
+
+            if (log) log.logInfo({
+              message: `${this.logHeader(cell)}: end of gridding stack`,
+              methodName: "computeCell$",
+              moduleName: "MdtProcessingGridderTask"
+            })
+
+            return [];
+
+          }
 
         } else {
 

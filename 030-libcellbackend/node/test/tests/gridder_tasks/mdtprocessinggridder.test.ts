@@ -137,7 +137,7 @@ describe("MdtProcessingGridderTask computeCell$", function() {
       (o: Cell[][]) => {
 
         expect(o.map((x: Cell[]) => x.length), "Child cells")
-          .to.be.deep.equal([ 4, 4, 4, 4, 4, 25, 25, 0 ]);
+          .to.be.deep.equal([ 4, 4, 4, 0, 4, 25, 25, 0 ]);
 
       }
 

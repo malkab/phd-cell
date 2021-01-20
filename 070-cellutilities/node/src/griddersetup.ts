@@ -16,7 +16,7 @@ import { exit as processExit } from "process";
  */
 const vars: any = readJsonSync([ "config.json" ]);
 
-console.log("GridderSetup script version 1.1.0");
+console.log("GridderSetup script version 1.1.1");
 
 /**
  *
