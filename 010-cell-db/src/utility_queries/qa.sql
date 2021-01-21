@@ -36,11 +36,11 @@ to cell_readonly;
   Get cells by optional zoom, full extent
 
 */
-create materialized view qa.qa as
-select *
-from cell__getcellsbyvarkeys(
-  ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[],
-    false, 4, null);
+-- create materialized view qa.qa as
+-- select *
+-- from cell__getcellsbyvarkeys(
+--   ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[],
+--     false, 4, null);
 
 /**
 
@@ -58,12 +58,12 @@ from cell__getcellsbyvarkeys(
   Get cells where the index var is unset, at a zoom
 
 */
--- create materialized view qa.qa as
--- select *
--- from cell_data.data
--- where
---   zoom = 4 and
---   data -> cell__getindexvariablekeybygriddertaskid(:'griddertaskid') = 'null';
+create materialized view qa.qa as
+select *
+from cell_data.data
+where
+  zoom = 4 and
+  data -> cell__getindexvariablekeybygriddertaskid(:'griddertaskid') = 'null';
 
 /**
 
