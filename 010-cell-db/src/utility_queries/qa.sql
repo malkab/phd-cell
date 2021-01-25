@@ -27,9 +27,9 @@ to cell_readonly;
 -- \set griddertaskid gridderTaskMdtProcessing
 
 -- Zoom, just for alignment
-\set z 1
-\set x 8
-\set y 3
+\set z 0
+\set x 5
+\set y 1
 
 /**
 
