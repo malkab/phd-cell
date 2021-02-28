@@ -1,78 +1,80 @@
 #!/bin/bash
 
-# Version: 2021-01-04
+# Version: 2021-02-28
 
 # -----------------------------------------------------------------
 #
-# Environment to develop.
+# Document here the purpose of the script.
 #
 # -----------------------------------------------------------------
 #
 # Runs a Python environment.
 #
 # -----------------------------------------------------------------
-
-# Check mlkcontext to check. If void, no check will be performed.
+# Check mlkcontext to check. If void, no check will be performed. If NOTNULL,
+# any activated context will do, but will fail if no context was activated.
 MATCH_MLKCONTEXT=common
-# Custom command or path to script (relative to WORKDIR) to execute, for example
-# "ls -lh". Leave blank for using the image's built-in option.
+# Custom quoted command or path to script (relative to WORKDIR) to execute, for
+# example "python whatever". Leave blank for an interactive session.
 COMMAND_EXEC=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost".
 NETWORK=
-# Container name.
-CONTAINER_NAME=
-# Container host name.
-CONTAINER_HOST_NAME=pycell-lib
-# The name of the image to pull, without tag.
-IMAGE_NAME=malkab/python
-# The tag.
-IMAGE_TAG=3.9-buster
+# Container identifier root. This is used for both the container name (adding an
+# UID to avoid clashing) and the container host name (without UID). Incompatible
+# with NETWORK container:name option. If blank, a Docker engine default name
+# will be assigned to the container.
+ID_ROOT=pycell
+# Unique? If true, no container with the same name can be created. Defaults to
+# true.
+UNIQUE=
+# The Python image tag. Defaults to "latest".
+IMAGE_TAG=
 # A set of volumes in the form ("source:destination" "source:destination").
 VOLUMES=(
-  $(pwd)/../..:$(pwd)/../..
+  $(pwd)/../:$(pwd)/../
 )
-# Volatile (-ti --rm or -d).
-VOLATILE=true
-# Replicas. If VOLATILE is true will fail. Keep in mind replicas will share
+# Env vars. Use ENV_VAR_NAME_CONTAINER=ENV_VAR_NAME_HOST format.
+ENV_VARS=()
+# Run mode. Can be PERSISTABLE (-ti), VOLATILE (-ti --rm), or DAEMON (-d). If
+# blank, defaults to VOLATILE.
+RUN_MODE=
+# Replicas. If RUN_MODE is VOLATILE will fail. Keep in mind replicas will share
 # volumes and all other configuration set. They'll be named with a -# suffix.
 # Keep blank for no replicas.
 REPLICAS=
 # Open ports in the form (external:internal external:internal).
 PORTS=()
 # Custom entrypoint, leave blank for using the image's built-in option.
-ENTRYPOINT=/bin/bash
-# Custom workdir.
-WORKDIR=$(pwd)/../src/
-# The following options are mutually exclusive. Use display for X11 host server
-# in Mac?
-X11_MAC=false
-# Use display for X11 host server in Linux?
-X11_LINUX=false
-
-
+ENTRYPOINT=
+# Custom workdir. Defaults to /.
+WORKDIR=$(pwd)/../
+# Use display for X11 host server in MAC, LINUX, or NONE. Defaults to NONE.
+X11=
 
 
 
 # ---
 
 # Check mlkcontext is present at the system
-if command -v mlkcontext &> /dev/null
-then
+if command -v mlkcontext &> /dev/null ; then
 
-  echo -------------
-  echo WORKING AT $(mlkcontext)
-  echo -------------
+  if ! mlkcontext -c $MATCH_MLKCONTEXT ; then exit 1 ; fi
 
-  # Check mlkcontext
-  if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
+fi
 
-    if [ ! "$(mlkcontext)" = "$MATCH_MLKCONTEXT" ] ; then
+# Manage identifier
+if [ ! -z "${ID_ROOT}" ] ; then
 
-      echo Please initialise context $MATCH_MLKCONTEXT
-      exit 1
+  CONTAINER_HOST_NAME="${ID_ROOT}_${MATCH_MLKCONTEXT}"
 
-    fi
+  if [ "${UNIQUE}" = false ] ; then
+
+    CONTAINER_NAME="${CONTAINER_HOST_NAME}_$(uuidgen)"
+
+  else
+
+    CONTAINER_NAME="${CONTAINER_HOST_NAME}"
 
   fi
 
@@ -92,28 +94,25 @@ if [ ! -z "${NETWORK}" ] ; then
 
 fi
 
-# X11 for Mac
-if [ "${X11_MAC}" = true ] ; then
+# Default X11
+X11_F=
 
-  X11="-e DISPLAY=host.docker.internal:0"
+# X11 for Mac
+if [ "${X11}" == "MAC" ] ; then
+
+  X11_F="-e DISPLAY=host.docker.internal:0"
 
   # Prepare XQuartz server
   xhost + 127.0.0.1
 
-else
-
-  X11=
-
 fi
 
 # X11 for Linux
-if [ "${X11_LINUX}" = true ] ; then
+if [ "$X11" = "LINUX" ] ; then
 
-  X11="-e DISPLAY=host.docker.internal:0 -v $HOME/.Xauthority:/root/.Xauthority:rw"
-
-else
-
-  X11=
+  # Prepare X11 server
+  xhost +
+  X11_F="-e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $HOME/.Xauthority:/root/.Xauthority:rw"
 
 fi
 
@@ -158,6 +157,21 @@ if [ ! -z "${VOLUMES}" ] ; then
 
 fi
 
+# Env vars
+ENV_VARS_F=
+
+if [ ! -z "${ENV_VARS}" ] ; then
+
+  for E in "${ENV_VARS[@]}" ; do
+
+    ARR_E=(${E//=/ })
+
+    ENV_VARS_F="${ENV_VARS_F} -e ${ARR_E[0]}=${ARR_E[1]} "
+
+  done
+
+fi
+
 # Ports
 PORTS_F=
 
@@ -171,41 +185,69 @@ if [ ! -z "${PORTS}" ] ; then
 
 fi
 
-# Volatile
-if [ "$VOLATILE" = true ] ; then
+# Run mode
+if [ ! -z "$RUN_MODE" ] ; then
 
-  COMMAND="docker run -ti --rm"
+  if [ "$RUN_MODE" = "PERSISTABLE" ] ; then
+
+    COMMAND="docker run -ti"
+
+  elif [ "$RUN_MODE" = "VOLATILE" ] ; then
+
+    COMMAND="docker run -ti --rm"
+
+  elif [ "$RUN_MODE" = "DAEMON" ] ; then
+
+    COMMAND="docker run -d"
+
+  else
+
+    echo Error: unrecognized RUN_MODE $RUN_MODE, exiting...
+    exit 1
+
+  fi
 
 else
 
-  COMMAND="docker run -d"
+  COMMAND="docker run -ti --rm"
+
+  RUN_MODE=VOLATILE
+
+fi
+
+# Get default image tag
+if [ -z "$IMAGE_TAG" ] ; then
+
+  IMAGE_TAG=latest
 
 fi
 
 # Iterate to produce replicas if VOLATILE is false
 if [ ! -z "$REPLICAS" ] ; then
 
-  if [ "$VOLATILE" = true ] ; then
+  if [ "$RUN_MODE" = "VOLATILE" ] ; then
 
-    echo VOLATILE true and REPLICAS not blank are incompatible options
+    echo VOLATILE and REPLICAS are incompatible options
 
     exit 1
 
   fi
 
-
   for REPLICA in $(seq 1 $REPLICAS) ; do
+
+    REP="$(($REPLICA-1))"
 
     eval  $COMMAND \
             $NETWORK \
-            ${CONTAINER_NAME}-${REPLICA} \
-            ${CONTAINER_HOST_NAME}-${REPLICA} \
-            $X11 \
+            ${CONTAINER_NAME}-${REP} \
+            ${CONTAINER_HOST_NAME}-${REP} \
+            $X11_F \
             $VOLUMES_F \
+            $ENV_VARS_F \
             $PORTS_F \
             $ENTRYPOINT \
             $WORKDIR \
-            $IMAGE_NAME:$IMAGE_TAG \
+            malkab/python:$IMAGE_TAG \
             $COMMAND_EXEC
 
   done
@@ -216,12 +258,13 @@ else
         $NETWORK \
         ${CONTAINER_NAME} \
         ${CONTAINER_HOST_NAME} \
-        $X11 \
+        $X11_F \
         $VOLUMES_F \
+        $ENV_VARS_F \
         $PORTS_F \
         $ENTRYPOINT \
         $WORKDIR \
-        $IMAGE_NAME:$IMAGE_TAG \
+        malkab/python:$IMAGE_TAG \
         $COMMAND_EXEC
 
 fi
