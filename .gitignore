@@ -1,8 +1,8 @@
 # Added by mlkcontext - v1.1.0
 # -------------------
-010-cell-db/src/010-create_db.sql
-010-cell-db/src/020-celldslib.sql
-010-cell-db/src/050-add_metadata.sql
+010-celldb/src/010-create_db.sql
+010-celldb/src/020-celldslib.sql
+010-celldb/src/050-add_metadata.sql
 070-cellutilities/assets/gridder/gridder-config-discretepolyareasummary.json
 070-cellutilities/assets/gridder/gridder-config-discretepolytoparea.json
 070-cellutilities/assets/gridder/gridder-config-mdtprocessing.json
