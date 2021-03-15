@@ -33,23 +33,23 @@ windows:
             clear ;
             sleep 12 ;
             . mlkcontext common
-  - cell-db-psql: >
+  - celldb-psql: >
       clear ;
       sleep 14 ;
       . mlkcontext common ;
       cd docker/010-dev ;
-      ./100-pg-psql-celldb.sh
+      ./102-pg-psql-celldb-master.sh
   - cell-raw-data-psql: >
       clear ;
       sleep 16 ;
       . mlkcontext common ;
       cd docker/010-dev ;
-      ./110-pg-psql-cell_raw_data.sh
+      ./109-pg-psql-cell_raw_data-master.sh
   - cell-persistence: >
       clear ;
       sleep 0.2 ;
       . mlkcontext common ;
-      cd 010-cell-db/docker ;
+      cd 010-celldb/docker ;
       ./010-compose_up.sh
   - docker: >
       clear ;

@@ -7,7 +7,7 @@ windows:
       sleep 0.5 ;
       cd 080-pycell/docker
 
-  - cell-db-psql: >
+  - celldb-psql: >
       clear ;
       sleep 0.5 ;
       cd docker/010-dev

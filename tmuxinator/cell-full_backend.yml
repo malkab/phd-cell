@@ -59,19 +59,19 @@ windows:
       clear ;
       sleep 10 ;
       . mlkcontext common ;
-      cd 010-cell-db/docker ;
+      cd 010-celldb/docker ;
       ./110-pg-psql.sh
   - cell-redis-cli: >
       clear ;
       sleep 12 ;
       . mlkcontext common ;
-      cd 010-cell-db/docker ;
+      cd 010-celldb/docker ;
       ./120-redis-cli.sh
-  - cell-db: >
+  - celldb: >
       clear ;
       sleep 0.2 ;
       . mlkcontext common ;
-      cd 010-cell-db/docker ;
+      cd 010-celldb/docker ;
       ./010-compose_up.sh ;
       exit
   - main-docker: >

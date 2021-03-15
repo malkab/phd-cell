@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version 2021-01-20
+# Version 2021-03-03
 
 # -----------------------------------------------------------------
 #
@@ -8,8 +8,8 @@
 #
 # -----------------------------------------------------------------
 #
-# Creates a volatile PostGIS container to either create an interactive
-# psql session or run a SQL script with the same client.
+# Creates a volatile PostGIS container to either create an interactive psql
+# session or run a SQL script with the same client.
 #
 # -----------------------------------------------------------------
 # Check mlkcontext to check. If void, no check will be performed. If NOTNULL,
@@ -19,37 +19,49 @@ MATCH_MLKCONTEXT=NOTNULL
 # existing container (using container:name) the HOST is "localhost". Also the
 # host network can be connected using just "host".
 NETWORK=$MLKC_CELL_DB_NETWORK
-# These two options are mutually excluyent. Use null at both for an interactive
+# These two options are mutually exclusive. Use null at both for an interactive
 # psql session. In case of passing a script, files must exist at a mounted
-# volume at the VOLUMES section.
+# volume at the VOLUMES section, referenced by a full path. By default, the
+# script will be search at WORKDIR.
 SCRIPT=
 COMMAND=
 # Container identifier root. This is used for both the container name (adding an
-# UID to avoid clashing) and the container host name (without UID).
-ID_ROOT=celldb_psql_master
-# Work dir
-WORKDIR=$(pwd)/../../010-cell-db/src
-# The version of Docker PG image to use
-POSTGIS_DOCKER_TAG=gargantuan_giraffe
-# The host
+# UID to avoid clashing) and the container host name (without UID). Incompatible
+# with NETWORK container:name option. If blank, a Docker engine default name
+# will be assigned to the container.
+ID_ROOT=cell-db_psql_master
+# Unique? If true, no container with the same name can be created. Defaults to
+# true.
+UNIQUE=
+# Work dir. Use $(pwd) paths. Defaults to /.
+WORKDIR=$(pwd)/../../010-celldb/src
+# The version of PG to use. Defaults to latest.
+PG_DOCKER_TAG=gargantuan_giraffe
+# The host, defaults to localhost.
 HOST=$MLKC_CELL_DB_HOST
-# The port
+# The port, defaults to 5432.
 PORT=$MLKC_CELL_DB_PORT
-# The user
+# The user, defaults to postgres.
 USER=$MLKC_CELL_DB_USER_CELL_MASTER
-# The pass
+# The pass, defaults to postgres.
 PASS=$MLKC_CELL_DB_PASS_CELL_MASTER
-# The DB
+# The DB, defaults to postgres.
 DB=cell
 # Declare volumes, a line per volume, complete in source:destination form. No
-# strings needed, $(pwd)/../data/:/ext_src/ works perfectly.
+# strings needed, $(pwd)/../data/:/ext_src/ works perfectly. Defaults to ().
 VOLUMES=(
   $(pwd)/../../../:$(pwd)/../../../
 )
+# Env vars. Use ENV_VAR_NAME_CONTAINER=ENV_VAR_NAME_HOST format. Defaults to ().
+ENV_VARS=
 # Output to files. This will run the script silently and output results and
-# errors to out.txt and error.txt. Use only if running a script or command (-f
-# -c SCRIPT parameter).
-OUTPUT_FILES=false
+# errors to $OUTPUT_FILES_results.txt and $OUTPUT_FILES_errors.txt to the
+# WORKDIR. Use only if running with the SCRIPT or COMMAND options. If empty,
+# outputs to console.
+OUTPUT_FILES=
+# PostgreSQL user UID and GID. Defaults to 1000 and 1000.
+POSTGRESUSERID=0
+POSTGRESGROUPID=0
 
 
 
@@ -65,23 +77,42 @@ if command -v mlkcontext &> /dev/null ; then
 fi
 
 # Manage identifier
-CONTAINER_HOST_NAME="${ID_ROOT}_${MATCH_MLKCONTEXT}"
-CONTAINER_NAME="${CONTAINER_HOST_NAME}_$(uuidgen)"
+if [ ! -z "${ID_ROOT}" ] ; then
 
-if [ ! -z "${NETWORK}" ] ; then NETWORK="--network=${NETWORK}" ; fi
+  N="${ID_ROOT}_$(mlkcontext)"
+  CONTAINER_HOST_NAME_F="--hostname ${N}"
 
-if [ ! -z "${CONTAINER_NAME}" ] ; then
+  if [ "${UNIQUE}" = false ] ; then
 
-  CONTAINER_NAME="--name=${CONTAINER_NAME}"
+    CONTAINER_NAME_F="--name ${N}_$(uuidgen)"
+
+  else
+
+    CONTAINER_NAME_F="--name ${N}"
+
+  fi
 
 fi
 
-if [ ! -z "${CONTAINER_HOST_NAME}" ] ; then
+# Command string
+if [ ! -z "${NETWORK}" ]; then NETWORK="--network=${NETWORK}" ; fi
 
-  CONTAINER_HOST_NAME="--hostname=${CONTAINER_HOST_NAME}"
+# Env vars
+ENV_VARS_F=
+
+if [ ! -z "${ENV_VARS}" ] ; then
+
+  for E in "${ENV_VARS[@]}" ; do
+
+    ARR_E=(${E//=/ })
+
+    ENV_VARS_F="${ENV_VARS_F} -e ${ARR_E[0]}=${ARR_E[1]} "
+
+  done
 
 fi
 
+# Volumes
 VOLUMES_F=
 
 if [ ! -z "${VOLUMES}" ] ; then
@@ -94,40 +125,69 @@ if [ ! -z "${VOLUMES}" ] ; then
 
 fi
 
-if [ ! -z "${SCRIPT}" ] ; then
+# Docker tag
+PG_DOCKER_TAG_F=latest
+if [ ! -z "${PG_DOCKER_TAG}" ] ; then PG_DOCKER_TAG_F=$PG_DOCKER_TAG ; fi
 
-  SCRIPT="-f ${SCRIPT}"
+# Host
+HOST_F=localhost
+if [ ! -z "${HOST}" ] ; then HOST_F=$HOST ; fi
 
-fi
+# Port
+PORT_F=5432
+if [ ! -z "${PORT}" ] ; then PORT_F=$PORT ; fi
 
-if [ ! -z "${COMMAND}" ] ; then
+# User
+USER_F=postgres
+if [ ! -z "${USER}" ] ; then USER_F=$USER ; fi
 
-  COMMAND="-c \\\"${COMMAND}\\\""
+# Password
+PASS_F=postgres
+if [ ! -z "${PASS}" ] ; then PASS_F=$PASS ; fi
 
-fi
+# DB
+DB_F=postgres
+if [ ! -z "${DB}" ] ; then DB_F=$DB ; fi
 
-if [ ! -z "${WORKDIR}" ] ; then
+# Script
+if [ ! -z "${SCRIPT}" ] ; then SCRIPT="-f ${SCRIPT}" ; fi
 
-  WORKDIR="--workdir ${WORKDIR}"
+# Command
+if [ ! -z "${COMMAND}" ] ; then COMMAND="-c \\\"${COMMAND}\\\"" ; fi
 
-fi
+# Workdir
+WORKDIR_F="--workdir /"
+if [ ! -z "${WORKDIR}" ] ; then WORKDIR_F="--workdir ${WORKDIR}" ; fi
 
-if [ "$OUTPUT_FILES" == "true" ] ; then
+# UID
+POSTGRESUSERID_F=1000
+if [ ! -z "${POSTGRESUSERID}" ] ; then POSTGRESUSERID_F=$POSTGRESUSERID ; fi
 
-  OUTPUT_FILES=" 1>out.txt 2>error.txt"
+# GID
+POSTGRESGROUPID_F=1000
+if [ ! -z "${POSTGRESGROUPID}" ] ; then POSTGRESGROUPID_F=$POSTGRESGROUPID ; fi
+
+# Output files
+OUTPUT_FILES_F=""
+
+if [ ! -z "$OUTPUT_FILES" ] ; then
+
+  OUTPUT_FILES_F=" 1>${OUTPUT_FILES}_out.txt 2>${OUTPUT_FILES}_error.txt"
 
 else
 
-  OUTPUT_FILES=""
+  OUTPUT_FILES_F=""
 
 fi
 
 eval    docker run -ti --rm \
           $NETWORK \
-          $CONTAINER_NAME \
-          $CONTAINER_HOST_NAME \
+          $CONTAINER_NAME_F \
+          $CONTAINER_HOST_NAME_F \
           $VOLUMES_F \
-          $WORKDIR \
+          $ENV_VARS_F \
+          -u $POSTGRESUSERID_F:$POSTGRESGROUPID_F \
+          $WORKDIR_F \
           --entrypoint /bin/bash \
-          malkab/postgis:$POSTGIS_DOCKER_TAG \
-          -c "\"PGPASSWORD=${PASS} psql -h ${HOST} -p ${PORT} -U ${USER} ${DB} ${SCRIPT} ${COMMAND} ${OUTPUT_FILES}\""
+          malkab/postgis:$PG_DOCKER_TAG_F \
+          -c "\"PGPASSWORD=${PASS_F} psql -h ${HOST_F} -p ${PORT_F} -U ${USER_F} ${DB_F} ${SCRIPT} ${COMMAND} ${OUTPUT_FILES_F}\""
