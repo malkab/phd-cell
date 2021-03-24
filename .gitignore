@@ -14,4 +14,5 @@
 070-cellutilities/assets/griddersetup/griddersetup-config-pointaggregations.json
 070-cellutilities/assets/griddersetup/griddersetup-config-pointidwinterpolation.json
 assets/postgres_config/postgresql.conf
-assets/redis_config/redis.conf
+# Added by mlkctxt - v1.1.4
+# -------------------
