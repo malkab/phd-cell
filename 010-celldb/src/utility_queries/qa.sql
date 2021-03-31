@@ -15,7 +15,8 @@ grant usage on schema qa
 to cell_readonly;
 
 -- Select the Gridder Task ID
-\set griddertaskid hicAreaSummary
+-- \set griddertaskid hicAreaSummary
+\set griddertaskid gridderTaskPointAggregationsCatastro
 -- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid municipioDiscretePolyTopArea
 -- \set griddertaskid municipioDiscreteAreaSummary
@@ -40,7 +41,7 @@ create materialized view qa.qa as
 select *
 from cell__getcellsbyvarkeys(
   ARRAY[ cell__getindexvariablekeybygriddertaskid(:'griddertaskid') ]::varchar[],
-    false, 4, null);
+    false, null, null);
 
 /**
 

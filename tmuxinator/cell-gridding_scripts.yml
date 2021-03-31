@@ -10,4 +10,4 @@ windows:
   - psql: >
       clear ;
       sleep 0.2 ;
-      cd docker/010-dev
+      cd /home/git/malkab-phd/cell/docker/010-dev

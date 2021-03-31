@@ -7,9 +7,6 @@
 			"path": "../mlkcontext"
 		},
 		{
-			"path": "../010-cell-db"
-		},
-		{
 			"path": "../tmuxinator"
 		},
 		{
@@ -17,6 +14,9 @@
 		},
 		{
 			"path": "../assets"
+		},
+		{
+			"path": "../010-celldb"
 		}
 	]
 }
