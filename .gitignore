@@ -1,4 +1,4 @@
-# Added by mlkcontext - v1.1.0
+# Added by mlkctxt - v1.1.4
 # -------------------
 010-celldb/src/010-create_db.sql
 010-celldb/src/020-celldslib.sql
@@ -14,5 +14,3 @@
 070-cellutilities/assets/griddersetup/griddersetup-config-pointaggregations.json
 070-cellutilities/assets/griddersetup/griddersetup-config-pointidwinterpolation.json
 assets/postgres_config/postgresql.conf
-# Added by mlkctxt - v1.1.4
-# -------------------

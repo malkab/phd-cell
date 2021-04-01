@@ -32,7 +32,7 @@ COMMAND=
 ID_ROOT=cell-db_psql_master
 # Unique? If true, no container with the same name can be created. Defaults to
 # true.
-UNIQUE=
+UNIQUE=false
 # Work dir. Use $(pwd) paths. Defaults to /.
 WORKDIR=$(pwd)/../../010-celldb/src
 # The version of PG to use. Defaults to latest.
