@@ -1,12 +1,14 @@
 /**
 
-  Population vector extractions for ML.
-
-  Index var: c206
+  Creates a pop structure ML view for visualizing
 
 */
-create materialized view ml.urbanization_6 as
+drop materialized view ml.res_urbanization;
+
+create materialized view ml.res_urbanization as
 select
+  grid_id,
+  epsg,
   zoom, x, y,
   round(
     (data ->> '95f4')::numeric / (
@@ -31,45 +33,14 @@ select
   ) as r64,
   (data ->> 'e01a')::numeric as residencial,
   (data ->> '3607')::numeric as total_superficie_cons,
-  geom
-from
-  cell_data.data
-where
-  zoom = 6 and
-  data ? 'e6b8' and
-  data ? '95f4' and
-  data ? '1db1' and
-  data ? '8e93' and
-  data ? 'c206' and
-  data ? 'e01a' and
-  data ? '3607' and
-  data ->> '95f4' is not null and
-  data ->> '1db1' is not null and
-  data ->> '8e93' is not null and
-  data ->> 'e01a' is not null and
-  data ->> '3607' is not null
-order by x, y;
-
-select count(*)
-from
-  cell_data.data
-where
-  zoom = 6 and
-  data ? 'e6b8' and
-  data ? 'c206';
+  data ->> '9932' as class,
+  geom,
+  geom_4326
+from cell_data.data
+where data ? '9932';
 
 grant usage on schema ml
 to cell_readonly;
 
 grant select on all tables in schema ml
 to cell_readonly;
-
-/**
-
-  Stats: total of tiles with population data / total of tiles with full vector.
-
-  Zoom 4: 10943 / 5580
-  Zoom 5: 21149 / 10355
-  Zoom 6: 43412 / 21474
-
-*/

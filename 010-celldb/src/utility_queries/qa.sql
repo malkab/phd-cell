@@ -16,16 +16,15 @@ to cell_readonly;
 
 -- Select the Gridder Task ID
 -- \set griddertaskid hicAreaSummary
-\set griddertaskid gridderTaskPointAggregationsCatastro
+-- \set griddertaskid gridderTaskPointAggregationsCatastro
 -- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid municipioDiscretePolyTopArea
--- \set griddertaskid municipioDiscreteAreaSummary
 -- \set griddertaskid eennppDiscreteAreaSummary
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
 -- \set griddertaskid provinciaDiscreteAreaSummary
 -- \set griddertaskid seccionCensalDiscreteAreaSummary
 -- \set griddertaskid gridderTaskPointAggregationsPoblacion
--- \set griddertaskid gridderTaskMdtProcessing
+\set griddertaskid gridderTaskMdtProcessing
 
 -- Zoom, just for alignment
 \set z 0
