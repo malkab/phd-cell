@@ -1,0 +1,5 @@
+'2021-01-10T21:58:43.372Z','info','griddersetup','process$','initilizing process','undefined'
+'2021-01-10T21:58:43.391Z','info','gridder','process$','connected with Cell PG at cell-db-postgis-dev','undefined'
+'2021-01-10T21:58:43.447Z','info','griddersetup','process$','connected with source PG at 37north.io','undefined'
+'2021-01-10T21:58:43.463Z','info','griddersetup','process$','added objects to the DB','undefined'
+'2021-01-10T21:58:43.469Z','info','griddersetup','process$','GridderTask set up','undefined'

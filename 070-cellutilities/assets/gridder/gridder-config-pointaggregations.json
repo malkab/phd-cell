@@ -1,0 +1,565 @@
+{
+
+  "cellPg": {
+    "host": "192.168.1.52",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "sourcePg": {
+    "db": "cell_raw_data",
+    "host": "192.168.1.52",
+    "pass": "3j329fjvkd2345-:k342ju",
+    "port": "5632",
+    "user": "postgres"
+  },
+
+  "grid": {
+    "description": "A grid based on the official EU one",
+    "gridId": "eu-grid",
+    "name": "eu-grid",
+    "originEpsg": "3035",
+    "originX": 2700000,
+    "originY": 1500000,
+    "zoomLevels": [
+      {"name": "100 km", "size": 100000},
+      {"name": "50 km", "size": 50000},
+      {"name": "10 km", "size": 10000},
+      {"name": "5 km", "size": 5000},
+      {"name": "1 km", "size": 1000},
+      {"name": "500 m", "size": 500},
+      {"name": "250 m", "size": 250},
+      {"name": "125 m", "size": 125},
+      {"name": "25 m", "size": 25},
+      {"name": "5 m", "size": 5}
+    ]
+  },
+
+  "gridderTask": {
+    "gridderTaskId": "gridderTaskPointAggregationsPoblacion",
+    "gridderTaskType": "POINTAGGREGATIONS",
+    "name": "Estadísticas de población",
+    "description": "Estadísticas de población",
+    "sourceTable": "poblacion.poblacion",
+    "geomField": "geom",
+    "variableDefinitions": [
+      {
+        "name": "Población total 2002",
+        "description": "Población total del año 2002.",
+        "expression": "sum(ptot02)"
+      },
+      {
+        "name": "Población hombres 2002",
+        "description": "Población de hombres del año 2002.",
+        "expression": "sum(ph02)"
+      },
+      {
+        "name": "Población mujeres 2002",
+        "description": "Población de mujeres del año 2002.",
+        "expression": "sum(pm02)"
+      },
+      {
+        "name": "Población edad 0-15 2002",
+        "description": "Población de edades entre 0 y 15 años del año 2002.",
+        "expression": "sum(e001502)"
+      },
+      {
+        "name": "Población edad 16-64 2002",
+        "description": "Población de edades entre 16 y 64 años del año 2002.",
+        "expression": "sum(e166402)"
+      },
+      {
+        "name": "Población edad mayor 64 2002",
+        "description": "Población de edad mayor de 64 años del año 2002.",
+        "expression": "sum(e6502)"
+      },
+      {
+        "name": "Población española 2002",
+        "description": "Población española del año 2002.",
+        "expression": "sum(esp02)"
+      },
+      {
+        "name": "Población UE Schengen 2002",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2002.",
+        "expression": "sum(ue1502)"
+      },
+      {
+        "name": "Población magrebí 2002",
+        "description": "Población de origen magrebí del año 2002.",
+        "expression": "sum(mag02)"
+      },
+      {
+        "name": "Población americana 2002",
+        "description": "Población de origen americano del año 2002.",
+        "expression": "sum(ams02)"
+      },
+      {
+        "name": "Población otros 2002",
+        "description": "Población de otros origenes del año 2002.",
+        "expression": "sum(otr02)"
+      },
+      {
+        "name": "Índice de dependencia total 2002",
+        "description": "Índice de dependencia total de 2002. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001502)::float + sum(e6502)::float) / (nullif(sum(e166402), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2002",
+        "description": "Índice de dependencia infantil de 2002. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001502)::float) / (nullif(sum(e166402), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2002",
+        "description": "Índice de dependencia anciana de 2002. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6502)::float) / (nullif(sum(e166402), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Población total 2013",
+        "description": "Población total del año 2013.",
+        "expression": "sum(ptot13)"
+      },
+      {
+        "name": "Población hombres 2013",
+        "description": "Población de hombres del año 2013.",
+        "expression": "sum(ph13)"
+      },
+      {
+        "name": "Población mujeres 2013",
+        "description": "Población de mujeres del año 2013.",
+        "expression": "sum(pm13)"
+      },
+      {
+        "name": "Población edad 0-15 2013",
+        "description": "Población de edades entre 0 y 15 años del año 2013.",
+        "expression": "sum(e001513)"
+      },
+      {
+        "name": "Población edad 16-64 2013",
+        "description": "Población de edades entre 16 y 64 años del año 2013.",
+        "expression": "sum(e166413)"
+      },
+      {
+        "name": "Población edad mayor 64 2013",
+        "description": "Población de edad mayor de 64 años del año 2013.",
+        "expression": "sum(e6513)"
+      },
+      {
+        "name": "Población española 2013",
+        "description": "Población española del año 2013.",
+        "expression": "sum(esp13)"
+      },
+      {
+        "name": "Población UE Schengen 2013",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2013.",
+        "expression": "sum(ue1513)"
+      },
+      {
+        "name": "Población magrebí 2013",
+        "description": "Población de origen magrebí del año 2013.",
+        "expression": "sum(mag13)"
+      },
+      {
+        "name": "Población americana 2013",
+        "description": "Población de origen americano del año 2013.",
+        "expression": "sum(ams13)"
+      },
+      {
+        "name": "Población otros 2013",
+        "description": "Población de otros origenes del año 2013.",
+        "expression": "sum(otr13)"
+      },
+      {
+        "name": "Índice de dependencia total 2013",
+        "description": "Índice de dependencia total de 2013. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001513)::float + sum(e6513)::float) / (nullif(sum(e166413), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2013",
+        "description": "Índice de dependencia infantil de 2013. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001513)::float) / (nullif(sum(e166413), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2013",
+        "description": "Índice de dependencia anciana de 2013. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6513)::float) / (nullif(sum(e166413), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Población total 2014",
+        "description": "Población total del año 2014.",
+        "expression": "sum(ptot14)"
+      },
+      {
+        "name": "Población hombres 2014",
+        "description": "Población de hombres del año 2014.",
+        "expression": "sum(ph14)"
+      },
+      {
+        "name": "Población mujeres 2014",
+        "description": "Población de mujeres del año 2014.",
+        "expression": "sum(pm14)"
+      },
+      {
+        "name": "Población edad 0-15 2014",
+        "description": "Población de edades entre 0 y 15 años del año 2014.",
+        "expression": "sum(e001514)"
+      },
+      {
+        "name": "Población edad 16-64 2014",
+        "description": "Población de edades entre 16 y 64 años del año 2014.",
+        "expression": "sum(e166414)"
+      },
+      {
+        "name": "Población edad mayor 64 2014",
+        "description": "Población de edad mayor de 64 años del año 2014.",
+        "expression": "sum(e6514)"
+      },
+      {
+        "name": "Población española 2014",
+        "description": "Población española del año 2014.",
+        "expression": "sum(esp14)"
+      },
+      {
+        "name": "Población UE Schengen 2014",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2014.",
+        "expression": "sum(ue1514)"
+      },
+      {
+        "name": "Población magrebí 2014",
+        "description": "Población de origen magrebí del año 2014.",
+        "expression": "sum(mag14)"
+      },
+      {
+        "name": "Población americana 2014",
+        "description": "Población de origen americano del año 2014.",
+        "expression": "sum(ams14)"
+      },
+      {
+        "name": "Población otros 2014",
+        "description": "Población de otros origenes del año 2014.",
+        "expression": "sum(otr14)"
+      },
+      {
+        "name": "Índice de dependencia total 2014",
+        "description": "Índice de dependencia total de 2014. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001514)::float + sum(e6514)::float) / (nullif(sum(e166414), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2014",
+        "description": "Índice de dependencia infantil de 2014. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001514)::float) / (nullif(sum(e166414), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2014",
+        "description": "Índice de dependencia anciana de 2014. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6514)::float) / (nullif(sum(e166414), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Población total 2015",
+        "description": "Población total del año 2015.",
+        "expression": "sum(ptot15)"
+      },
+      {
+        "name": "Población hombres 2015",
+        "description": "Población de hombres del año 2015.",
+        "expression": "sum(ph15)"
+      },
+      {
+        "name": "Población mujeres 2015",
+        "description": "Población de mujeres del año 2015.",
+        "expression": "sum(pm15)"
+      },
+      {
+        "name": "Población edad 0-15 2015",
+        "description": "Población de edades entre 0 y 15 años del año 2015.",
+        "expression": "sum(e001515)"
+      },
+      {
+        "name": "Población edad 16-64 2015",
+        "description": "Población de edades entre 16 y 64 años del año 2015.",
+        "expression": "sum(e166415)"
+      },
+      {
+        "name": "Población edad mayor 64 2015",
+        "description": "Población de edad mayor de 64 años del año 2015.",
+        "expression": "sum(e6515)"
+      },
+      {
+        "name": "Población española 2015",
+        "description": "Población española del año 2015.",
+        "expression": "sum(esp15)"
+      },
+      {
+        "name": "Población UE Schengen 2015",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2015.",
+        "expression": "sum(ue1515)"
+      },
+      {
+        "name": "Población magrebí 2015",
+        "description": "Población de origen magrebí del año 2015.",
+        "expression": "sum(mag15)"
+      },
+      {
+        "name": "Población americana 2015",
+        "description": "Población de origen americano del año 2015.",
+        "expression": "sum(ams15)"
+      },
+      {
+        "name": "Población otros 2015",
+        "description": "Población de otros origenes del año 2015.",
+        "expression": "sum(otr15)"
+      },
+      {
+        "name": "Índice de dependencia total 2015",
+        "description": "Índice de dependencia total de 2015. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001515)::float + sum(e6515)::float) / (nullif(sum(e166415), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2015",
+        "description": "Índice de dependencia infantil de 2015. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001515)::float) / (nullif(sum(e166415), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2015",
+        "description": "Índice de dependencia anciana de 2015. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6515)::float) / (nullif(sum(e166415), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Población total 2016",
+        "description": "Población total del año 2016.",
+        "expression": "sum(ptot16)"
+      },
+      {
+        "name": "Población hombres 2016",
+        "description": "Población de hombres del año 2016.",
+        "expression": "sum(ph16)"
+      },
+      {
+        "name": "Población mujeres 2016",
+        "description": "Población de mujeres del año 2016.",
+        "expression": "sum(pm16)"
+      },
+      {
+        "name": "Población edad 0-16 2016",
+        "description": "Población de edades entre 0 y 16 años del año 2016.",
+        "expression": "sum(e001516)"
+      },
+      {
+        "name": "Población edad 16-64 2016",
+        "description": "Población de edades entre 16 y 64 años del año 2016.",
+        "expression": "sum(e166416)"
+      },
+      {
+        "name": "Población edad mayor 64 2016",
+        "description": "Población de edad mayor de 64 años del año 2016.",
+        "expression": "sum(e6516)"
+      },
+      {
+        "name": "Población española 2016",
+        "description": "Población española del año 2016.",
+        "expression": "sum(esp16)"
+      },
+      {
+        "name": "Población UE Schengen 2016",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2016.",
+        "expression": "sum(ue1516)"
+      },
+      {
+        "name": "Población magrebí 2016",
+        "description": "Población de origen magrebí del año 2016.",
+        "expression": "sum(mag16)"
+      },
+      {
+        "name": "Población americana 2016",
+        "description": "Población de origen americano del año 2016.",
+        "expression": "sum(ams16)"
+      },
+      {
+        "name": "Población otros 2016",
+        "description": "Población de otros origenes del año 2016.",
+        "expression": "sum(otr16)"
+      },
+      {
+        "name": "Índice de dependencia total 2016",
+        "description": "Índice de dependencia total de 2016. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001516)::float + sum(e6516)::float) / (nullif(sum(e166416), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2016",
+        "description": "Índice de dependencia infantil de 2016. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001516)::float) / (nullif(sum(e166416), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2016",
+        "description": "Índice de dependencia anciana de 2016. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6516)::float) / (nullif(sum(e166416), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Población total 2017",
+        "description": "Población total del año 2017.",
+        "expression": "sum(ptot17)"
+      },
+      {
+        "name": "Población hombres 2017",
+        "description": "Población de hombres del año 2017.",
+        "expression": "sum(ph17)"
+      },
+      {
+        "name": "Población mujeres 2017",
+        "description": "Población de mujeres del año 2017.",
+        "expression": "sum(pm17)"
+      },
+      {
+        "name": "Población edad 0-17 2017",
+        "description": "Población de edades entre 0 y 17 años del año 2017.",
+        "expression": "sum(e001517)"
+      },
+      {
+        "name": "Población edad 17-64 2017",
+        "description": "Población de edades entre 17 y 64 años del año 2017.",
+        "expression": "sum(e166417)"
+      },
+      {
+        "name": "Población edad mayor 64 2017",
+        "description": "Población de edad mayor de 64 años del año 2017.",
+        "expression": "sum(e6517)"
+      },
+      {
+        "name": "Población española 2017",
+        "description": "Población española del año 2017.",
+        "expression": "sum(esp17)"
+      },
+      {
+        "name": "Población UE Schengen 2017",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2017.",
+        "expression": "sum(ue1517)"
+      },
+      {
+        "name": "Población magrebí 2017",
+        "description": "Población de origen magrebí del año 2017.",
+        "expression": "sum(mag17)"
+      },
+      {
+        "name": "Población americana 2017",
+        "description": "Población de origen americano del año 2017.",
+        "expression": "sum(ams17)"
+      },
+      {
+        "name": "Población otros 2017",
+        "description": "Población de otros origenes del año 2017.",
+        "expression": "sum(otr17)"
+      },
+      {
+        "name": "Índice de dependencia total 2017",
+        "description": "Índice de dependencia total de 2017. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001517)::float + sum(e6517)::float) / (nullif(sum(e166417), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2017",
+        "description": "Índice de dependencia infantil de 2017. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001517)::float) / (nullif(sum(e166417), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2017",
+        "description": "Índice de dependencia anciana de 2017. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6517)::float) / (nullif(sum(e166417), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Población total 2018",
+        "description": "Población total del año 2018.",
+        "expression": "sum(ptot18)"
+      },
+      {
+        "name": "Población hombres 2018",
+        "description": "Población de hombres del año 2018.",
+        "expression": "sum(ph18)"
+      },
+      {
+        "name": "Población mujeres 2018",
+        "description": "Población de mujeres del año 2018.",
+        "expression": "sum(pm18)"
+      },
+      {
+        "name": "Población edad 0-18 2018",
+        "description": "Población de edades entre 0 y 18 años del año 2018.",
+        "expression": "sum(e001518)"
+      },
+      {
+        "name": "Población edad 18-64 2018",
+        "description": "Población de edades entre 18 y 64 años del año 2018.",
+        "expression": "sum(e166418)"
+      },
+      {
+        "name": "Población edad mayor 64 2018",
+        "description": "Población de edad mayor de 64 años del año 2018.",
+        "expression": "sum(e6518)"
+      },
+      {
+        "name": "Población española 2018",
+        "description": "Población española del año 2018.",
+        "expression": "sum(esp18)"
+      },
+      {
+        "name": "Población UE Schengen 2018",
+        "description": "Población de origen Unión Europea (espacio Schengen) del año 2018.",
+        "expression": "sum(ue1518)"
+      },
+      {
+        "name": "Población magrebí 2018",
+        "description": "Población de origen magrebí del año 2018.",
+        "expression": "sum(mag18)"
+      },
+      {
+        "name": "Población americana 2018",
+        "description": "Población de origen americano del año 2018.",
+        "expression": "sum(ams18)"
+      },
+      {
+        "name": "Población otros 2018",
+        "description": "Población de otros origenes del año 2018.",
+        "expression": "sum(otr18)"
+      },
+      {
+        "name": "Índice de dependencia total 2018",
+        "description": "Índice de dependencia total de 2018. El índice de dependencia total es el cociente de la suma de población joven y anciana entre el total de adultos.",
+        "expression": "round(((sum(e001518)::float + sum(e6518)::float) / (nullif(sum(e166418), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia infantil 2018",
+        "description": "Índice de dependencia infantil de 2018. El índice de dependencia infantil es el cociente de la suma de población joven entre el total de adultos.",
+        "expression": "round(((sum(e001518)::float) / (nullif(sum(e166418), 0))::float)::numeric, 2)"
+      },
+      {
+        "name": "Índice de dependencia anciana 2018",
+        "description": "Índice de dependencia anciana de 2018. El índice de dependencia anciana es el cociente de la suma de población anciana entre el total de adultos.",
+        "expression": "round(((sum(e6518)::float) / (nullif(sum(e166418), 0))::float)::numeric, 2)"
+      }
+    ]
+  },
+
+  "cells": [
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 1,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 5
+    }
+  ],
+
+  "targetZoom": 3,
+
+  "verbose": true
+
+}

@@ -1,0 +1,3 @@
+Main TypeDoc README.md front.
+
+INCLUDES JSONPATH STUFF, CHECK.

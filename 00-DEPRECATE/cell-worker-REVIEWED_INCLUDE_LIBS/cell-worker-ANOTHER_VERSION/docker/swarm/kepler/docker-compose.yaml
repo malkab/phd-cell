@@ -1,0 +1,31 @@
+version: '3.5'
+  
+
+# This configures the workers to work against the cell-api deployment
+# at kepler.fgh.us.es
+
+
+services:
+
+  worker:
+    image: registry.gitlab.com/cell-platform/cell-worker
+    working_dir: /home/node/app
+    deploy:
+      replicas: 4
+
+    environment:
+      - REDISURL=redis://kepler.fgh.us.es
+      - NODE_MEMORY=40000
+      - REDISPORT=443
+      - REDISPASS=cellredis77
+      - REDIS_QUEUE_API_WORKER=queue:api-worker
+      - REDIS_QUEUE_WORKER_API=queue:worker-api
+      - REDIS_CHANNEL_WORKER=channel:worker
+      - DOCKER_HOST=kepler
+      - WORKERS_HEARTBEAT_MINUTES=1
+      - CELLDS_HOST=kepler.fgh.us.es
+      - CELLDS_PORT=444
+      - CELLDS_USER=postgres
+      - CELLDS_PASS=cellswe665
+      - CELLDS_DB=cellds
+      - POOL_SIZE=20
