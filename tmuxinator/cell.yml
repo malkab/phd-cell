@@ -1,5 +1,5 @@
 name: cell
-root: /home/git/malkab-phd/cell
+root: /home/git/malkab-phd/phd-cell
 
 startup_window: cell/full_backend
 
