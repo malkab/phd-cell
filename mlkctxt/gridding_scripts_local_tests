@@ -17,7 +17,7 @@ export NODE_MEMORY=200GB
 export MLKC_CELL_NODE_ENV=development
 
 # -----
-# PG persistence config for celldb, some items at mlkcontext/system
+# PG persistence config for celldb, some items at mlkctxt/system
 # -----
 export MLKC_CELL_DB_NETWORK=$MLKC_CELL_NETWORK
 export MLKC_CELL_DB_HOST=localhost
@@ -31,7 +31,7 @@ export MLKC_CELL_DB_MINPOOLSIZE=5
 export MLKC_CELL_DB_IDLETIMEOUTMILLIS=60000
 
 # -----
-# PG persistence config for cell_raw_data, some items at mlkcontext/system
+# PG persistence config for cell_raw_data, some items at mlkctxt/system
 # -----
 export MLKC_CELL_RAW_DATA_NETWORK=
 export MLKC_CELL_RAW_DATA_HOST=$MLKC_SYSTEM_37NORTH_HOST

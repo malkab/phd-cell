@@ -10,32 +10,32 @@ windows:
         - api: >
             clear ;
             sleep 3 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 010_api/docker
         - controller: >
             clear ;
             sleep 4 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 020_controller/docker
         - worker_0: >
             clear ;
             sleep 5 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 030_worker/docker
         - worker_1: >
             clear ;
             sleep 6 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 030_worker/docker
         - worker_2: >
             clear ;
             sleep 7 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 030_worker/docker
         - worker_3: >
             clear ;
             sleep 8 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 030_worker/docker
   - compilation:
       layout: fb56,317x73,0,0[317x23,0,0,23,317x24,0,24,24,317x24,0,49,26]
@@ -43,39 +43,39 @@ windows:
         - api: >
             clear ;
             sleep 20 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 010_api/docker
         - controller: >
             clear ;
             sleep 22 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 020_controller/docker
         - worker: >
             clear ;
             sleep 24 ;
-            . mlkcontext common ;
+            . mlkctxt common ;
             cd 030_worker/docker
   - cell-psql: >
       clear ;
       sleep 10 ;
-      . mlkcontext common ;
+      . mlkctxt common ;
       cd 010-celldb/docker ;
       ./110-pg-psql.sh
   - cell-redis-cli: >
       clear ;
       sleep 12 ;
-      . mlkcontext common ;
+      . mlkctxt common ;
       cd 010-celldb/docker ;
       ./120-redis-cli.sh
   - celldb: >
       clear ;
       sleep 0.2 ;
-      . mlkcontext common ;
+      . mlkctxt common ;
       cd 010-celldb/docker ;
       ./010-compose_up.sh ;
       exit
   - main-docker: >
       clear ;
       sleep 15 ;
-      . mlkcontext common ;
+      . mlkctxt common ;
       cd docker/010-dev

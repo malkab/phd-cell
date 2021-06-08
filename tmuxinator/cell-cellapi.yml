@@ -6,5 +6,5 @@ windows:
       clear ;
       sleep 2 ;
       cd 040-cellapi/docker ;
-      . mlkcontext common ;
+      . mlkctxt common ;
       ./010-node-api.sh

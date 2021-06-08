@@ -14,5 +14,5 @@ windows:
       clear ;
       sleep 0.2 ;
       cd 010-celldb/docker ;
-      . mlkcontext common ;
+      . mlkctxt common ;
       ./010-compose_up.sh

@@ -55,7 +55,7 @@ export MLKC_CELL_PG_MAX_PARALLEL_WORKERS=8
 export MLKC_CELL_PG_MAX_PARALLEL_MAINTENANCE_WORKERS=4
 
 # -----
-# PG persistence config for celldb, some items at mlkcontext/system
+# PG persistence config for celldb, some items at mlkctxt/system
 # -----
 export MLKC_CELL_DB_NETWORK=$MLKC_CELL_NETWORK
 export MLKC_CELL_DB_HOST=cell-db-postgis-dev
@@ -73,7 +73,7 @@ export MLKC_CELL_DB_USER_CELL_READONLY=$MLKC_SYSTEM_37NORTH_PG_USER_CELL_READONL
 export MLKC_CELL_DB_PASS_CELL_READONLY=postgres
 
 # -----
-# PG persistence config for cell_raw_data, some items at mlkcontext/system
+# PG persistence config for cell_raw_data, some items at mlkctxt/system
 # -----
 export MLKC_CELL_RAW_DATA_NETWORK=
 export MLKC_CELL_RAW_DATA_HOST=$MLKC_SYSTEM_37NORTH_HOST
@@ -91,7 +91,7 @@ export MLKC_CELL_RAW_DATA_USER_CELL_READONLY=$MLKC_SYSTEM_37NORTH_PG_USER_CELL_R
 export MLKC_CELL_RAW_DATA_PASS_CELL_READONLY=$MLKC_SYSTEM_37NORTH_PG_PASS_CELL_READONLY
 
 # -----
-# Redis persistence config, some items at mlkcontext/system
+# Redis persistence config, some items at mlkctxt/system
 # -----
 # Remember that for RxRedis clients this must be used as redis://whatever, but
 # not here
