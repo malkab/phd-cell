@@ -13,3 +13,4 @@ select
   geom_field,
   index_variable_key
 from cell_meta.gridder_task;
+-- where gridder_task_type = 'DISCRETEPOLYTOPAREA';
