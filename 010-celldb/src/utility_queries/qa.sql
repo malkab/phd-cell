@@ -18,18 +18,25 @@ to cell_readonly;
 -- \set griddertaskid hicAreaSummary
 -- \set griddertaskid gridderTaskPointAggregationsCatastro
 -- \set griddertaskid municipioDiscreteAreaSummary
+-- \set griddertaskid provinciaDiscretePolyTopArea
 -- \set griddertaskid municipioDiscretePolyTopArea
+-- \set griddertaskid seccionCensalDiscretePolyTopArea
+-- \set griddertaskid nucleoPoblacionDiscretePolyTopArea
+\set griddertaskid provincia2018DiscretePolyTopArea
+-- \set griddertaskid municipio2018DiscretePolyTopArea
+-- \set griddertaskid seccionCensal2018DiscretePolyTopArea
+-- \set griddertaskid eennppDiscretePolyTopArea
 -- \set griddertaskid eennppDiscreteAreaSummary
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
 -- \set griddertaskid provinciaDiscreteAreaSummary
 -- \set griddertaskid seccionCensalDiscreteAreaSummary
 -- \set griddertaskid gridderTaskPointAggregationsPoblacion
-\set griddertaskid gridderTaskMdtProcessing
+-- \set griddertaskid gridderTaskMdtProcessing
 
 -- Zoom, just for alignment
-\set z 0
-\set x 5
-\set y 1
+-- \set z 0
+-- \set x 5
+-- \set y 1
 
 /**
 

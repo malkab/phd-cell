@@ -1,5 +1,5 @@
 name: celldb
-root: /home/git/malkab-phd/cell
+root: /home/git/malkab-phd/phd-cell
 
 windows:
 
@@ -8,10 +8,4 @@ windows:
       cd docker/010-dev
 
   - compose: >
-      clear ;
-      sleep 0.2 ;
-      cd 010-celldb/docker ;
-      . mlkctxt common ;
-      ./010-compose_up.sh ;
-      sleep 60 ;
-      exit
+      clear

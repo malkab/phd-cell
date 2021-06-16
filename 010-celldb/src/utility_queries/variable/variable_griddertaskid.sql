@@ -1,4 +1,4 @@
-\set gtid gridderTaskPointAggregationsCatastro
+\set gtid nucleoPoblacionDiscretePolyTopArea
 
 select *
 from cell_meta.variable

@@ -1,5 +1,5 @@
 name: cell-libcellbackend
-root: /home/git/malkab-phd/cell
+root: /home/git/malkab-phd/phd-cell
 
 windows:
   - node: >
@@ -12,7 +12,4 @@ windows:
 
   - celldb-compose: >
       clear ;
-      sleep 0.2 ;
-      cd 010-celldb/docker ;
-      . mlkctxt common ;
-      ./010-compose_up.sh
+      cd 010-celldb/docker
