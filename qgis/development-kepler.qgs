@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis projectname="" saveUser="malkab" version="3.14.1-Pi" saveUserFull="Juan Pedro Perez Alcantara" saveDateTime="2021-06-21T12:24:31">
+<qgis projectname="" saveUser="malkab" version="3.14.1-Pi" saveUserFull="Juan Pedro Perez Alcantara" saveDateTime="2021-06-22T14:42:37">
   <homePath path=""/>
   <title></title>
   <autotransaction active="0"/>
@@ -20,6 +20,9 @@
   </projectCrs>
   <layer-tree-group>
     <customproperties/>
+    <layer-tree-layer legend_exp="" providerKey="postgres" source="dbname='cell_raw_data' host=kepler port=5632 user='cell_readonly' sslmode=disable key='fid' estimatedmetadata=true srid=25830 type=Point checkPrimaryKeyUnicity='0' table=&quot;renta_espe&quot;.&quot;renta_original_point&quot; (geom)" legend_split_behavior="0" name="renta_original_point" expanded="1" patch_size="-1,-1" id="renta_original_point_424984db_1281_40f5_be89_804269e4e659" checked="Qt::Unchecked">
+      <customproperties/>
+    </layer-tree-layer>
     <layer-tree-group name="MDT - Test convolución" expanded="1" checked="Qt::Unchecked">
       <customproperties/>
       <layer-tree-layer legend_exp="" providerKey="postgres" source="dbname='cell_raw_data' host=kepler port=5632 user='cell_readonly' sslmode=disable key='tid' srid=3035 type=Point checkPrimaryKeyUnicity='1' table=&quot;test_mdt_convolution&quot;.&quot;nearest_points&quot; (geom)" legend_split_behavior="0" name="Puntos cercanos" expanded="0" patch_size="-1,-1" id="nearest_points_b28d1187_fe2a_437c_8d7b_6d3dd5fc18b7" checked="Qt::Checked">
@@ -333,7 +336,7 @@
     </layer-tree-group>
     <layer-tree-group name="QA" expanded="1" checked="Qt::Checked">
       <customproperties/>
-      <layer-tree-layer legend_exp="" providerKey="postgres" source="dbname='cell' host=kepler port=5632 user='cell_readonly' sslmode=disable key='grid_id' estimatedmetadata=true srid=3035 type=Polygon checkPrimaryKeyUnicity='1' table=&quot;qa&quot;.&quot;qa&quot; (geom)" legend_split_behavior="0" name="QA" expanded="1" patch_size="-1,-1" id="qa_geom_da665049_dd51_48dd_b137_03726f1e8304" checked="Qt::Unchecked">
+      <layer-tree-layer legend_exp="" providerKey="postgres" source="dbname='cell' host=kepler port=5632 user='cell_readonly' sslmode=disable key='grid_id' estimatedmetadata=true srid=3035 type=Polygon checkPrimaryKeyUnicity='1' table=&quot;qa&quot;.&quot;qa&quot; (geom)" legend_split_behavior="0" name="QA" expanded="1" patch_size="-1,-1" id="qa_geom_da665049_dd51_48dd_b137_03726f1e8304" checked="Qt::Checked">
         <customproperties>
           <property key="expandedLegendNodes"/>
         </customproperties>
@@ -539,6 +542,7 @@
       <item>Grid_07677bb3_48f6_4bc2_b485_a16960150b8b</item>
       <item>Grid_copy_af9ef6ee_d98c_49d8_aee4_facdb87db309</item>
       <item>Grid_copy_copy_e67bf7ac_040c_46d1_8f29_96781be02978</item>
+      <item>renta_original_point_424984db_1281_40f5_be89_804269e4e659</item>
     </custom-order>
   </layer-tree-group>
   <snapping-settings unit="1" type="1" maxScale="0" intersection-snapping="0" minScale="0" tolerance="12" self-snapping="0" scaleDependencyMode="0" enabled="0" mode="2">
@@ -548,6 +552,7 @@
       <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="Zoom_3_41cbbcef_8e1c_43ec_bf06_dd821e971b0c" enabled="0"/>
       <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="Zoom_2_592c552b_3b77_468a_bd8c_e6fabb358f90" enabled="0"/>
       <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="analisis_centroides_parcela_c_centroids_14c66d75_5597_4f86_9609_4dac32147e9d" enabled="0"/>
+      <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="renta_original_point_424984db_1281_40f5_be89_804269e4e659" enabled="0"/>
       <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="mdt_909bb015_8da1_4893_8b21_76e5ac7ec2b4" enabled="0"/>
       <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="ind_viv_31_25_ac_grid_geom_dd8abecc_c6d3_4a73_b10f_4e58b3664b25" enabled="0"/>
       <layer-setting type="1" maxScale="0" minScale="0" tolerance="12" units="1" id="poblacion_geom_d1164252_ccd2_46ed_b97f_c2fa173a3118" enabled="0"/>
@@ -636,10 +641,10 @@
   <mapcanvas name="theMapCanvas" annotationsVisible="1">
     <units>meters</units>
     <extent>
-      <xmin>2724861.11111111100763083</xmin>
-      <ymin>1522569.44444444449618459</ymin>
-      <xmax>3354861.11111111100763083</xmax>
-      <ymax>1942569.44444444449618459</ymax>
+      <xmin>2685000</xmin>
+      <ymin>1490000</ymin>
+      <xmax>3315000</xmax>
+      <ymax>1910000</ymax>
     </extent>
     <rotation>0</rotation>
     <destinationsrs>
@@ -660,6 +665,11 @@
   </mapcanvas>
   <projectModels/>
   <legend updateDrawingOrder="true">
+    <legendlayer open="true" name="renta_original_point" showFeatureCount="0" drawingOrder="-1" checked="Qt::Unchecked">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" layerid="renta_original_point_424984db_1281_40f5_be89_804269e4e659" visible="0"/>
+      </filegroup>
+    </legendlayer>
     <legendgroup open="true" name="MDT - Test convolución" checked="Qt::Unchecked">
       <legendlayer open="false" name="Puntos cercanos" showFeatureCount="0" drawingOrder="-1" checked="Qt::Checked">
         <filegroup open="false" hidden="false">
@@ -1007,9 +1017,9 @@
       </legendlayer>
     </legendgroup>
     <legendgroup open="true" name="QA" checked="Qt::Checked">
-      <legendlayer open="true" name="QA" showFeatureCount="0" drawingOrder="-1" checked="Qt::Unchecked">
+      <legendlayer open="true" name="QA" showFeatureCount="0" drawingOrder="-1" checked="Qt::Checked">
         <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="qa_geom_da665049_dd51_48dd_b137_03726f1e8304" visible="0"/>
+          <legendlayerfile isInOverview="0" layerid="qa_geom_da665049_dd51_48dd_b137_03726f1e8304" visible="1"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
@@ -51603,12 +51613,12 @@ def my_form_open(dialog, layer, feature):
         <categories>
           <category value="0" symbol="0" label="Zoom 0 - 100 km" render="false"/>
           <category value="1" symbol="1" label="Zoom 1 - 50 km" render="false"/>
-          <category value="2" symbol="2" label="Zoom 2 - 10 km" render="true"/>
+          <category value="2" symbol="2" label="Zoom 2 - 10 km" render="false"/>
           <category value="3" symbol="3" label="Zoom 3 - 5 km" render="false"/>
           <category value="4" symbol="4" label="Zoom 4 - 1 km" render="false"/>
           <category value="5" symbol="5" label="Zoom 5 - 500 m" render="false"/>
           <category value="6" symbol="6" label="Zoom 6 - 250 m" render="false"/>
-          <category value="7" symbol="7" label="Zoom 7 - 125 m" render="false"/>
+          <category value="7" symbol="7" label="Zoom 7 - 125 m" render="true"/>
           <category value="8" symbol="8" label="Zoom 8 - 25 m" render="false"/>
           <category value="9" symbol="9" label="Zoom 9 - 5 m" render="false"/>
         </categories>
@@ -52079,6 +52089,2264 @@ def my_form_open(dialog, layer, feature):
       <dataDefinedFieldProperties/>
       <widgets/>
       <previewExpression>"grid_id"</previewExpression>
+      <mapTip></mapTip>
+    </maplayer>
+    <maplayer wkbType="Point" styleCategories="AllStyleCategories" simplifyMaxScale="1" simplifyLocal="1" readOnly="0" simplifyDrawingTol="1" geometry="Point" maxScale="0" simplifyDrawingHints="1" refreshOnNotifyMessage="" simplifyAlgorithm="0" labelsEnabled="0" autoRefreshEnabled="0" refreshOnNotifyEnabled="0" autoRefreshTime="0" minScale="100000000" type="vector" hasScaleBasedVisibilityFlag="0">
+      <extent>
+        <xmin>108476.2734375</xmin>
+        <ymin>3987829</ymin>
+        <xmax>616977.6875</xmax>
+        <ymax>4277366.5</ymax>
+      </extent>
+      <id>renta_original_point_424984db_1281_40f5_be89_804269e4e659</id>
+      <datasource>dbname='cell_raw_data' host=kepler port=5632 user='cell_readonly' sslmode=disable key='fid' estimatedmetadata=true srid=25830 type=Point checkPrimaryKeyUnicity='0' table="renta_espe"."renta_original_point" (geom)</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>renta_original_point</layername>
+      <srs>
+        <spatialrefsys>
+          <wkt>PROJCRS["ETRS89 / UTM zone 30N",BASEGEOGCRS["ETRS89",DATUM["European Terrestrial Reference System 1989",ELLIPSOID["GRS 1980",6378137,298.257222101,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4258]],CONVERSION["UTM zone 30N",METHOD["Transverse Mercator",ID["EPSG",9807]],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",-3,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["Scale factor at natural origin",0.9996,SCALEUNIT["unity",1],ID["EPSG",8805]],PARAMETER["False easting",500000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1]],USAGE[SCOPE["unknown"],AREA["Europe - 6°W to 0°W and ETRS89 by country"],BBOX[35.26,-6,80.53,0]],ID["EPSG",25830]]</wkt>
+          <proj4>+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</proj4>
+          <srsid>2103</srsid>
+          <srid>25830</srid>
+          <authid>EPSG:25830</authid>
+          <description>ETRS89 / UTM zone 30N</description>
+          <projectionacronym>utm</projectionacronym>
+          <ellipsoidacronym>EPSG:7019</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type>dataset</type>
+        <title></title>
+        <abstract></abstract>
+        <links/>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <wkt>PROJCRS["ETRS89 / UTM zone 30N",BASEGEOGCRS["ETRS89",DATUM["European Terrestrial Reference System 1989",ELLIPSOID["GRS 1980",6378137,298.257222101,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4258]],CONVERSION["UTM zone 30N",METHOD["Transverse Mercator",ID["EPSG",9807]],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",-3,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["Scale factor at natural origin",0.9996,SCALEUNIT["unity",1],ID["EPSG",8805]],PARAMETER["False easting",500000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1]],USAGE[SCOPE["unknown"],AREA["Europe - 6°W to 0°W and ETRS89 by country"],BBOX[35.26,-6,80.53,0]],ID["EPSG",25830]]</wkt>
+            <proj4>+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</proj4>
+            <srsid>2103</srsid>
+            <srid>25830</srid>
+            <authid>EPSG:25830</authid>
+            <description>ETRS89 / UTM zone 30N</description>
+            <projectionacronym>utm</projectionacronym>
+            <ellipsoidacronym>EPSG:7019</ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent/>
+      </resourceMetadata>
+      <provider encoding="">postgres</provider>
+      <vectorjoins/>
+      <layerDependencies/>
+      <dataDependencies/>
+      <legend type="default-vector"/>
+      <expressionfields/>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <auxiliaryLayer/>
+      <flags>
+        <Identifiable>1</Identifiable>
+        <Removable>1</Removable>
+        <Searchable>1</Searchable>
+      </flags>
+      <temporal startField="" accumulate="0" startExpression="" endExpression="" endField="" durationField="" fixedDuration="0" enabled="0" durationUnit="min" mode="0">
+        <fixedRange>
+          <start></start>
+          <end></end>
+        </fixedRange>
+      </temporal>
+      <renderer-v2 forceraster="0" type="singleSymbol" enableorderby="0" symbollevels="0">
+        <symbols>
+          <symbol type="marker" alpha="1" name="0" force_rhr="0" clip_to_extent="1">
+            <layer locked="0" pass="0" class="SimpleMarker" enabled="1">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="164,113,88,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="circle"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="35,35,35,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="diameter"/>
+              <prop k="size" v="2"/>
+              <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MM"/>
+              <prop k="vertical_anchor_point" v="1"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option type="QString" value="" name="name"/>
+                  <Option name="properties"/>
+                  <Option type="QString" value="collection" name="type"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </symbols>
+        <rotation/>
+        <sizescale/>
+      </renderer-v2>
+      <customproperties/>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerOpacity>1</layerOpacity>
+      <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
+        <activeChecks type="StringList">
+          <Option type="QString" value=""/>
+        </activeChecks>
+        <checkConfiguration/>
+      </geometryOptions>
+      <referencedLayers/>
+      <referencingLayers/>
+      <fieldConfiguration>
+        <field name="fid">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="gid">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="cod_seccion">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="cod_distrito">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="cod_municipio">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="municipio">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="cod_provincia">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="provincia">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="cod_comunidad">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="comunidad">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="media_renta_por_unidad_consumo_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="mediana_renta_por_unidad_consumo_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="renta_bruta_media_por_hogar_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="renta_bruta_media_por_persona_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="renta_neta_media_por_hogar_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="renta_neta_media_por_persona_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="fuente_otras_prestaciones_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="fuente_otros_ingresos_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="fuente_pensiones_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="fuente_desempleo_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="fuente_salario_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="p80_p20_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="gini_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="edad_media_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="poblacion_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hogares_unipersonales_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_65_y_mayor_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_menor_18_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="tamaño_medio_hogar_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_por_unidad_consumo_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_por_unidad_consumo_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_por_unidad_consumo_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_por_unidad_consumo_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_por_unidad_consumo_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_por_unidad_consumo_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_por_unidad_consumo_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_por_unidad_consumo_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_por_unidad_consumo_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_menos_18_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_menos_18_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_menos_18_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_18_a_64_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_18_a_64_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_18_a_64_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_65_y_mas_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_65_y_mas_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_65_y_mas_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_menos_18_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_menos_18_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_menos_18_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_18_a_64_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_18_a_64_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_18_a_64_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_65_y_mas_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_65_y_mas_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_65_y_mas_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_menos_18_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_menos_18_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_menos_18_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_18_a_64_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_18_a_64_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_18_a_64_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_65_y_mas_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_65_y_mas_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_65_y_mas_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_española_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_española_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_española_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_extranjera_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_extranjera_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_pob_extranjera_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_españoles_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_españoles_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_españoles_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_extranjeros_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_extranjeros_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_hombres_extranjeros_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_españolas_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_españolas_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_españolas_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_extranjeras_ingresos_menos_5000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_extranjeras_ingresos_menos_7500_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porcentaje_mujeres_extranjeras_ingresos_menos_10000_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_menos_18_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_menos_18_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_menos_18_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_menos_18_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_menos_18_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_menos_18_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_18_a_64_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_18_a_64_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_18_a_64_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_18_a_64_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_18_a_64_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_18_a_64_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_65_y_mas_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_65_y_mas_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_65_y_mas_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_65_y_mas_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_65_y_mas_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_65_y_mas_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_menos_18_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_menos_18_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_menos_18_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_menos_18_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_menos_18_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_menos_18_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_18_a_64_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_18_a_64_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_18_a_64_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_18_a_64_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_18_a_64_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_18_a_64_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_65_y_mas_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_65_y_mas_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_hombres_65_y_mas_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_menos_18_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_menos_18_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_menos_18_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_menos_18_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_menos_18_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_menos_18_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_18_a_64_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_18_a_64_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_18_a_64_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_18_a_64_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_18_a_64_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_18_a_64_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_65_y_mas_ingresos_encima_140porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_65_y_mas_ingresos_encima_160porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_mujeres_65_y_mas_ingresos_encima_200porc_de_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_española_ingresos_debajo_40porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_española_ingresos_debajo_50porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_española_ingresos_debajo_60porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_española_ingresos_encima_140porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_española_ingresos_encima_160porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_española_ingresos_encima_200porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_extranjera_ingresos_debajo_40porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_extranjera_ingresos_debajo_50porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_extranjera_ingresos_debajo_60porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_extranjera_ingresos_encima_140porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_extranjera_ingresos_encima_160porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_pob_extranjera_ingresos_encima_200porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_españoles_ingresos_debajo_40porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_españoles_ingresos_debajo_50porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_españoles_ingresos_debajo_60porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_españoles_ingresos_encima_140porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_españoles_ingresos_encima_160porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_españoles_ingresos_encima_200porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_extranjeros_ingresos_debajo_40porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_extranjeros_ingresos_debajo_50porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_extranjeros_ingresos_debajo_60porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_extranjeros_ingresos_encima_140porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_extranjeros_ingresos_encima_160porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_homb_extranjeros_ingresos_encima_200porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_españolas_ingresos_debajo_40porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_españolas_ingresos_debajo_50porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_españolas_ingresos_debajo_60porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_españolas_ingresos_encima_140porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_españolas_ingresos_encima_160porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_españolas_ingresos_encima_200porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_extranjeras_ingresos_debajo_40porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_extranjeras_ingresos_debajo_50porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_extranjeras_ingresos_debajo_60porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_extranjeras_ingresos_encima_140porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_extranjeras_ingresos_encima_160porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="porc_muj_extranjeras_ingresos_encima_200porc_mediana_2018">
+          <editWidget type="">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+      </fieldConfiguration>
+      <aliases>
+        <alias field="fid" name="" index="0"/>
+        <alias field="gid" name="" index="1"/>
+        <alias field="cod_seccion" name="" index="2"/>
+        <alias field="cod_distrito" name="" index="3"/>
+        <alias field="cod_municipio" name="" index="4"/>
+        <alias field="municipio" name="" index="5"/>
+        <alias field="cod_provincia" name="" index="6"/>
+        <alias field="provincia" name="" index="7"/>
+        <alias field="cod_comunidad" name="" index="8"/>
+        <alias field="comunidad" name="" index="9"/>
+        <alias field="media_renta_por_unidad_consumo_2018" name="" index="10"/>
+        <alias field="mediana_renta_por_unidad_consumo_2018" name="" index="11"/>
+        <alias field="renta_bruta_media_por_hogar_2018" name="" index="12"/>
+        <alias field="renta_bruta_media_por_persona_2018" name="" index="13"/>
+        <alias field="renta_neta_media_por_hogar_2018" name="" index="14"/>
+        <alias field="renta_neta_media_por_persona_2018" name="" index="15"/>
+        <alias field="fuente_otras_prestaciones_2018" name="" index="16"/>
+        <alias field="fuente_otros_ingresos_2018" name="" index="17"/>
+        <alias field="fuente_pensiones_2018" name="" index="18"/>
+        <alias field="fuente_desempleo_2018" name="" index="19"/>
+        <alias field="fuente_salario_2018" name="" index="20"/>
+        <alias field="p80_p20_2018" name="" index="21"/>
+        <alias field="gini_2018" name="" index="22"/>
+        <alias field="edad_media_2018" name="" index="23"/>
+        <alias field="poblacion_2018" name="" index="24"/>
+        <alias field="porcentaje_hogares_unipersonales_2018" name="" index="25"/>
+        <alias field="porcentaje_65_y_mayor_2018" name="" index="26"/>
+        <alias field="porcentaje_menor_18_2018" name="" index="27"/>
+        <alias field="tamaño_medio_hogar_2018" name="" index="28"/>
+        <alias field="porc_pob_ingresos_por_unidad_consumo_menos_5000_2018" name="" index="29"/>
+        <alias field="porc_pob_ingresos_por_unidad_consumo_menos_7500_2018" name="" index="30"/>
+        <alias field="porc_pob_ingresos_por_unidad_consumo_menos_10000_2018" name="" index="31"/>
+        <alias field="porc_hombres_ingresos_por_unidad_consumo_menos_5000_2018" name="" index="32"/>
+        <alias field="porc_hombres_ingresos_por_unidad_consumo_menos_7500_2018" name="" index="33"/>
+        <alias field="porc_hombres_ingresos_por_unidad_consumo_menos_10000_2018" name="" index="34"/>
+        <alias field="porc_mujeres_ingresos_por_unidad_consumo_menos_5000_2018" name="" index="35"/>
+        <alias field="porc_mujeres_ingresos_por_unidad_consumo_menos_7500_2018" name="" index="36"/>
+        <alias field="porc_mujeres_ingresos_por_unidad_consumo_menos_10000_2018" name="" index="37"/>
+        <alias field="porcentaje_pob_menos_18_ingresos_menos_5000_2018" name="" index="38"/>
+        <alias field="porcentaje_pob_menos_18_ingresos_menos_7500_2018" name="" index="39"/>
+        <alias field="porcentaje_pob_menos_18_ingresos_menos_10000_2018" name="" index="40"/>
+        <alias field="porcentaje_pob_18_a_64_ingresos_menos_5000_2018" name="" index="41"/>
+        <alias field="porcentaje_pob_18_a_64_ingresos_menos_7500_2018" name="" index="42"/>
+        <alias field="porcentaje_pob_18_a_64_ingresos_menos_10000_2018" name="" index="43"/>
+        <alias field="porcentaje_pob_65_y_mas_ingresos_menos_5000_2018" name="" index="44"/>
+        <alias field="porcentaje_pob_65_y_mas_ingresos_menos_7500_2018" name="" index="45"/>
+        <alias field="porcentaje_pob_65_y_mas_ingresos_menos_10000_2018" name="" index="46"/>
+        <alias field="porcentaje_hombres_menos_18_ingresos_menos_5000_2018" name="" index="47"/>
+        <alias field="porcentaje_hombres_menos_18_ingresos_menos_7500_2018" name="" index="48"/>
+        <alias field="porcentaje_hombres_menos_18_ingresos_menos_10000_2018" name="" index="49"/>
+        <alias field="porcentaje_hombres_18_a_64_ingresos_menos_5000_2018" name="" index="50"/>
+        <alias field="porcentaje_hombres_18_a_64_ingresos_menos_7500_2018" name="" index="51"/>
+        <alias field="porcentaje_hombres_18_a_64_ingresos_menos_10000_2018" name="" index="52"/>
+        <alias field="porcentaje_hombres_65_y_mas_ingresos_menos_5000_2018" name="" index="53"/>
+        <alias field="porcentaje_hombres_65_y_mas_ingresos_menos_7500_2018" name="" index="54"/>
+        <alias field="porcentaje_hombres_65_y_mas_ingresos_menos_10000_2018" name="" index="55"/>
+        <alias field="porcentaje_mujeres_menos_18_ingresos_menos_5000_2018" name="" index="56"/>
+        <alias field="porcentaje_mujeres_menos_18_ingresos_menos_7500_2018" name="" index="57"/>
+        <alias field="porcentaje_mujeres_menos_18_ingresos_menos_10000_2018" name="" index="58"/>
+        <alias field="porcentaje_mujeres_18_a_64_ingresos_menos_5000_2018" name="" index="59"/>
+        <alias field="porcentaje_mujeres_18_a_64_ingresos_menos_7500_2018" name="" index="60"/>
+        <alias field="porcentaje_mujeres_18_a_64_ingresos_menos_10000_2018" name="" index="61"/>
+        <alias field="porcentaje_mujeres_65_y_mas_ingresos_menos_5000_2018" name="" index="62"/>
+        <alias field="porcentaje_mujeres_65_y_mas_ingresos_menos_7500_2018" name="" index="63"/>
+        <alias field="porcentaje_mujeres_65_y_mas_ingresos_menos_10000_2018" name="" index="64"/>
+        <alias field="porcentaje_pob_española_ingresos_menos_5000_2018" name="" index="65"/>
+        <alias field="porcentaje_pob_española_ingresos_menos_7500_2018" name="" index="66"/>
+        <alias field="porcentaje_pob_española_ingresos_menos_10000_2018" name="" index="67"/>
+        <alias field="porcentaje_pob_extranjera_ingresos_menos_5000_2018" name="" index="68"/>
+        <alias field="porcentaje_pob_extranjera_ingresos_menos_7500_2018" name="" index="69"/>
+        <alias field="porcentaje_pob_extranjera_ingresos_menos_10000_2018" name="" index="70"/>
+        <alias field="porcentaje_hombres_españoles_ingresos_menos_5000_2018" name="" index="71"/>
+        <alias field="porcentaje_hombres_españoles_ingresos_menos_7500_2018" name="" index="72"/>
+        <alias field="porcentaje_hombres_españoles_ingresos_menos_10000_2018" name="" index="73"/>
+        <alias field="porcentaje_hombres_extranjeros_ingresos_menos_5000_2018" name="" index="74"/>
+        <alias field="porcentaje_hombres_extranjeros_ingresos_menos_7500_2018" name="" index="75"/>
+        <alias field="porcentaje_hombres_extranjeros_ingresos_menos_10000_2018" name="" index="76"/>
+        <alias field="porcentaje_mujeres_españolas_ingresos_menos_5000_2018" name="" index="77"/>
+        <alias field="porcentaje_mujeres_españolas_ingresos_menos_7500_2018" name="" index="78"/>
+        <alias field="porcentaje_mujeres_españolas_ingresos_menos_10000_2018" name="" index="79"/>
+        <alias field="porcentaje_mujeres_extranjeras_ingresos_menos_5000_2018" name="" index="80"/>
+        <alias field="porcentaje_mujeres_extranjeras_ingresos_menos_7500_2018" name="" index="81"/>
+        <alias field="porcentaje_mujeres_extranjeras_ingresos_menos_10000_2018" name="" index="82"/>
+        <alias field="porc_pob_ingresos_debajo_40porc_de_mediana_2018" name="" index="83"/>
+        <alias field="porc_pob_ingresos_debajo_50porc_de_mediana_2018" name="" index="84"/>
+        <alias field="porc_pob_ingresos_debajo_60porc_de_mediana_2018" name="" index="85"/>
+        <alias field="porc_pob_ingresos_encima_140porc_de_mediana_2018" name="" index="86"/>
+        <alias field="porc_pob_ingresos_encima_160porc_de_mediana_2018" name="" index="87"/>
+        <alias field="porc_pob_ingresos_encima_200porc_de_mediana_2018" name="" index="88"/>
+        <alias field="porc_hombres_ingresos_debajo_40porc_de_mediana_2018" name="" index="89"/>
+        <alias field="porc_hombres_ingresos_debajo_50porc_de_mediana_2018" name="" index="90"/>
+        <alias field="porc_hombres_ingresos_debajo_60porc_de_mediana_2018" name="" index="91"/>
+        <alias field="porc_hombres_ingresos_encima_140porc_de_mediana_2018" name="" index="92"/>
+        <alias field="porc_hombres_ingresos_encima_160porc_de_mediana_2018" name="" index="93"/>
+        <alias field="porc_hombres_ingresos_encima_200porc_de_mediana_2018" name="" index="94"/>
+        <alias field="porc_mujeres_ingresos_debajo_40porc_de_mediana_2018" name="" index="95"/>
+        <alias field="porc_mujeres_ingresos_debajo_50porc_de_mediana_2018" name="" index="96"/>
+        <alias field="porc_mujeres_ingresos_debajo_60porc_de_mediana_2018" name="" index="97"/>
+        <alias field="porc_mujeres_ingresos_encima_140porc_de_mediana_2018" name="" index="98"/>
+        <alias field="porc_mujeres_ingresos_encima_160porc_de_mediana_2018" name="" index="99"/>
+        <alias field="porc_mujeres_ingresos_encima_200porc_de_mediana_2018" name="" index="100"/>
+        <alias field="porc_pob_menos_18_ingresos_debajo_40porc_de_mediana_2018" name="" index="101"/>
+        <alias field="porc_pob_menos_18_ingresos_debajo_50porc_de_mediana_2018" name="" index="102"/>
+        <alias field="porc_pob_menos_18_ingresos_debajo_60porc_de_mediana_2018" name="" index="103"/>
+        <alias field="porc_pob_menos_18_ingresos_encima_140porc_de_mediana_2018" name="" index="104"/>
+        <alias field="porc_pob_menos_18_ingresos_encima_160porc_de_mediana_2018" name="" index="105"/>
+        <alias field="porc_pob_menos_18_ingresos_encima_200porc_de_mediana_2018" name="" index="106"/>
+        <alias field="porc_pob_18_a_64_ingresos_debajo_40porc_de_mediana_2018" name="" index="107"/>
+        <alias field="porc_pob_18_a_64_ingresos_debajo_50porc_de_mediana_2018" name="" index="108"/>
+        <alias field="porc_pob_18_a_64_ingresos_debajo_60porc_de_mediana_2018" name="" index="109"/>
+        <alias field="porc_pob_18_a_64_ingresos_encima_140porc_de_mediana_2018" name="" index="110"/>
+        <alias field="porc_pob_18_a_64_ingresos_encima_160porc_de_mediana_2018" name="" index="111"/>
+        <alias field="porc_pob_18_a_64_ingresos_encima_200porc_de_mediana_2018" name="" index="112"/>
+        <alias field="porc_pob_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" name="" index="113"/>
+        <alias field="porc_pob_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" name="" index="114"/>
+        <alias field="porc_pob_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" name="" index="115"/>
+        <alias field="porc_pob_65_y_mas_ingresos_encima_140porc_de_mediana_2018" name="" index="116"/>
+        <alias field="porc_pob_65_y_mas_ingresos_encima_160porc_de_mediana_2018" name="" index="117"/>
+        <alias field="porc_pob_65_y_mas_ingresos_encima_200porc_de_mediana_2018" name="" index="118"/>
+        <alias field="porc_hombres_menos_18_ingresos_debajo_40porc_de_mediana_2018" name="" index="119"/>
+        <alias field="porc_hombres_menos_18_ingresos_debajo_50porc_de_mediana_2018" name="" index="120"/>
+        <alias field="porc_hombres_menos_18_ingresos_debajo_60porc_de_mediana_2018" name="" index="121"/>
+        <alias field="porc_hombres_menos_18_ingresos_encima_140porc_de_mediana_2018" name="" index="122"/>
+        <alias field="porc_hombres_menos_18_ingresos_encima_160porc_de_mediana_2018" name="" index="123"/>
+        <alias field="porc_hombres_menos_18_ingresos_encima_200porc_de_mediana_2018" name="" index="124"/>
+        <alias field="porc_hombres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" name="" index="125"/>
+        <alias field="porc_hombres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" name="" index="126"/>
+        <alias field="porc_hombres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" name="" index="127"/>
+        <alias field="porc_hombres_18_a_64_ingresos_encima_140porc_de_mediana_2018" name="" index="128"/>
+        <alias field="porc_hombres_18_a_64_ingresos_encima_160porc_de_mediana_2018" name="" index="129"/>
+        <alias field="porc_hombres_18_a_64_ingresos_encima_200porc_de_mediana_2018" name="" index="130"/>
+        <alias field="porc_hombres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" name="" index="131"/>
+        <alias field="porc_hombres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" name="" index="132"/>
+        <alias field="porc_hombres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" name="" index="133"/>
+        <alias field="porc_hombres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" name="" index="134"/>
+        <alias field="porc_hombres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" name="" index="135"/>
+        <alias field="porc_hombres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" name="" index="136"/>
+        <alias field="porc_mujeres_menos_18_ingresos_debajo_40porc_de_mediana_2018" name="" index="137"/>
+        <alias field="porc_mujeres_menos_18_ingresos_debajo_50porc_de_mediana_2018" name="" index="138"/>
+        <alias field="porc_mujeres_menos_18_ingresos_debajo_60porc_de_mediana_2018" name="" index="139"/>
+        <alias field="porc_mujeres_menos_18_ingresos_encima_140porc_de_mediana_2018" name="" index="140"/>
+        <alias field="porc_mujeres_menos_18_ingresos_encima_160porc_de_mediana_2018" name="" index="141"/>
+        <alias field="porc_mujeres_menos_18_ingresos_encima_200porc_de_mediana_2018" name="" index="142"/>
+        <alias field="porc_mujeres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" name="" index="143"/>
+        <alias field="porc_mujeres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" name="" index="144"/>
+        <alias field="porc_mujeres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" name="" index="145"/>
+        <alias field="porc_mujeres_18_a_64_ingresos_encima_140porc_de_mediana_2018" name="" index="146"/>
+        <alias field="porc_mujeres_18_a_64_ingresos_encima_160porc_de_mediana_2018" name="" index="147"/>
+        <alias field="porc_mujeres_18_a_64_ingresos_encima_200porc_de_mediana_2018" name="" index="148"/>
+        <alias field="porc_mujeres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" name="" index="149"/>
+        <alias field="porc_mujeres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" name="" index="150"/>
+        <alias field="porc_mujeres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" name="" index="151"/>
+        <alias field="porc_mujeres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" name="" index="152"/>
+        <alias field="porc_mujeres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" name="" index="153"/>
+        <alias field="porc_mujeres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" name="" index="154"/>
+        <alias field="porc_pob_española_ingresos_debajo_40porc_mediana_2018" name="" index="155"/>
+        <alias field="porc_pob_española_ingresos_debajo_50porc_mediana_2018" name="" index="156"/>
+        <alias field="porc_pob_española_ingresos_debajo_60porc_mediana_2018" name="" index="157"/>
+        <alias field="porc_pob_española_ingresos_encima_140porc_mediana_2018" name="" index="158"/>
+        <alias field="porc_pob_española_ingresos_encima_160porc_mediana_2018" name="" index="159"/>
+        <alias field="porc_pob_española_ingresos_encima_200porc_mediana_2018" name="" index="160"/>
+        <alias field="porc_pob_extranjera_ingresos_debajo_40porc_mediana_2018" name="" index="161"/>
+        <alias field="porc_pob_extranjera_ingresos_debajo_50porc_mediana_2018" name="" index="162"/>
+        <alias field="porc_pob_extranjera_ingresos_debajo_60porc_mediana_2018" name="" index="163"/>
+        <alias field="porc_pob_extranjera_ingresos_encima_140porc_mediana_2018" name="" index="164"/>
+        <alias field="porc_pob_extranjera_ingresos_encima_160porc_mediana_2018" name="" index="165"/>
+        <alias field="porc_pob_extranjera_ingresos_encima_200porc_mediana_2018" name="" index="166"/>
+        <alias field="porc_homb_españoles_ingresos_debajo_40porc_mediana_2018" name="" index="167"/>
+        <alias field="porc_homb_españoles_ingresos_debajo_50porc_mediana_2018" name="" index="168"/>
+        <alias field="porc_homb_españoles_ingresos_debajo_60porc_mediana_2018" name="" index="169"/>
+        <alias field="porc_homb_españoles_ingresos_encima_140porc_mediana_2018" name="" index="170"/>
+        <alias field="porc_homb_españoles_ingresos_encima_160porc_mediana_2018" name="" index="171"/>
+        <alias field="porc_homb_españoles_ingresos_encima_200porc_mediana_2018" name="" index="172"/>
+        <alias field="porc_homb_extranjeros_ingresos_debajo_40porc_mediana_2018" name="" index="173"/>
+        <alias field="porc_homb_extranjeros_ingresos_debajo_50porc_mediana_2018" name="" index="174"/>
+        <alias field="porc_homb_extranjeros_ingresos_debajo_60porc_mediana_2018" name="" index="175"/>
+        <alias field="porc_homb_extranjeros_ingresos_encima_140porc_mediana_2018" name="" index="176"/>
+        <alias field="porc_homb_extranjeros_ingresos_encima_160porc_mediana_2018" name="" index="177"/>
+        <alias field="porc_homb_extranjeros_ingresos_encima_200porc_mediana_2018" name="" index="178"/>
+        <alias field="porc_muj_españolas_ingresos_debajo_40porc_mediana_2018" name="" index="179"/>
+        <alias field="porc_muj_españolas_ingresos_debajo_50porc_mediana_2018" name="" index="180"/>
+        <alias field="porc_muj_españolas_ingresos_debajo_60porc_mediana_2018" name="" index="181"/>
+        <alias field="porc_muj_españolas_ingresos_encima_140porc_mediana_2018" name="" index="182"/>
+        <alias field="porc_muj_españolas_ingresos_encima_160porc_mediana_2018" name="" index="183"/>
+        <alias field="porc_muj_españolas_ingresos_encima_200porc_mediana_2018" name="" index="184"/>
+        <alias field="porc_muj_extranjeras_ingresos_debajo_40porc_mediana_2018" name="" index="185"/>
+        <alias field="porc_muj_extranjeras_ingresos_debajo_50porc_mediana_2018" name="" index="186"/>
+        <alias field="porc_muj_extranjeras_ingresos_debajo_60porc_mediana_2018" name="" index="187"/>
+        <alias field="porc_muj_extranjeras_ingresos_encima_140porc_mediana_2018" name="" index="188"/>
+        <alias field="porc_muj_extranjeras_ingresos_encima_160porc_mediana_2018" name="" index="189"/>
+        <alias field="porc_muj_extranjeras_ingresos_encima_200porc_mediana_2018" name="" index="190"/>
+      </aliases>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <defaults>
+        <default field="fid" applyOnUpdate="0" expression=""/>
+        <default field="gid" applyOnUpdate="0" expression=""/>
+        <default field="cod_seccion" applyOnUpdate="0" expression=""/>
+        <default field="cod_distrito" applyOnUpdate="0" expression=""/>
+        <default field="cod_municipio" applyOnUpdate="0" expression=""/>
+        <default field="municipio" applyOnUpdate="0" expression=""/>
+        <default field="cod_provincia" applyOnUpdate="0" expression=""/>
+        <default field="provincia" applyOnUpdate="0" expression=""/>
+        <default field="cod_comunidad" applyOnUpdate="0" expression=""/>
+        <default field="comunidad" applyOnUpdate="0" expression=""/>
+        <default field="media_renta_por_unidad_consumo_2018" applyOnUpdate="0" expression=""/>
+        <default field="mediana_renta_por_unidad_consumo_2018" applyOnUpdate="0" expression=""/>
+        <default field="renta_bruta_media_por_hogar_2018" applyOnUpdate="0" expression=""/>
+        <default field="renta_bruta_media_por_persona_2018" applyOnUpdate="0" expression=""/>
+        <default field="renta_neta_media_por_hogar_2018" applyOnUpdate="0" expression=""/>
+        <default field="renta_neta_media_por_persona_2018" applyOnUpdate="0" expression=""/>
+        <default field="fuente_otras_prestaciones_2018" applyOnUpdate="0" expression=""/>
+        <default field="fuente_otros_ingresos_2018" applyOnUpdate="0" expression=""/>
+        <default field="fuente_pensiones_2018" applyOnUpdate="0" expression=""/>
+        <default field="fuente_desempleo_2018" applyOnUpdate="0" expression=""/>
+        <default field="fuente_salario_2018" applyOnUpdate="0" expression=""/>
+        <default field="p80_p20_2018" applyOnUpdate="0" expression=""/>
+        <default field="gini_2018" applyOnUpdate="0" expression=""/>
+        <default field="edad_media_2018" applyOnUpdate="0" expression=""/>
+        <default field="poblacion_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hogares_unipersonales_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_65_y_mayor_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_menor_18_2018" applyOnUpdate="0" expression=""/>
+        <default field="tamaño_medio_hogar_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_por_unidad_consumo_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_por_unidad_consumo_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_por_unidad_consumo_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_por_unidad_consumo_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_por_unidad_consumo_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_por_unidad_consumo_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_por_unidad_consumo_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_por_unidad_consumo_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_por_unidad_consumo_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_menos_18_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_menos_18_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_menos_18_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_18_a_64_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_18_a_64_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_18_a_64_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_65_y_mas_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_65_y_mas_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_65_y_mas_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_menos_18_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_menos_18_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_menos_18_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_18_a_64_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_18_a_64_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_18_a_64_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_65_y_mas_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_65_y_mas_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_65_y_mas_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_menos_18_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_menos_18_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_menos_18_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_18_a_64_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_18_a_64_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_18_a_64_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_65_y_mas_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_65_y_mas_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_65_y_mas_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_española_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_española_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_española_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_extranjera_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_extranjera_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_pob_extranjera_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_españoles_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_españoles_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_españoles_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_extranjeros_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_extranjeros_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_hombres_extranjeros_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_españolas_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_españolas_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_españolas_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_extranjeras_ingresos_menos_5000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_extranjeras_ingresos_menos_7500_2018" applyOnUpdate="0" expression=""/>
+        <default field="porcentaje_mujeres_extranjeras_ingresos_menos_10000_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_menos_18_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_menos_18_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_menos_18_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_menos_18_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_menos_18_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_menos_18_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_18_a_64_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_18_a_64_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_18_a_64_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_18_a_64_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_18_a_64_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_18_a_64_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_65_y_mas_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_65_y_mas_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_65_y_mas_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_menos_18_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_menos_18_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_menos_18_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_menos_18_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_menos_18_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_menos_18_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_18_a_64_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_18_a_64_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_18_a_64_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_hombres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_menos_18_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_menos_18_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_menos_18_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_menos_18_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_menos_18_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_menos_18_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_18_a_64_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_18_a_64_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_18_a_64_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_mujeres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_española_ingresos_debajo_40porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_española_ingresos_debajo_50porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_española_ingresos_debajo_60porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_española_ingresos_encima_140porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_española_ingresos_encima_160porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_española_ingresos_encima_200porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_extranjera_ingresos_debajo_40porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_extranjera_ingresos_debajo_50porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_extranjera_ingresos_debajo_60porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_extranjera_ingresos_encima_140porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_extranjera_ingresos_encima_160porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_pob_extranjera_ingresos_encima_200porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_españoles_ingresos_debajo_40porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_españoles_ingresos_debajo_50porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_españoles_ingresos_debajo_60porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_españoles_ingresos_encima_140porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_españoles_ingresos_encima_160porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_españoles_ingresos_encima_200porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_extranjeros_ingresos_debajo_40porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_extranjeros_ingresos_debajo_50porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_extranjeros_ingresos_debajo_60porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_extranjeros_ingresos_encima_140porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_extranjeros_ingresos_encima_160porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_homb_extranjeros_ingresos_encima_200porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_españolas_ingresos_debajo_40porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_españolas_ingresos_debajo_50porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_españolas_ingresos_debajo_60porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_españolas_ingresos_encima_140porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_españolas_ingresos_encima_160porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_españolas_ingresos_encima_200porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_extranjeras_ingresos_debajo_40porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_extranjeras_ingresos_debajo_50porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_extranjeras_ingresos_debajo_60porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_extranjeras_ingresos_encima_140porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_extranjeras_ingresos_encima_160porc_mediana_2018" applyOnUpdate="0" expression=""/>
+        <default field="porc_muj_extranjeras_ingresos_encima_200porc_mediana_2018" applyOnUpdate="0" expression=""/>
+      </defaults>
+      <constraints>
+        <constraint field="fid" exp_strength="0" constraints="3" unique_strength="1" notnull_strength="1"/>
+        <constraint field="gid" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="cod_seccion" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="cod_distrito" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="cod_municipio" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="municipio" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="cod_provincia" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="provincia" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="cod_comunidad" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="comunidad" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="media_renta_por_unidad_consumo_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="mediana_renta_por_unidad_consumo_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="renta_bruta_media_por_hogar_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="renta_bruta_media_por_persona_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="renta_neta_media_por_hogar_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="renta_neta_media_por_persona_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="fuente_otras_prestaciones_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="fuente_otros_ingresos_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="fuente_pensiones_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="fuente_desempleo_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="fuente_salario_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="p80_p20_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="gini_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="edad_media_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="poblacion_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hogares_unipersonales_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_65_y_mayor_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_menor_18_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="tamaño_medio_hogar_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_por_unidad_consumo_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_por_unidad_consumo_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_por_unidad_consumo_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_por_unidad_consumo_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_por_unidad_consumo_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_por_unidad_consumo_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_por_unidad_consumo_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_por_unidad_consumo_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_por_unidad_consumo_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_menos_18_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_menos_18_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_menos_18_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_18_a_64_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_18_a_64_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_18_a_64_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_65_y_mas_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_65_y_mas_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_65_y_mas_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_menos_18_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_menos_18_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_menos_18_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_18_a_64_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_18_a_64_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_18_a_64_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_65_y_mas_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_65_y_mas_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_65_y_mas_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_menos_18_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_menos_18_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_menos_18_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_18_a_64_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_18_a_64_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_18_a_64_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_65_y_mas_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_65_y_mas_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_65_y_mas_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_española_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_española_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_española_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_extranjera_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_extranjera_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_pob_extranjera_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_españoles_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_españoles_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_españoles_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_extranjeros_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_extranjeros_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_hombres_extranjeros_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_españolas_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_españolas_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_españolas_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_extranjeras_ingresos_menos_5000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_extranjeras_ingresos_menos_7500_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porcentaje_mujeres_extranjeras_ingresos_menos_10000_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_menos_18_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_menos_18_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_menos_18_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_menos_18_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_menos_18_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_menos_18_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_18_a_64_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_18_a_64_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_18_a_64_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_18_a_64_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_18_a_64_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_18_a_64_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_65_y_mas_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_65_y_mas_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_65_y_mas_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_menos_18_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_menos_18_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_menos_18_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_menos_18_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_menos_18_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_menos_18_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_18_a_64_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_18_a_64_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_18_a_64_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_menos_18_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_menos_18_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_menos_18_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_menos_18_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_menos_18_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_menos_18_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_española_ingresos_debajo_40porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_española_ingresos_debajo_50porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_española_ingresos_debajo_60porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_española_ingresos_encima_140porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_española_ingresos_encima_160porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_española_ingresos_encima_200porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_extranjera_ingresos_debajo_40porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_extranjera_ingresos_debajo_50porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_extranjera_ingresos_debajo_60porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_extranjera_ingresos_encima_140porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_extranjera_ingresos_encima_160porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_pob_extranjera_ingresos_encima_200porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_españoles_ingresos_debajo_40porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_españoles_ingresos_debajo_50porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_españoles_ingresos_debajo_60porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_españoles_ingresos_encima_140porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_españoles_ingresos_encima_160porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_españoles_ingresos_encima_200porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_extranjeros_ingresos_debajo_40porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_extranjeros_ingresos_debajo_50porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_extranjeros_ingresos_debajo_60porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_extranjeros_ingresos_encima_140porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_extranjeros_ingresos_encima_160porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_homb_extranjeros_ingresos_encima_200porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_españolas_ingresos_debajo_40porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_españolas_ingresos_debajo_50porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_españolas_ingresos_debajo_60porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_españolas_ingresos_encima_140porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_españolas_ingresos_encima_160porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_españolas_ingresos_encima_200porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_extranjeras_ingresos_debajo_40porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_extranjeras_ingresos_debajo_50porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_extranjeras_ingresos_debajo_60porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_extranjeras_ingresos_encima_140porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_extranjeras_ingresos_encima_160porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+        <constraint field="porc_muj_extranjeras_ingresos_encima_200porc_mediana_2018" exp_strength="0" constraints="0" unique_strength="0" notnull_strength="0"/>
+      </constraints>
+      <constraintExpressions>
+        <constraint field="fid" exp="" desc=""/>
+        <constraint field="gid" exp="" desc=""/>
+        <constraint field="cod_seccion" exp="" desc=""/>
+        <constraint field="cod_distrito" exp="" desc=""/>
+        <constraint field="cod_municipio" exp="" desc=""/>
+        <constraint field="municipio" exp="" desc=""/>
+        <constraint field="cod_provincia" exp="" desc=""/>
+        <constraint field="provincia" exp="" desc=""/>
+        <constraint field="cod_comunidad" exp="" desc=""/>
+        <constraint field="comunidad" exp="" desc=""/>
+        <constraint field="media_renta_por_unidad_consumo_2018" exp="" desc=""/>
+        <constraint field="mediana_renta_por_unidad_consumo_2018" exp="" desc=""/>
+        <constraint field="renta_bruta_media_por_hogar_2018" exp="" desc=""/>
+        <constraint field="renta_bruta_media_por_persona_2018" exp="" desc=""/>
+        <constraint field="renta_neta_media_por_hogar_2018" exp="" desc=""/>
+        <constraint field="renta_neta_media_por_persona_2018" exp="" desc=""/>
+        <constraint field="fuente_otras_prestaciones_2018" exp="" desc=""/>
+        <constraint field="fuente_otros_ingresos_2018" exp="" desc=""/>
+        <constraint field="fuente_pensiones_2018" exp="" desc=""/>
+        <constraint field="fuente_desempleo_2018" exp="" desc=""/>
+        <constraint field="fuente_salario_2018" exp="" desc=""/>
+        <constraint field="p80_p20_2018" exp="" desc=""/>
+        <constraint field="gini_2018" exp="" desc=""/>
+        <constraint field="edad_media_2018" exp="" desc=""/>
+        <constraint field="poblacion_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hogares_unipersonales_2018" exp="" desc=""/>
+        <constraint field="porcentaje_65_y_mayor_2018" exp="" desc=""/>
+        <constraint field="porcentaje_menor_18_2018" exp="" desc=""/>
+        <constraint field="tamaño_medio_hogar_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_por_unidad_consumo_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_por_unidad_consumo_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_por_unidad_consumo_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_por_unidad_consumo_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_por_unidad_consumo_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_por_unidad_consumo_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_por_unidad_consumo_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_por_unidad_consumo_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_por_unidad_consumo_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_menos_18_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_menos_18_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_menos_18_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_18_a_64_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_18_a_64_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_18_a_64_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_65_y_mas_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_65_y_mas_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_65_y_mas_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_menos_18_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_menos_18_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_menos_18_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_18_a_64_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_18_a_64_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_18_a_64_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_65_y_mas_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_65_y_mas_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_65_y_mas_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_menos_18_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_menos_18_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_menos_18_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_18_a_64_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_18_a_64_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_18_a_64_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_65_y_mas_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_65_y_mas_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_65_y_mas_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_española_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_española_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_española_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_extranjera_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_extranjera_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_pob_extranjera_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_españoles_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_españoles_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_españoles_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_extranjeros_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_extranjeros_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_hombres_extranjeros_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_españolas_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_españolas_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_españolas_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_extranjeras_ingresos_menos_5000_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_extranjeras_ingresos_menos_7500_2018" exp="" desc=""/>
+        <constraint field="porcentaje_mujeres_extranjeras_ingresos_menos_10000_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_menos_18_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_menos_18_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_menos_18_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_menos_18_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_menos_18_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_menos_18_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_18_a_64_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_18_a_64_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_18_a_64_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_18_a_64_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_18_a_64_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_18_a_64_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_65_y_mas_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_65_y_mas_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_65_y_mas_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_menos_18_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_menos_18_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_menos_18_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_menos_18_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_menos_18_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_menos_18_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_18_a_64_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_18_a_64_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_18_a_64_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_hombres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_menos_18_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_menos_18_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_menos_18_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_menos_18_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_menos_18_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_menos_18_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_18_a_64_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_debajo_40porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_debajo_50porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_debajo_60porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_encima_140porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_encima_160porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_mujeres_65_y_mas_ingresos_encima_200porc_de_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_española_ingresos_debajo_40porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_española_ingresos_debajo_50porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_española_ingresos_debajo_60porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_española_ingresos_encima_140porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_española_ingresos_encima_160porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_española_ingresos_encima_200porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_extranjera_ingresos_debajo_40porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_extranjera_ingresos_debajo_50porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_extranjera_ingresos_debajo_60porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_extranjera_ingresos_encima_140porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_extranjera_ingresos_encima_160porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_pob_extranjera_ingresos_encima_200porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_españoles_ingresos_debajo_40porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_españoles_ingresos_debajo_50porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_españoles_ingresos_debajo_60porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_españoles_ingresos_encima_140porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_españoles_ingresos_encima_160porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_españoles_ingresos_encima_200porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_extranjeros_ingresos_debajo_40porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_extranjeros_ingresos_debajo_50porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_extranjeros_ingresos_debajo_60porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_extranjeros_ingresos_encima_140porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_extranjeros_ingresos_encima_160porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_homb_extranjeros_ingresos_encima_200porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_españolas_ingresos_debajo_40porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_españolas_ingresos_debajo_50porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_españolas_ingresos_debajo_60porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_españolas_ingresos_encima_140porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_españolas_ingresos_encima_160porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_españolas_ingresos_encima_200porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_extranjeras_ingresos_debajo_40porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_extranjeras_ingresos_debajo_50porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_extranjeras_ingresos_debajo_60porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_extranjeras_ingresos_encima_140porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_extranjeras_ingresos_encima_160porc_mediana_2018" exp="" desc=""/>
+        <constraint field="porc_muj_extranjeras_ingresos_encima_200porc_mediana_2018" exp="" desc=""/>
+      </constraintExpressions>
+      <expressionfields/>
+      <attributeactions>
+        <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+      </attributeactions>
+      <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
+        <columns/>
+      </attributetableconfig>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <storedexpressions/>
+      <editform tolerant="1"></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <editable/>
+      <labelOnTop/>
+      <dataDefinedFieldProperties/>
+      <widgets/>
+      <previewExpression></previewExpression>
       <mapTip></mapTip>
     </maplayer>
     <maplayer wkbType="Polygon" styleCategories="AllStyleCategories" simplifyMaxScale="1" simplifyLocal="1" readOnly="0" simplifyDrawingTol="1" geometry="Polygon" maxScale="0" simplifyDrawingHints="1" refreshOnNotifyMessage="" simplifyAlgorithm="0" labelsEnabled="0" autoRefreshEnabled="0" refreshOnNotifyEnabled="0" autoRefreshTime="0" minScale="100000000" type="vector" hasScaleBasedVisibilityFlag="0">
@@ -55331,6 +57599,7 @@ def my_form_open(dialog, layer, feature):
     <layer id="Grid_07677bb3_48f6_4bc2_b485_a16960150b8b"/>
     <layer id="Grid_copy_af9ef6ee_d98c_49d8_aee4_facdb87db309"/>
     <layer id="Grid_copy_copy_e67bf7ac_040c_46d1_8f29_96781be02978"/>
+    <layer id="renta_original_point_424984db_1281_40f5_be89_804269e4e659"/>
   </layerorder>
   <properties>
     <DefaultStyles>
