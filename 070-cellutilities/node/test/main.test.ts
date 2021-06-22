@@ -53,4 +53,8 @@ describe("cell-utilities", () => {
   describe("\n\n  --- mdtprocessinggridder.test ---\n",
     () => require("./tests/mdtprocessinggridder.test"));
 
+  // Export
+  describe("\n\n  --- export.test ---\n",
+    () => require("./tests/export.test"));
+
 });

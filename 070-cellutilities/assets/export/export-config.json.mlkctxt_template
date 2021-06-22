@@ -1,0 +1,18 @@
+{
+
+  "cellPg": {
+    "host": "{{{MLKC_CELL_DB_HOST}}}",
+    "pass": "{{{MLKC_CELL_DB_PASS}}}",
+    "port": "{{{MLKC_CELL_DB_PORT}}}",
+    "user": "{{{MLKC_CELL_DB_USER}}}"
+  },
+
+  "variableKeys": [ "key0", "key1" ],
+
+  "minZoom": 0,
+
+  "maxZoom": 1,
+
+  "verbose": true
+
+}

@@ -1,8 +1,11 @@
 # Added by mlkctxt - v1.1.4
 # -------------------
+010-celldb/docker/020-production-remote/100-pg-psql-celldb-postgres.sh
+010-celldb/docker/020-production-remote/102-pg-psql-celldb-master.sh
 010-celldb/src/010-create_db.sql
 010-celldb/src/020-celldslib.sql
 010-celldb/src/050-add_metadata.sql
+070-cellutilities/assets/export/export-config.json
 070-cellutilities/assets/gridder/gridder-config-discretepolyareasummary.json
 070-cellutilities/assets/gridder/gridder-config-discretepolytoparea.json
 070-cellutilities/assets/gridder/gridder-config-mdtprocessing.json

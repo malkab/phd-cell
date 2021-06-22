@@ -8,7 +8,8 @@ module.exports = {
     mocha: "./test/main.test.ts",
     quicktest: "./test/00_quick_test.ts",
     gridder: "./src/gridder.ts",
-    griddersetup: "./src/griddersetup.ts"
+    griddersetup: "./src/griddersetup.ts",
+    export: "./src/export.ts"
   },
   mode: "development",
   watch: true,

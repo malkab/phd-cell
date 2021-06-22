@@ -5,6 +5,7 @@
 */
 
 select
+-- distinct on (gridder_task_type)
   gridder_task_id,
   gridder_task_type,
   name,
@@ -12,5 +13,6 @@ select
   source_table,
   geom_field,
   index_variable_key
-from cell_meta.gridder_task;
--- where gridder_task_type = 'DISCRETEPOLYTOPAREA';
+from cell_meta.gridder_task
+order by gridder_task_type;
+-- where gridder_task_type = 'POINTAGGREGATIONS';

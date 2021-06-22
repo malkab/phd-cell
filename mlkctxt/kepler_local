@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# ---------------------------
+#
+# This is to run locally at kepler.
+#
+# ---------------------------
+#
+# Prefix variables with MLKC_.
+#
+# ---------------------------
+
+# -----
+# Remote SSH
+# -----
+export MLKC_CELL_SSH_HOST=$MLKC_SYSTEM_KEPLER_HOST
+export MLKC_CELL_SSH_USER=$MLKC_SYSTEM_KEPLER_USER
+
+# -----
+# PostGIS for Cell DB
+# -----
+export MLKC_CELL_DB_NETWORK=
+export MLKC_CELL_DB_HOST=localhost
+export MLKC_CELL_DB_PORT=5632
+export MLKC_CELL_DB_USER=$MLKC_SYSTEM_KEPLER_PG_USER
+export MLKC_CELL_DB_PASS=$MLKC_SYSTEM_KEPLER_PG_PASS
+export MLKC_CELL_DB_USER_CELL_MASTER=$MLKC_SYSTEM_KEPLER_PG_USER_CELL_MASTER
+export MLKC_CELL_DB_PASS_CELL_MASTER=$MLKC_SYSTEM_KEPLER_PG_PASS_CELL_MASTER
+export MLKC_CELL_DB_USER_CELL_READONLY=$MLKC_SYSTEM_KEPLER_PG_USER_CELL_READONLY
+export MLKC_CELL_DB_PASS_CELL_READONLY=$MLKC_SYSTEM_KEPLER_PG_PASS_CELL_READONLY
+export MLKC_CELL_DB_DB=cell

@@ -39,7 +39,7 @@ UNIQUE=false
 # Work dir. Use $(pwd) paths. Defaults to /.
 WORKDIR=$(pwd)/../../010-celldb/src
 # The version of PG to use. Defaults to latest.
-PG_DOCKER_TAG=holistic_hornet
+PG_DOCKER_TAG=
 # The host, defaults to localhost.
 HOST=$MLKC_CELL_DB_HOST
 # The port, defaults to 5432.

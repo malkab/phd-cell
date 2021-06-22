@@ -21,8 +21,13 @@ describe("libcellbackend", () => {
   describe("\n\n  --- griddertask.test ---\n",
     () => require("./tests/griddertask.test"));
 
+  // This one is atomic
   describe("\n\n  --- variable.test ---\n",
-    () => require("./tests/variable.test"));
+    () => require("./tests/variable/variable.test"));
+
+  // This one is atomic
+  describe("\n\n  --- variableSqlExport.test ---\n",
+    () => require("./tests/variableSqlExport/variableSqlExport.test"));
 
   describe("\n\n  --- catalog.test ---\n",
     () => require("./tests/catalog.test"));

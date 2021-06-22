@@ -80,3 +80,7 @@ export const mdtProcessingGridderConfig: any =
 
 export const mdtProcessingGridderSetUpConfig: any =
   readJsonSync([ "/config/griddersetup/griddersetup-config-mdtprocessing.json" ]);
+
+// Export
+export const exportConfig: any =
+  readJsonSync([ "/config/export/export-config.json" ]);

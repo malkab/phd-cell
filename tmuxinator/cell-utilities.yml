@@ -1,5 +1,5 @@
 name: cell-utilities
-root: /home/git/malkab-phd/cell
+root: /home/git/malkab-phd/phd-cell
 
 windows:
   - node: >
@@ -8,11 +8,13 @@ windows:
 
   - psql: >
       clear ;
-      cd docker/010-dev
+      cd 070-cellutilities/docker
 
   - celldb-compose: >
       clear ;
       sleep 0.2 ;
       cd 010-celldb/docker ;
       . mlkctxt common ;
-      ./010-compose_up.sh
+      ./010-compose_up.sh ;
+      sleep 10 ;
+      exit

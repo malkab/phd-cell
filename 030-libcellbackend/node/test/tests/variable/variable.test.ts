@@ -4,16 +4,16 @@ import { expect } from "chai";
 
 import { rxMochaTests } from "@malkab/ts-utils";
 
-import {
-  Variable, SourcePgConnection, DiscretePolyTopAreaGridderTask, Grid
-} from "../../src/index";
+import { Variable, SourcePgConnection, DiscretePolyTopAreaGridderTask, Grid }
+  from "../../../src/index";
 
-import {
-  clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu,
-  gridderTaskDiscretePolyTopAreaMunicipio, variableDefault
-} from "./common";
+import { clearDatabase$, pgConnectionCellRawData, pgConnCell, gridEu,
+  gridderTaskDiscretePolyTopAreaMunicipio, variableDefault, sqlExport }
+  from "./assets";
 
 import * as rx from "rxjs";
+
+import * as rxo from "rxjs/operators";
 
 /**
  *
@@ -157,7 +157,7 @@ describe("Variable pgInsert$", function() {
 
     assertions: [
 
-      (o: Variable) => expect(o.name).to.be.equal("Var default name"),
+      (o: Variable) => expect(o.name).to.be.equal("Var default name (ñáéíóú./-¿?¡!*+)"),
       (o: Error) =>
         expect(o.message).to.be.equal('duplicate key value violates unique constraint "unique_gridder_task_id_name"')
 
@@ -166,6 +166,99 @@ describe("Variable pgInsert$", function() {
     verbose: false,
 
     active: true
+
+  })
+
+})
+
+/**
+ *
+ * Variable getByGridderTaskId$.
+ *
+ */
+describe("Variable getByGridderTaskId$", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Variable getByGridderTaskId$",
+
+    observables: [
+
+      Variable.getByGridderTaskIdAndName$(pgConnCell,
+        "gridderTaskDiscretePolyTopAreaMunicipio", "Var default name (ñáéíóú./-¿?¡!*+)")
+
+    ],
+
+    assertions: [
+
+      (x: Variable) => {
+
+        expect(x.gridderTaskId, "gridderTaskId equality").to.be
+          .equal("gridderTaskDiscretePolyTopAreaMunicipio");
+
+        expect(x.variableKey, "variableKey not null").to.be.not.null;
+
+        expect(x.name, "name equality").to.be.equal('Var default name (ñáéíóú./-¿?¡!*+)');
+
+        expect(x.description, "description equality")
+          .to.be.equal("Var default description");
+
+        expect(x.columnName, "columnName undefined")
+          .to.be.equal("var_default_name_nyaeiou__");
+
+      }
+
+    ]
+
+  })
+
+})
+
+/**
+ *
+ * Get SQL.
+ *
+ */
+ describe("Get SQL", function() {
+
+  rxMochaTests({
+
+    testCaseName: "Get SQL",
+
+    observables: [
+
+      Variable.getByGridderTaskIdAndName$(pgConnCell,
+        "gridderTaskDiscretePolyTopAreaMunicipio", "Var default name (ñáéíóú./-¿?¡!*+)")
+        .pipe(rxo.map((o: Variable) => o.getSql())),
+
+      Variable.getByGridderTaskIdAndName$(pgConnCell,
+        "gridderTaskDiscretePolyTopAreaMunicipio", "Var default name (ñáéíóú./-¿?¡!*+)")
+        .pipe(
+
+          rxo.concatMap((o: Variable) => o.getGridderTask$(pgConnCell)),
+
+          rxo.map((o: Variable) => o.getSql())
+
+        )
+
+    ],
+
+    assertions: [
+
+      (o: Error) => {
+
+        expect(o.message, "No parent GridderTask retrieved").to.be
+          .equal("The parent GridderTask is undefined and no SQL string can be returned");
+
+      },
+
+      (o: string) => {
+
+        expect(o, "SQL export").to.be.equal(sqlExport);
+
+      }
+
+    ]
 
   })
 

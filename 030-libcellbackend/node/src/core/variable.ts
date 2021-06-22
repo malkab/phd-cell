@@ -10,6 +10,10 @@ import { miniHash } from "@malkab/node-utils";
 
 import { Catalog } from "./catalog";
 
+import { gridderTaskGet$ } from "../griddertasks/griddertaskfactory";
+
+import { EGRIDDERTASKTYPE } from "../griddertasks/egriddertasktype";
+
 /**
  *
  * Variable, backend version.
@@ -28,7 +32,51 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
    *
    */
   private _gridderTaskId: string;
-  get gridderTaskId(): string { return this._gridderTaskId }
+  get gridderTaskId(): string { return this._gridderTaskId; }
+
+  /**
+   *
+   * Column name, that is, a small name suitable for export in a table for other
+   * formats. Will return a modified version of _name if null.
+   *
+   */
+  private _columnName: string | undefined;
+  get columnName(): string | undefined {
+
+    // Check for undefined
+    if (this._columnName === undefined) {
+
+      // Sanitize _name
+      return this._name.toLowerCase()
+        .replace(/ /g, "_")
+        .replace(/ñ/g, "ny")
+        .replace(/á/g, "a")
+        .replace(/é/g, "e")
+        .replace(/í/g, "i")
+        .replace(/ó/g, "o")
+        .replace(/ú/g, "u")
+        .replace(/\(/g, "")
+        .replace(/\)/g, "")
+        .replace(/\./g, "")
+        .replace(/\//g, "_")
+        .replace(/-/g, "_")
+        .replace(/¿/g, "")
+        .replace(/\?/g, "")
+        .replace(/¡/g, "")
+        .replace(/!/g, "")
+        .replace(/\*/g, "")
+        .replace(/:/g, "")
+        .replace(/;/g, "")
+        .replace(/,/g, "_")
+        .replace(/\+/g, "");
+
+    } else {
+
+      return this._columnName;
+
+    }
+
+  }
 
   /**
    *
@@ -56,6 +104,14 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
 
   /**
    *
+   * The parent GridderTask, doesn't need to be defined.
+   *
+   */
+  private _gridderTask: GridderTask | undefined;
+  get gridderTask(): GridderTask | undefined { return this._gridderTask }
+
+  /**
+   *
    * Constructor.
    *
    */
@@ -63,20 +119,24 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
       gridderTaskId,
       gridderTask = undefined,
       variableKey = undefined,
+      columnName = undefined,
       name,
       description
     }: {
       gridderTaskId: string;
       gridderTask?: GridderTask;
       variableKey?: string;
+      columnName?: string;
       name: string;
       description: string;
   }) {
 
     this._gridderTaskId = gridderTaskId;
+    this._gridderTask = gridderTask;
     this._variableKey = variableKey;
     this._name = name;
     this._description = description;
+    this._columnName = columnName;
 
   }
 
@@ -206,6 +266,53 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
       params: () => [ key ],
       type: Variable
     })
+
+  }
+
+  /**
+   *
+   * Retrieves the parent GridderTask.
+   *
+   */
+  public getGridderTask$(pg: RxPg): rx.Observable<Variable> {
+
+    return gridderTaskGet$(pg, this._gridderTaskId).pipe(
+
+      rxo.map((o: GridderTask) => {
+
+        this._gridderTask = o;
+
+        return this;
+
+      })
+
+    )
+
+  }
+
+  /**
+   *
+   * Returns an SQL to get this variable in a table suitable for export to other
+   * formats. The parent GridderTask must be retrieved for this to work.
+   *
+   */
+  public getSql(): string {
+
+    if (this.gridderTask === undefined) {
+
+      throw new Error("The parent GridderTask is undefined and no SQL string can be returned");
+
+    }
+
+    if (this.gridderTask.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
+
+      return `select grid_id, epsg, zoom, x, y, b.value as ${this.columnName}, geom from cell_data.data a inner join cell_meta.catalog b on b.variable_key = '${this.variableKey}' and data ->> '${this.variableKey}' = b.key where data ? '${this.variableKey}'`;
+
+    } else {
+
+      return `select grid_id, epsg, zoom, x, y, data ->> '${this.variableKey}' as ${this.columnName}, geom from cell_data.data where data ? '${this.variableKey}'`;
+
+    }
 
   }
 

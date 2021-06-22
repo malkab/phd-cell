@@ -9,7 +9,8 @@ const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 module.exports = {
   entry: {
     gridder: './src/gridder.ts',
-    griddersetup: './src/griddersetup.ts'
+    griddersetup: './src/griddersetup.ts',
+    export: "./src/export.ts"
   },
 
   mode: "production",

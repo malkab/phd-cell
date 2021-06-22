@@ -4,7 +4,8 @@
 
 # -----------------------------------------------------------------
 #
-# Document here the purpose of the script.
+# WARNING!!!
+# Connection to the unsafe, production raw data DB with a read-only user.
 #
 # -----------------------------------------------------------------
 #
@@ -16,12 +17,12 @@
 # any activated context will do, but will fail if no context was activated.
 MATCH_MLKCTXT=common
 # PostgreSQL user UID and GID. Defaults to 0 and 0.
-POSTGRESUSERID=
-POSTGRESGROUPID=
+POSTGRESUSERID=1000
+POSTGRESGROUPID=1000
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost". Also the
 # host network can be connected using just "host".
-NETWORK=$MLKC_CELL_DB_NETWORK
+NETWORK=$MLKC_CELL_RAW_DATA_NETWORK
 # These two options are mutually exclusive. Use null at both for an interactive
 # psql session. In case of passing a script, files must exist at a mounted
 # volume at the VOLUMES section, referenced by a full path. By default, the
@@ -32,29 +33,27 @@ COMMAND=
 # UID to avoid clashing) and the container host name (without UID). Incompatible
 # with NETWORK container:name option. If blank, a Docker engine default name
 # will be assigned to the container.
-ID_ROOT=cell-db_psql_postgres
+ID_ROOT=psql_cell_raw_data_readonly_libcellbackend
 # Unique? If true, no container with the same name can be created. Defaults to
 # true.
-UNIQUE=false
+UNIQUE=
 # Work dir. Use $(pwd) paths. Defaults to /.
 WORKDIR=$(pwd)/../../010-celldb/src
 # The version of PG to use. Defaults to latest.
 PG_DOCKER_TAG=holistic_hornet
 # The host, defaults to localhost.
-HOST=$MLKC_CELL_DB_HOST
+HOST=$MLKC_CELL_RAW_DATA_HOST
 # The port, defaults to 5432.
-PORT=$MLKC_CELL_DB_PORT
+PORT=$MLKC_CELL_RAW_DATA_PORT
 # The user, defaults to postgres.
-USER=$MLKC_CELL_DB_USER
+USER=$MLKC_CELL_RAW_DATA_USER_CELL_READONLY
 # The pass, defaults to postgres.
-PASS=$MLKC_CELL_DB_PASS
+PASS=$MLKC_CELL_RAW_DATA_PASS_CELL_READONLY
 # The DB, defaults to postgres.
-DB=postgres
+DB=cell_raw_data
 # Declare volumes, a line per volume, complete in source:destination form. No
 # strings needed, $(pwd)/../data/:/ext_src/ works perfectly. Defaults to ().
-VOLUMES=(
-  $(pwd)/../../../:$(pwd)/../../../
-)
+VOLUMES=
 # Env vars. Use ENV_VAR_NAME_CONTAINER=ENV_VAR_NAME_HOST format. Defaults to ().
 ENV_VARS=
 # Output to files. This will run the script silently and output results and
@@ -187,6 +186,7 @@ eval   docker run -ti --rm \
           $VOLUMES_F \
           $ENV_VARS_F \
           $WORKDIR_F \
+          -v $(pwd)/../../:$(pwd)/../../ \
           -e \""POSTGRESUSERID=${POSTGRESUSERID_F}\"" \
           -e \""POSTGRESGROUPID=${POSTGRESGROUPID_F}\"" \
           -e \""PASS_F=${PASS_F}\"" \

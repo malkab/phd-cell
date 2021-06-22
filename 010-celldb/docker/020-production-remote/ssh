@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Version: 2021-06-22
+
+# -----------------------------------------------------------------
+#
+# Document purpose of script here.
+#
+# -----------------------------------------------------------------
+#
+# SSH to a host.
+#
+# -----------------------------------------------------------------
+# Check mlkctxt to check. If void, no check will be performed. Use NOTNULL to
+# enforce any context.
+MATCH_MLKCTXT=NOTNULL
+# Remote SSH username.
+USER=$MLKC_CELL_SSH_USER
+# Host.
+HOST=$MLKC_CELL_SSH_HOST
+# SSH port.
+SSH_PORT=22
+# Amazon AWS PEM key (it´s a path to a file).
+AWS_PEM=
+
+
+
+
+
+# ---
+
+# Check mlkctxt
+if command -v mlkctxt &> /dev/null ; then
+
+  if ! mlkctxt -c $MATCH_MLKCTXT ; then exit 1 ; fi
+
+fi
+
+# Amazon PEM
+if [ ! -z $AWS_PEM ] ; then
+
+    RSH_OPTIONS="-i ${AWS_PEM} -p ${SSH_PORT}"
+
+else
+
+    RSH_OPTIONS="-p ${SSH_PORT}"
+
+fi
+
+# The command
+SSH="ssh ${RSH_OPTIONS} "
+
+# Command
+RSYNC="${SSH} ${USER}@${HOST}"
+
+# eval $RSYNC
+eval $RSYNC

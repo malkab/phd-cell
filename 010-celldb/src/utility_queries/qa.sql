@@ -23,8 +23,9 @@ to cell_readonly;
 -- \set griddertaskid seccionCensalDiscretePolyTopArea
 -- \set griddertaskid nucleoPoblacionDiscretePolyTopArea
 \set griddertaskid provincia2018DiscretePolyTopArea
--- \set griddertaskid municipio2018DiscretePolyTopArea
--- \set griddertaskid seccionCensal2018DiscretePolyTopArea
+\set griddertaskid municipio2018DiscretePolyTopArea
+\set griddertaskid seccionCensal2018DiscretePolyTopArea
+\set griddertaskid seccionesCensalesPointAggregations
 -- \set griddertaskid eennppDiscretePolyTopArea
 -- \set griddertaskid eennppDiscreteAreaSummary
 -- \set griddertaskid nucleosPoblacionDiscreteAreaSummary
