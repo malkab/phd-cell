@@ -126,6 +126,14 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
 
   /**
    *
+   * To store the data type in PG format for this GridderTask type.
+   *
+   */
+  protected _pgDataType: string;
+  get pgDataType(): string { return this._pgDataType }
+
+  /**
+   *
    * Constructor.
    *
    */
@@ -138,6 +146,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       description,
       sourceTable,
       geomField,
+      pgDataType,
       indexVariableKey,
       indexVariable = undefined
     }: {
@@ -149,6 +158,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
       description: string;
       sourceTable: string;
       geomField: string;
+      pgDataType: string;
       indexVariableKey?: string;
       indexVariable?: Variable;
   }) {
@@ -161,6 +171,7 @@ export class GridderTask implements PgOrm.IPgOrm<GridderTask> {
     this._description = description;
     this._sourceTable=  sourceTable;
     this._geomField = geomField;
+    this._pgDataType = pgDataType;
     this._indexVariableKey = indexVariableKey;
     this._indexVariable = indexVariable;
 

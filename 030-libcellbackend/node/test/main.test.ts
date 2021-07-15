@@ -38,8 +38,9 @@ describe("libcellbackend", () => {
   describe("\n\n  --- cell.test ---\n",
     () => require("./tests/cell.test"));
 
+  // Atomic
   describe("\n\n  --- utils.test ---\n",
-    () => require("./tests/utils.test"));
+    () => require("./tests/utils/utils.test"));
 
   /**
    *

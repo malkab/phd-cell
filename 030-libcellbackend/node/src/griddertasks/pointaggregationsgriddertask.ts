@@ -99,6 +99,7 @@ export class PointAggregationsGridderTask extends GridderTask implements PgOrm.I
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
+      pgDataType: "numeric",
       indexVariableKey: indexVariableKey,
       indexVariable: indexVariable
     });

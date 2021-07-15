@@ -218,48 +218,62 @@ describe("Variable pgInsert$", function() {
     observables: [
 
       Variable.getByGridderTaskIdAndName$(pgConnCell,
-        "gridderTaskDiscretePolyTopAreaMunicipioA", "Var variableGridderTaskDiscretePolyTopAreaMunicipio A")
+        "gridderTaskDiscretePolyTopAreaMunicipioA",
+        "Var variableGridderTaskDiscretePolyTopAreaMunicipio A")
       .pipe(
 
         rxo.concatMap((o: Variable) => o.getGridderTask$(pgConnCell)),
 
-        rxo.map((o: Variable) => o.getSql())
+        rxo.map((o: Variable) => o.getSql("a",
+          { schema: "a", pgSqlDataType: "float", minZoom: 1, maxZoom: 5 }))
 
       ),
 
       Variable.getByGridderTaskIdAndName$(pgConnCell,
-        "gridderTaskDiscretePolyAreaSummaryMunicipioA", "Var variableGridderTaskDiscretePolyAreaSummaryMunicipio A")
+        "gridderTaskDiscretePolyAreaSummaryMunicipioA",
+        "Var variableGridderTaskDiscretePolyAreaSummaryMunicipio A")
       .pipe(
 
         rxo.concatMap((o: Variable) => o.getGridderTask$(pgConnCell)),
 
-        rxo.map((o: Variable) => o.getSql())
+        rxo.map((o: Variable) => o.getSql("a",
+          { schema: "a", pgSqlDataType: "float", minZoom: 1, maxZoom: 5 }))
 
       ),
 
       Variable.getByGridderTaskIdAndName$(pgConnCell,
-        "gridderTaskDiscretePolyTopAreaMunicipioB", "Var variableGridderTaskDiscretePolyTopAreaMunicipio B")
+        "gridderTaskDiscretePolyTopAreaMunicipioB",
+        "Var variableGridderTaskDiscretePolyTopAreaMunicipio B")
       .pipe(
 
         rxo.concatMap((o: Variable) => o.getGridderTask$(pgConnCell)),
 
-        rxo.map((o: Variable) => o.getSql())
+        rxo.map((o: Variable) => o.getSql("a",
+          { schema: "a", pgSqlDataType: "float", minZoom: 1, maxZoom: 5 }))
 
       ),
 
       Variable.getByGridderTaskIdAndName$(pgConnCell,
-        "gridderTaskDiscretePolyAreaSummaryMunicipioB", "Var variableGridderTaskDiscretePolyAreaSummaryMunicipio B")
+        "gridderTaskDiscretePolyAreaSummaryMunicipioB",
+        "Var variableGridderTaskDiscretePolyAreaSummaryMunicipio B")
       .pipe(
 
         rxo.concatMap((o: Variable) => o.getGridderTask$(pgConnCell)),
 
-        rxo.map((o: Variable) => o.getSql())
+        rxo.map((o: Variable) => o.getSql("a",
+          { schema: "a", pgSqlDataType: "float", minZoom: 1, maxZoom: 5 }))
 
       ),
 
-      exportSql$(pgConnCell, [ "6", "8", "b", "c" ], 0, 4),
+      exportSql$(pgConnCell, "a", [ "6", "8", "b", "c" ],
+        {
+          schema: "s", minZoom: 0, maxZoom: 4,
+          pgSqlDataTypes: [ "a", "b", "c", "d" ],
+          addNullityFields: [ "6", "c" ],
+          excludeNullityFields: [ "c" ]
+        }),
 
-      exportSql$(pgConnCell, [ "6", "8", "b", "c" ])
+      exportSql$(pgConnCell, "a", [ "6", "8", "b", "c" ])
 
     ],
 
@@ -277,13 +291,15 @@ describe("Variable pgInsert$", function() {
       (o: string) => expect(o, "SQL export").to.be
         .equal(sqlExportVariableGridderTaskDiscretePolyAreaSummaryMunicipioB),
 
-      (o: string) => expect(o, "SQL export").to.be
-        .equal(sqlTotalExportWithZoom),
+      (o: string) => expect(o.length, "SQL export").to.be
+        .equal(sqlTotalExportWithZoom.length),
 
-      (o: string) => expect(o, "SQL export").to.be
-        .equal(sqlTotalExportWithoutZoom),
+      (o: string) => expect(o.length, "SQL export").to.be
+        .equal(sqlTotalExportWithoutZoom.length)
 
-    ]
+    ],
+
+    verbose: false
 
   })
 

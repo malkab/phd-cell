@@ -154,6 +154,7 @@ export class PointIdwGridderTask extends GridderTask implements PgOrm.IPgOrm<Poi
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
+      pgDataType: "numeric",
       indexVariableKey: indexVariableKey,
       indexVariable: indexVariable
     });

@@ -1,18 +1,18 @@
-import { PgOrm, RxPg, QueryResult } from "@malkab/rxpg"
+import { miniHash } from "@malkab/node-utils";
+
+import { PgOrm, QueryResult, RxPg } from "@malkab/rxpg";
 
 import * as rx from "rxjs";
 
 import * as rxo from "rxjs/operators";
 
+import { EGRIDDERTASKTYPE } from "../griddertasks/egriddertasktype";
+
 import { GridderTask } from "../griddertasks/griddertask";
-
-import { miniHash } from "@malkab/node-utils";
-
-import { Catalog } from "./catalog";
 
 import { gridderTaskGet$ } from "../griddertasks/griddertaskfactory";
 
-import { EGRIDDERTASKTYPE } from "../griddertasks/egriddertasktype";
+import { Catalog } from "./catalog";
 
 /**
  *
@@ -292,11 +292,43 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
 
   /**
    *
-   * Returns an SQL to get this variable in a table suitable for export to other
-   * formats. The parent GridderTask must be retrieved for this to work.
+   * Returns an SQL to generate a materialized view that extracts the variable
+   * to a simple cell data / variable value table. The parent GridderTask must
+   * be retrieved for this to work.
+   *
+   * @param mvName
+   * The name of the materialized view to create.
+   * @param __namedParameters
+   * Optional parameters.
+   * @param schema
+   * Optional, the PG schema to use. Defaults to "public".
+   * @param pgSqlDataType
+   * Optional, the PG data type to cast the variable's value to. By default, it
+   * gets it from the parent GridderTask.
+   * @param minZoom
+   * Optional, the min zoom of cells to extract. Must be lower or equal than
+   * maxZoom. Both minZoom and maxZoom needs to be provided together.
+   * @param maxZoom
+   * Optional, the max zoom of cells to extract. Must be higher or equal than
+   * maxZoom. Both minZoom and maxZoom needs to be provided together.
+   * @returns
+   * The SQL to create the materialized view and an index on it.
    *
    */
-  public getSql(): string {
+  public getSql(
+    mvName: string,
+    {
+      schema = "public",
+      pgSqlDataType = <string>this.gridderTask?.pgDataType,
+      minZoom = undefined,
+      maxZoom = undefined
+    }: {
+      schema?: string;
+      pgSqlDataType?: string;
+      minZoom?: number;
+      maxZoom?: number;
+    } = {}):
+  string {
 
     if (this.gridderTask === undefined) {
 
@@ -304,15 +336,37 @@ export class Variable implements PgOrm.IPgOrm<Variable> {
 
     }
 
+    // To store the SQL
+    let sql: string;
+
     if (this.gridderTask.gridderTaskType === EGRIDDERTASKTYPE.DISCRETEPOLYTOPAREA) {
 
-      return `select grid_id, epsg, zoom, x, y, b.value as ${this.columnName}, geom from cell_data.data a inner join cell_meta.catalog b on b.variable_key = '${this.variableKey}' and data ->> '${this.variableKey}' = b.key where data ? '${this.variableKey}'`;
+      sql = `create materialized view ${schema}.${mvName} as select grid_id, epsg, zoom, x, y, b.value::${pgSqlDataType} as ${this.columnName}, geom from cell_data.data a inner join cell_meta.catalog b on b.variable_key = '${this.variableKey}' and data ->> '${this.variableKey}' = b.key where data ? '${this.variableKey}'`;
 
     } else {
 
-      return `select grid_id, epsg, zoom, x, y, data ->> '${this.variableKey}' as ${this.columnName}, geom from cell_data.data where data ? '${this.variableKey}'`;
+      sql = `create materialized view ${schema}.${mvName} as select grid_id, epsg, zoom, x, y, (data ->> '${this.variableKey}')::${pgSqlDataType} as ${this.columnName}, geom from cell_data.data where data ? '${this.variableKey}'`;
 
     }
+
+    // Check min zoom and max zoom
+    if (minZoom !== undefined && maxZoom !== undefined) {
+
+      // Check values
+      if (minZoom <= maxZoom) {
+
+        sql = `${sql} and zoom between ${minZoom} and ${maxZoom}`;
+
+      } else {
+
+        throw new Error("minZoom must be smaller or equal than maxZoom");
+
+      }
+
+    }
+
+    // Add the index
+    return `${sql}; create index idx_${mvName} on ${schema}.${mvName} using btree(grid_id, epsg, zoom, x, y);`;
 
   }
 

@@ -16,12 +16,10 @@ import { exit as processExit } from "process";
  */
 const vars: any = readJsonSync([ "config.json" ]);
 
-console.log("Export script version 1.1.1");
-
 process$(vars)
 .subscribe(
 
-  (o: any) => console.log("Export next:", o),
+  (o: any) => console.log(o),
 
   (e: Error) => {
 

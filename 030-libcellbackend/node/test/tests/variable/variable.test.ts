@@ -229,7 +229,12 @@ describe("Variable getByGridderTaskId$", function() {
 
       Variable.getByGridderTaskIdAndName$(pgConnCell,
         "gridderTaskDiscretePolyTopAreaMunicipio", "Var default name (ñáéíóú./-¿?¡!*+)")
-        .pipe(rxo.map((o: Variable) => o.getSql())),
+        .pipe(rxo.map((o: Variable) => o.getSql("a", {
+            schema: "a",
+            pgSqlDataType: "float",
+            minZoom: 1,
+            maxZoom: 5
+          }))),
 
       Variable.getByGridderTaskIdAndName$(pgConnCell,
         "gridderTaskDiscretePolyTopAreaMunicipio", "Var default name (ñáéíóú./-¿?¡!*+)")
@@ -237,7 +242,12 @@ describe("Variable getByGridderTaskId$", function() {
 
           rxo.concatMap((o: Variable) => o.getGridderTask$(pgConnCell)),
 
-          rxo.map((o: Variable) => o.getSql())
+          rxo.map((o: Variable) => o.getSql("a", {
+              schema: "a",
+              pgSqlDataType: "float",
+              minZoom: 1,
+              maxZoom: 5
+            }))
 
         )
 
@@ -252,11 +262,7 @@ describe("Variable getByGridderTaskId$", function() {
 
       },
 
-      (o: string) => {
-
-        expect(o, "SQL export").to.be.equal(sqlExport);
-
-      }
+      (o: string) => expect(o, "SQL export").to.be.deep.equal(sqlExport)
 
     ]
 

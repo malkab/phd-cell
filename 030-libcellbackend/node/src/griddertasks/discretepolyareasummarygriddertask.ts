@@ -123,6 +123,7 @@ export class DiscretePolyAreaSummaryGridderTask extends GridderTask implements P
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
+      pgDataType: "numeric",
       indexVariableKey: indexVariableKey,
       indexVariable: indexVariable
     });

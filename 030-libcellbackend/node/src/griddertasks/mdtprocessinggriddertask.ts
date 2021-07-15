@@ -159,6 +159,7 @@ export class MdtProcessingGridderTask extends GridderTask implements PgOrm.IPgOr
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
+      pgDataType: "numeric",
       indexVariableKey: indexVariableKey,
       indexVariable: indexVariable
     });

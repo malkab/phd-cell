@@ -22,7 +22,7 @@ export function process$(params: any): rx.Observable<any> {
 
   const logger: NodeLogger = new NodeLogger({
     appName: "export",
-    consoleOut: verbose,
+    consoleOut: false,
     minLogLevel: ELOGLEVELS.DEBUG,
     logFilePath: "."
   })
@@ -57,7 +57,7 @@ export function process$(params: any): rx.Observable<any> {
       logger.logInfo({
         message: `connected with Cell PG at ${params.cellPg.host}`,
         methodName: "process$",
-        moduleName: "gridder"
+        moduleName: "export"
       })
 
     },
@@ -67,7 +67,7 @@ export function process$(params: any): rx.Observable<any> {
       logger.logError({
         message: `error connecting with Cell PG at ${params.cellPg.host}`,
         methodName: "process$",
-        moduleName: "gridder"
+        moduleName: "export"
       })
 
       exit(-1);
@@ -77,19 +77,30 @@ export function process$(params: any): rx.Observable<any> {
   )
 
   // Get the SQL
-  return exportSql$(cellPgConn, params.variableKeys, params.minZoom,
-  params.maxZoom).pipe(
+  return exportSql$(
+    cellPgConn,
+    params.mvName,
+    params.variableKeys,
+    {
+      minZoom: params.minZoom,
+      maxZoom: params.maxZoom,
+      schema: params.schema,
+      pgSqlDataTypes: params.pgSqlDataTypes,
+      addNullityFields: params.addNullityFields,
+      excludeNullityFields: params.excludeNullityFields
+    }
+  ).pipe(
 
     // Compute the cell
     rxo.map((o: string) => {
 
       logger.logInfo({
-        message: `added objects to the DB`,
+        message: `SQL generated`,
         methodName: "process$",
         moduleName: "export"
       });
 
-      console.log(o);
+      return o;
 
     }),
 
@@ -97,7 +108,7 @@ export function process$(params: any): rx.Observable<any> {
     rxo.finalize(() => {
 
       logger.logInfo({
-        message: `gridding finished`,
+        message: `export finished`,
         methodName: "process$",
         moduleName: "export"
       });

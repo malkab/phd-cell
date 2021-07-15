@@ -1,5 +1,5 @@
 name: cell-full_backend
-root: /home/git/malkab-phd/cell
+root: /home/git/malkab-phd/phd-cell
 
 startup_window: sunnsaas_v1-full_backend/full_backend
 
@@ -71,9 +71,8 @@ windows:
       clear ;
       sleep 0.2 ;
       . mlkctxt common ;
-      cd 010-celldb/docker ;
-      ./010-compose_up.sh ;
-      exit
+      cd 010-celldb/docker/010-dev-local ;
+      ./010-compose_up.sh
   - main-docker: >
       clear ;
       sleep 15 ;

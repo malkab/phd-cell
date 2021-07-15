@@ -134,6 +134,7 @@ export class DiscretePolyTopAreaGridderTask extends GridderTask implements PgOrm
       description: description,
       sourceTable: sourceTable,
       geomField: geomField,
+      pgDataType: "varchar",
       indexVariableKey: indexVariableKey,
       indexVariable: indexVariable
     });

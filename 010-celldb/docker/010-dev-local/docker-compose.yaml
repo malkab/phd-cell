@@ -22,7 +22,7 @@ services:
 
     volumes:
       - ./000-localhost-volumes/cell-db-postgis:/data
-      - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
+      - ../../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
   cell-raw-data-postgis-dev:
     image: malkab/postgis:gargantuan_giraffe
@@ -40,7 +40,7 @@ services:
 
     volumes:
       - ./000-localhost-volumes/cell-raw-data-postgis:/data
-      - ../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
+      - ../../../assets/postgres_config/postgresql.conf:/default_confs/postgresql.conf
 
   cell-redis-dev:
     image: redis:5.0
@@ -55,7 +55,7 @@ services:
 
     volumes:
       - ./000-localhost-volumes/cell-redis:/data
-      - ../../assets/redis_config/redis.conf:/redis.conf:ro
+      - ../../../assets/redis_config/redis.conf:/redis.conf:ro
 
     entrypoint:
       - redis-server

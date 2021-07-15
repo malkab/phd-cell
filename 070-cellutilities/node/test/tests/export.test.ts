@@ -19,9 +19,14 @@ describe("Read parameters from config file", function() {
 
     expect(Object.keys(exportConfig)).to.deep.equal([
       "cellPg",
+      "mvName",
       "variableKeys",
       "minZoom",
       "maxZoom",
+      "schema",
+      "pgSqlDataTypes",
+      "addNullityFields",
+      "excludeNullityFields",
       "verbose"
     ]);
 

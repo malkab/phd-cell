@@ -1,5 +1,5 @@
-import { SourcePgConnection, Variable, Grid, DiscretePolyTopAreaGridderTask}
-  from "../../../src/index";
+import { SourcePgConnection, Variable, Grid, DiscretePolyTopAreaGridderTask,
+  DiscretePolyAreaSummaryGridderTask } from "../../../src/index";
 
 import { RxPg, QueryResult } from "@malkab/rxpg";
 
@@ -94,26 +94,6 @@ export const pgConnCellRawData: RxPg = pgConnectionCellRawData.open();
 
 /**
  *
- * Clear the database.
- *
- */
-export const clearDatabase$: rx.Observable<boolean> = pgConnCell.executeParamQuery$(`
-  delete from cell_data.data;
-  delete from cell_meta.catalog;
-  delete from cell_meta.variable;
-  delete from cell_meta.gridder_task;
-  delete from cell_meta.grid;
-  delete from cell_meta.pg_connection;
-  delete from cell_meta.cell_version;
-`)
-.pipe(
-
-  rxo.map((o: QueryResult): boolean => o.command === "DELETE" ? true : false)
-
-)
-
-/**
- *
  * Grid.
  *
  */
@@ -158,20 +138,69 @@ new DiscretePolyTopAreaGridderTask({
 
 /**
  *
- * Variable default.
+ * Municipio Polygon Area Summary.
  *
  */
-export const variableDefault: Variable = new Variable({
+export const gridderTaskDiscretePolyAreaSummaryMunicipio: DiscretePolyAreaSummaryGridderTask =
+new DiscretePolyAreaSummaryGridderTask({
+   gridderTaskId: "gridderTaskDiscretePolyAreaSummaryMunicipio",
+   name : "Sumario de áreas de municipios",
+   description: "Sumario de áreas de municipios con sus provincias.",
+   sourceTable: "context.municipio",
+   geomField: "geom",
+   discreteFields: [ "provincia", "municipio" ],
+   variableNameTemplate: "Área {{{municipio}}} ({{{provincia}}})",
+   variableDescriptionTemplate: "Área del municipio {{{municipio}}}, provincia {{{provincia}}}."
+ });
+
+/**
+ *
+ * Variable top area.
+ *
+ */
+export const variableTopArea: Variable = new Variable({
   gridderTaskId: "gridderTaskDiscretePolyTopAreaMunicipio",
-  name: "Var default name (ñáéíóú./-¿?¡!*+)",
-  description: "Var default description",
+  name: "Var top area",
+  description: "Var top area description",
   gridderTask: gridderTaskDiscretePolyTopAreaMunicipio
 });
+
+/**
+ *
+ * Variable area summary.
+ *
+ */
+ export const variableAreaSummary: Variable = new Variable({
+  gridderTaskId: "gridderTaskDiscretePolyAreaSummaryMunicipio",
+  name: "Var area summary",
+  description: "Var area summary description",
+  gridderTask: gridderTaskDiscretePolyAreaSummaryMunicipio
+});
+
+/**
+ *
+ * Clear the database.
+ *
+ */
+export const clearDatabase$: rx.Observable<boolean> = pgConnCell.executeParamQuery$(`
+  delete from cell_data.data;
+  delete from cell_meta.catalog;
+  delete from cell_meta.variable;
+  delete from cell_meta.gridder_task;
+  delete from cell_meta.grid;
+  delete from cell_meta.pg_connection;
+  delete from cell_meta.cell_version;
+`)
+.pipe(
+
+ rxo.map((o: QueryResult): boolean => o.command === "DELETE" ? true : false)
+
+)
 
 /**
  *
  * SQL export result.
  *
  */
-export const sqlExport: any =
-  "create materialized view a.a as select grid_id, epsg, zoom, x, y, b.value::float as var_default_name_nyaeiou__, geom from cell_data.data a inner join cell_meta.catalog b on b.variable_key = 'c' and data ->> 'c' = b.key where data ? 'c' and zoom between 1 and 5; create index idx_a on a.a using btree(grid_id, epsg, zoom, x, y);";
+export const sqlExport: string =
+  "create materialized view export.mv__02c56b0f888fcb70f3099dc1b2d925fb87c282a6e32962749d63672718bb383c as select grid_id, epsg, zoom, x, y, b.value::t0 as var_top_area, geom from cell_data.data a inner join cell_meta.catalog b on b.variable_key = 'e' and data ->> 'e' = b.key where data ? 'e' and zoom between 1 and 3; create index idx_mv__02c56b0f888fcb70f3099dc1b2d925fb87c282a6e32962749d63672718bb383c on export.mv__02c56b0f888fcb70f3099dc1b2d925fb87c282a6e32962749d63672718bb383c using btree(grid_id, epsg, zoom, x, y); create materialized view export.mv__951a919faa1c46d26cc1f520bfdd72bfc2245c24c67bd2b9cbb73e346adfe6bd as select grid_id, epsg, zoom, x, y, (data ->> '2')::t1 as var_area_summary, geom from cell_data.data where data ? '2' and zoom between 1 and 3; create index idx_mv__951a919faa1c46d26cc1f520bfdd72bfc2245c24c67bd2b9cbb73e346adfe6bd on export.mv__951a919faa1c46d26cc1f520bfdd72bfc2245c24c67bd2b9cbb73e346adfe6bd using btree(grid_id, epsg, zoom, x, y); create materialized view export.mv__mv as select t0.grid_id as grid_id, t0.epsg as epsg, t0.zoom as zoom, t0.x as x, t0.y as y,var_top_area,var_area_summary, t0.geom from cell_data.data t0 left join export.mv__02c56b0f888fcb70f3099dc1b2d925fb87c282a6e32962749d63672718bb383c t1 on t0.zoom=t1.zoom and t0.x=t1.x and t0.y=t1.y left join export.mv__951a919faa1c46d26cc1f520bfdd72bfc2245c24c67bd2b9cbb73e346adfe6bd t2 on t0.zoom=t2.zoom and t0.x=t2.x and t0.y=t2.y where not(var_top_area is null and var_area_summary is null) and t0.zoom between 1 and 3 order by t0.zoom, t0.x, t0.y; create index mv__mv_idx on export.mv__mv using btree(grid_id, epsg, zoom, x, y);";

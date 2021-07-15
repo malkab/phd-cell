@@ -7,11 +7,21 @@
     "user": "{{{MLKC_CELL_DB_USER}}}"
   },
 
-  "variableKeys": [ "key0", "key1" ],
+  "mvName": "the_mv_name",
+
+  "variableKeys": [ "9961", "3f6f4" ],
 
   "minZoom": 0,
 
   "maxZoom": 1,
+
+  "schema": "the_schema",
+
+  "pgSqlDataTypes": [ "type0", "type1" ],
+
+  "addNullityFields": [ "9961", "3f6f4" ],
+
+  "excludeNullityFields": [ "3f6f4" ],
 
   "verbose": true
 
