@@ -86,6 +86,8 @@ describe("PointIdwGridderTask setup$", function() {
 
     testCaseName: "PointIdwGridderTask setup$",
 
+    timeout: 200000,
+
     observables: [ gridderTaskPointIdwMdt.setup$(pgConnCellRawData, pgConnCell) ],
 
     assertions: [

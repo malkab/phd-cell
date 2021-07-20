@@ -1,19 +1,18 @@
-name: cell-utilities
+name: cell-cli
 root: /home/git/malkab-phd/phd-cell
 
 windows:
   - node: >
       clear ;
-      cd 070-cellutilities/docker
+      cd 070-cell-cli/docker
 
   - psql: >
       clear ;
-      cd 070-cellutilities/docker
+      cd 070-cell-cli/docker
 
   - celldb-compose: >
       clear ;
-      sleep 0.2 ;
-      cd 010-celldb/docker ;
+      cd 010-celldb/docker/010-dev-local ;
       . mlkctxt common ;
       ./010-compose_up.sh ;
       sleep 10 ;
