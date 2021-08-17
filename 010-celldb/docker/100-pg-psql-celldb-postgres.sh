@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2021-06-12
+# Version: 2021-07-23
 
 # -----------------------------------------------------------------
 #
@@ -14,8 +14,9 @@
 # -----------------------------------------------------------------
 # Check mlkctxt to check. If void, no check will be performed. If NOTNULL,
 # any activated context will do, but will fail if no context was activated.
-MATCH_MLKCTXT=common
-# PostgreSQL user UID and GID. Defaults to 0 and 0.
+MATCH_MLKCTXT=NOTNULL
+# PostgreSQL user UID and GID. Defaults to 1000/1000, the default postgres
+# server user at the image, needed to run the PostgreSQL server without root.
 POSTGRESUSERID=
 POSTGRESGROUPID=
 # The network to connect to. Remember that when attaching to the network of an
@@ -39,7 +40,7 @@ UNIQUE=false
 # Work dir. Use $(pwd) paths. Defaults to /.
 WORKDIR=$(pwd)/../../010-celldb/src
 # The version of PG to use. Defaults to latest.
-PG_DOCKER_TAG=
+PG_DOCKER_TAG=holistic_hornet
 # The host, defaults to localhost.
 HOST=$MLKC_CELL_DB_HOST
 # The port, defaults to 5432.
@@ -52,9 +53,7 @@ PASS=$MLKC_CELL_DB_PASS
 DB=postgres
 # Declare volumes, a line per volume, complete in source:destination form. No
 # strings needed, $(pwd)/../data/:/ext_src/ works perfectly. Defaults to ().
-VOLUMES=(
-  $(pwd)/../../../:$(pwd)/../../../
-)
+VOLUMES=($(pwd)/../../../:$(pwd)/../../../)
 # Env vars. Use ENV_VAR_NAME_CONTAINER=ENV_VAR_NAME_HOST format. Defaults to ().
 ENV_VARS=
 # Output to files. This will run the script silently and output results and
@@ -79,7 +78,7 @@ fi
 # Manage identifier
 if [ ! -z "${ID_ROOT}" ] ; then
 
-  N="${ID_ROOT}_$(mlkctxt)"
+  N="${ID_ROOT}"
   CONTAINER_HOST_NAME_F="--hostname ${N}"
 
   if [ "${UNIQUE}" = false ] ; then
@@ -160,11 +159,11 @@ WORKDIR_F="--workdir /"
 if [ ! -z "${WORKDIR}" ] ; then WORKDIR_F="--workdir ${WORKDIR}" ; fi
 
 # UID
-POSTGRESUSERID_F=0
+POSTGRESUSERID_F=1000
 if [ ! -z "${POSTGRESUSERID}" ] ; then POSTGRESUSERID_F=$POSTGRESUSERID ; fi
 
 # GID
-POSTGRESGROUPID_F=0
+POSTGRESGROUPID_F=1000
 if [ ! -z "${POSTGRESGROUPID}" ] ; then POSTGRESGROUPID_F=$POSTGRESGROUPID ; fi
 
 # Output files

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2021-06-22
+# Version: 2021-07-23
 
 # -----------------------------------------------------------------
 #
@@ -14,14 +14,15 @@
 # -----------------------------------------------------------------
 # Check mlkctxt to check. If void, no check will be performed. If NOTNULL,
 # any activated context will do, but will fail if no context was activated.
-MATCH_MLKCTXT=kepler
-# PostgreSQL user UID and GID. Defaults to 0 and 0.
+MATCH_MLKCTXT=NOTNULL
+# PostgreSQL user UID and GID. Defaults to 1000/1000, the default postgres
+# server user at the image, needed to run the PostgreSQL server without root.
 POSTGRESUSERID=
 POSTGRESGROUPID=
 # The network to connect to. Remember that when attaching to the network of an
 # existing container (using container:name) the HOST is "localhost". Also the
 # host network can be connected using just "host".
-NETWORK=
+NETWORK=$MLKC_CELL_RAW_DATA_NETWORK
 # These two options are mutually exclusive. Use null at both for an interactive
 # psql session. In case of passing a script, files must exist at a mounted
 # volume at the VOLUMES section, referenced by a full path. By default, the
@@ -32,27 +33,27 @@ COMMAND=
 # UID to avoid clashing) and the container host name (without UID). Incompatible
 # with NETWORK container:name option. If blank, a Docker engine default name
 # will be assigned to the container.
-ID_ROOT=cell-db_psql_readonly_kepler
+ID_ROOT=cell-db_psql_readonly
 # Unique? If true, no container with the same name can be created. Defaults to
 # true.
 UNIQUE=false
 # Work dir. Use $(pwd) paths. Defaults to /.
-WORKDIR=$(pwd)
+WORKDIR=$(pwd)/../../010-celldb/src
 # The version of PG to use. Defaults to latest.
-PG_DOCKER_TAG=
+PG_DOCKER_TAG=holistic_hornet
 # The host, defaults to localhost.
-HOST=$MLKC_CELL_DB_HOST
+HOST=$MLKC_CELL_RAW_DATA_HOST
 # The port, defaults to 5432.
-PORT=$MLKC_CELL_DB_PORT
+PORT=$MLKC_CELL_RAW_DATA_PORT
 # The user, defaults to postgres.
-USER=$MLKC_CELL_DB_USER_CELL_READONLY
+USER=$MLKC_CELL_RAW_DATA_USER_CELL_READONLY
 # The pass, defaults to postgres.
-PASS=$MLKC_CELL_DB_PASS_CELL_READONLY
+PASS=$MLKC_CELL_RAW_DATA_PASS_CELL_READONLY
 # The DB, defaults to postgres.
-DB=cell
+DB=cell_raw_data
 # Declare volumes, a line per volume, complete in source:destination form. No
 # strings needed, $(pwd)/../data/:/ext_src/ works perfectly. Defaults to ().
-VOLUMES=($(pwd):$(pwd))
+VOLUMES=($(pwd)/../../../:$(pwd)/../../../)
 # Env vars. Use ENV_VAR_NAME_CONTAINER=ENV_VAR_NAME_HOST format. Defaults to ().
 ENV_VARS=
 # Output to files. This will run the script silently and output results and
@@ -158,11 +159,11 @@ WORKDIR_F="--workdir /"
 if [ ! -z "${WORKDIR}" ] ; then WORKDIR_F="--workdir ${WORKDIR}" ; fi
 
 # UID
-POSTGRESUSERID_F=0
+POSTGRESUSERID_F=1000
 if [ ! -z "${POSTGRESUSERID}" ] ; then POSTGRESUSERID_F=$POSTGRESUSERID ; fi
 
 # GID
-POSTGRESGROUPID_F=0
+POSTGRESGROUPID_F=1000
 if [ ! -z "${POSTGRESGROUPID}" ] ; then POSTGRESGROUPID_F=$POSTGRESGROUPID ; fi
 
 # Output files

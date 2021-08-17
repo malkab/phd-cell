@@ -8,12 +8,8 @@ windows:
 
   - psql: >
       clear ;
-      cd 070-cell-cli/docker
+      cd 010-celldb/docker
 
   - celldb-compose: >
       clear ;
-      cd 010-celldb/docker/010-dev-local ;
-      . mlkctxt common ;
-      ./010-compose_up.sh ;
-      sleep 10 ;
-      exit
+      cd 010-celldb/docker

@@ -4,7 +4,7 @@
 
 # -----------------------------------------------------------------
 #
-# Document purpose of script here.
+# SSH into the host.
 #
 # -----------------------------------------------------------------
 #
@@ -15,10 +15,10 @@
 # enforce any context.
 MATCH_MLKCTXT=NOTNULL
 # Remote SSH username.
-USER=$MLKC_CELL_SSH_USER
+USER=$MLKC_SYSTEM_37NORTH_USER
 # Host.
-HOST=$MLKC_CELL_SSH_HOST
-# SSH port.
+HOST=$MLKC_SYSTEM_37NORTH_HOST
+# SSH port. Defaults to 22.
 SSH_PORT=22
 # Amazon AWS PEM key (it´s a path to a file).
 AWS_PEM=
@@ -36,14 +36,18 @@ if command -v mlkctxt &> /dev/null ; then
 
 fi
 
+# Port
+PORT_F=22
+if [ ! -z "${PORT}" ] ; then PORT_F=$PORT ; fi
+
 # Amazon PEM
 if [ ! -z $AWS_PEM ] ; then
 
-    RSH_OPTIONS="-i ${AWS_PEM} -p ${SSH_PORT}"
+    RSH_OPTIONS="-i ${AWS_PEM} -p ${PORT_F}"
 
 else
 
-    RSH_OPTIONS="-p ${SSH_PORT}"
+    RSH_OPTIONS="-p ${PORT_F}"
 
 fi
 

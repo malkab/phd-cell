@@ -1,6 +1,6 @@
 {
   "name": "@malkab/libcellbackend",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "Backend library for Cell to use at API, Controller, and Worker",
   "scope": "@malkab",
   "author": {
@@ -29,12 +29,13 @@
     "build": "yarn clean ; yarn service:build-lib",
     "build-with-docs": "yarn clean ; yarn service:build-lib ; yarn build-docs ; rm -Rf docs ; cp -R typedoc/build/html docs",
     "build-docs": "cd typedoc ; ./html ; cd ..",
+    "publish-tar": "yarn build ; yarn pack --filename filename.tar",
     "publish-dev": "yarn build ; yarn publish --patch --no-git-tag-version",
     "publish-production": "yarn build-with-docs ; yarn publish --no-git-tag-version",
     "service:build-lib": "webpack --config webpack-production.config.js --progress",
     "service:build": "webpack --progress --watch",
     "service:watch:quick-test:server": "nodemon --inspect=0.0.0.0:9329 \"./build/quicktest.js\" --watch \"./build/quicktest.js\"",
-    "service:watch:mocha:server": "nodemon --ext js --watch ./build/ --exec 'mocha --timeout 20000 ./build/mocha.js || true'"
+    "service:watch:mocha:server": "nodemon --ext js --watch ./build/ --exec 'mocha --timeout 20000 --max-old-space-size=4096 ./build/mocha.js || true'"
   },
   "engines": {
     "node": "^14.0.0"
@@ -48,6 +49,7 @@
     "@types/webpack-env": "^1.16.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "eslint": "^7.0.0",
     "lodash": "^4.17.20",
     "mocha": "^9.0.0",
     "nodemon": "^2.0.6",
@@ -56,7 +58,6 @@
     "terser-webpack-plugin": "^5.0.0",
     "ts-loader": "^9.0.0",
     "ts-node": "^10.0.0",
-    "eslint": "^7.0.0",
     "typedoc": "^0.21.0",
     "typescript": "^4.1.2",
     "webpack": "^5.0.0",

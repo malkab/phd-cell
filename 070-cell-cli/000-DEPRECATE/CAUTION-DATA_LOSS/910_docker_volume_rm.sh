@@ -1,34 +1,29 @@
 #!/bin/bash
 
-# Version 2020-10-10
+# Version 2020-08-07
 
 # -----------------------------------------------------------------
 #
-# Stops the compose.
+# Document purpose of script here.
 #
 # -----------------------------------------------------------------
 #
-# Stops a compose in the current folder.
+# Remove Docker volumes.
 #
 # -----------------------------------------------------------------
 
 # Check mlkcontext to check. If void, no check will be performed
-MATCH_MLKCONTEXT=common
-# Stop timeout
-TIMEOUT=10
-# Project name, can be blank. Take into account that the folder name
-# will be used, there can be name clashes
-PROJECT_NAME=$MLKC_CELL_APP
+MATCH_MLKCONTEXT=
+# Volumes to be deleted here
+VOLUMES=(
+  cell_raw_data_postgis
+)
 
 
 
 
 
 # ---
-
-echo -------------
-echo WORKING AT $(mlkcontext)
-echo -------------
 
 # Check mlkcontext
 if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
@@ -43,10 +38,29 @@ if [ ! -z "${MATCH_MLKCONTEXT}" ] ; then
 
 fi
 
-if [ ! -z "${PROJECT_NAME}" ] ; then
+VOLUMES_F=
 
-  PROJECT_NAME="-p ${PROJECT_NAME}"
+if [ ! -z "${VOLUMES}" ] ; then
+
+  for E in "${VOLUMES[@]}" ; do
+
+    echo $E
+
+    VOLUMES_F="${VOLUMES_F} ${E} "
+
+  done
 
 fi
 
-docker-compose $PROJECT_NAME stop -t $TIMEOUT
+read -p "BEWARE!!! Going to clear the above volumes. Proceed? (y/N): " -t 10 str
+
+if [ "$str" == "y" ]
+then
+
+  docker volume rm $VOLUMES_F
+
+else
+
+    exit 0
+
+fi

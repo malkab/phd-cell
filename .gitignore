@@ -1,7 +1,5 @@
 # Added by mlkctxt - v1.1.4
 # -------------------
-010-celldb/docker/020-production-remote/100-pg-psql-celldb-postgres.sh
-010-celldb/docker/020-production-remote/102-pg-psql-celldb-master.sh
 010-celldb/src/010-create_db.sql
 010-celldb/src/020-celldslib.sql
 010-celldb/src/050-add_metadata.sql
@@ -17,3 +15,5 @@
 070-cell-cli/assets/griddersetup/griddersetup-config-pointaggregations.json
 070-cell-cli/assets/griddersetup/griddersetup-config-pointidwinterpolation.json
 assets/postgres_config/postgresql.conf
+docker/030-swarms/kepler/docker-compose.yaml
+docker/030-swarms/kepler/INSTANCE

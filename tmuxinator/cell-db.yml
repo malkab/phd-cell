@@ -2,10 +2,10 @@ name: celldb
 root: /home/git/malkab-phd/phd-cell
 
 windows:
-
   - psql: >
       clear ;
-      cd docker/010-dev
+      cd 010-celldb/docker
 
-  - compose: >
-      clear
+  - celldb-compose: >
+      clear ;
+      cd 010-celldb/docker

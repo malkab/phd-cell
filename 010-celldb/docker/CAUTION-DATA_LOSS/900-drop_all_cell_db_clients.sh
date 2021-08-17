@@ -31,7 +31,7 @@ DATABASE=cell
 # Service database
 DB=postgres
 # The version of Docker PG image to use
-POSTGIS_DOCKER_TAG=gargantuan_giraffe
+POSTGIS_DOCKER_TAG=holistic_hornet
 
 
 

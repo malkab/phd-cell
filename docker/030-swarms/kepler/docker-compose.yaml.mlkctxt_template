@@ -1,0 +1,26 @@
+version: '3.5'
+
+networks:
+  cell:
+    external: true
+
+volumes:
+  cell_postgis:
+    external: false
+    name: cell_postgis
+
+services:
+  cell_postgis:
+    image: malkab/postgis:holistic_hornet
+
+    environment:
+      - PASSWORD={{{MLKC_SYSTEM_KEPLER_PG_PASS}}}
+
+    networks:
+      - cell
+
+    ports:
+      - "5632:5432"
+
+    volumes:
+      - cell_postgis:/data

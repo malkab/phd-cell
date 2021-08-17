@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../../../../malkab/Desktop"
+		},
+		{
+			"path": "../010-celldb"
 		}
 	],
 	"settings": {}
