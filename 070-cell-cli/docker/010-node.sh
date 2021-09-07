@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: 2021-06-12
+# Version: 2021-08-10
 
 # -----------------------------------------------------------------
 #
@@ -22,8 +22,8 @@ USER=1000:1000
 # "/bin/bash -c \"ls -lh\"". Leave blank for using the image's built-in option.
 # This has a strong interaction with the ENTRYPOINT parameter.
 COMMAND=
-# Node image version. Defaults to "latest".
-NODE_VERSION=14.17.0-lts
+# Node image version. Mandatory.
+NODE_VERSION=14.17.3
 # Env mode: production / development. Defaults to "development".
 NODE_ENV=
 # Node memory. Defaults to "2GB".
@@ -220,8 +220,12 @@ USER_F="--user 0:0"
 if [ ! -z "${USER}" ] ; then USER_F="--user ${USER}:${USER}" ; fi
 
 # Node version
-NODE_VERSION_F="latest"
-if [ ! -z "${NODE_VERSION}" ] ; then NODE_VERSION_F=$NODE_VERSION ; fi
+if [ -z "${NODE_VERSION}" ] ; then
+
+  echo NODE_VERSION is mandatory, exiting...
+  exit 1
+
+fi
 
 # Node environment
 NODE_ENV_F=development
@@ -245,5 +249,5 @@ eval  $COMMAND_DOCKER \
         $WORKDIR_F \
         $ENV_VARS_F \
         $USER_F \
-        malkab/nodejs-dev:$NODE_VERSION_F \
+        malkab/nodejs-dev:$NODE_VERSION \
         $COMMAND

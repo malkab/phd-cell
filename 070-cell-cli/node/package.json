@@ -1,18 +1,18 @@
 {
-  "name": "cell-utilities",
-  "version": "1.0.0",
-  "description": "REWRITE-ME",
-  "scope": "SCOPE-ME",
+  "name": "cell-cli",
+  "version": "0.0.1",
+  "description": "A CLI interface to a Cell instance",
+  "scope": "malkab",
   "author": {
-    "name": "MY-NAME",
-    "email": "MY-EMAIL@EMAIL.COM",
+    "name": "Juan Pedro Pérez Alcántara",
+    "email": "jp.perez.alcantara@gmail.com",
     "url": "HTTP://MY-URL"
   },
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "keywords": [
-    "PUT-NEW-KEYWORDS-HERE",
-    "ANOTHER-ONE-HERE"
+    "cell",
+    "cli"
   ],
   "license": "UNLICENSED",
   "homepage": "https://github.com/owner/project#readme",
@@ -26,15 +26,18 @@
     "clean": "rm -Rf build ; rm -Rf dist",
     "quick-test": "npm-run-all --parallel service:watch:quick-test:server service:build",
     "build": "yarn clean ; yarn service:build-main",
+    "start": "npm-run-all --parallel service:watch:main:server service:build",
     "build-with-docs": "yarn clean ; yarn service:build-main ; yarn build-docs ; rm -Rf docs ; cp -R typedoc/build/html docs",
     "mocha": "npm-run-all --parallel service:watch:mocha:server service:build",
     "build-docs": "cd typedoc ; ./html ; cd ..",
+    "publish-tar": "yarn build ; yarn pack --filename filename.tar",
     "publish-dev": "yarn build ; yarn publish --patch --no-git-tag-version",
     "publish-production": "yarn build-with-docs ; yarn publish --no-git-tag-version",
     "service:build-main": "webpack --config webpack-production.config.js --progress",
     "service:build": "webpack --progress --watch",
     "service:watch:quick-test:server": "nodemon --inspect=0.0.0.0:9329 \"./build/quicktest.js\" --watch \"./build/quicktest.js\"",
-    "service:watch:mocha:server": "nodemon --ext js --watch ./build/mocha.js --exec 'mocha --timeout 20000 ./build/mocha.js || true'"
+    "service:watch:mocha:server": "nodemon --ext js --watch ./build/mocha.js --exec 'mocha --max-old-space-size=4096 --timeout 20000 ./build/mocha.js || true'",
+    "service:watch:main:server": "nodemon --inspect=0.0.0.0:9229 ./build/main.js --watch ./build/"
   },
   "engines": {
     "node": "^14.0.0"
@@ -48,12 +51,12 @@
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^3.0.0",
     "mocha": "^7.2.0",
+    "ts-node": "^9.0.0",
     "nodemon": "^2.0.6",
     "npm-run-all": "^4.1.5",
     "terser": "^5.3.7",
     "terser-webpack-plugin": "^4.2.3",
     "ts-loader": "^8.0.6",
-    "ts-node": "^9.0.0",
     "tslint": "^6.1.3",
     "typedoc": "^0.19.2",
     "typescript": "^4.0.2",

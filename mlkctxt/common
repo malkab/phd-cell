@@ -10,7 +10,7 @@
 #
 # ---------------------------
 export MLKC_CELL_APP=cell
-export MLKC_CELL_VERSION=1.0.0
+export MLKC_CELL_VERSION=0.0.1
 export MLKC_CELL_INSTANCE_GENERATION=$(date +"%Y%m%d-%H%M%S")
 
 # -----
@@ -24,7 +24,7 @@ export MLKC_CELL_PRODUCTION_IMAGE_TAG=$MLKC_CELL_VERSION_$MLKC_CELL_INSTANCE_GEN
 # -----
 # Node params
 # -----
-export NODE_MEMORY=200GB
+export NODE_MEMORY=20GB
 export MLKC_CELL_NODE_ENV=development
 
 # -----
@@ -62,8 +62,10 @@ export MLKC_CELL_DB_DOCKER_EXTERNAL_PORT=5600
 export MLKC_CELL_DB_MAXPOOLSIZE=2000
 export MLKC_CELL_DB_MINPOOLSIZE=5
 export MLKC_CELL_DB_IDLETIMEOUTMILLIS=60000
-export MLKC_CELL_DB_USER_CELL_MASTER=postgres
+export MLKC_CELL_DB_USER_CELL_MASTER=cell_master
 export MLKC_CELL_DB_PASS_CELL_MASTER=postgres
+export MLKC_CELL_DB_USER_CELL_READONLY=cell_master
+export MLKC_CELL_DB_PASS_CELL_READONLY=postgres
 
 # -----
 # PG persistence config for local cell_raw_data for development
@@ -80,6 +82,8 @@ export MLKC_CELL_RAW_DATA_MINPOOLSIZE=5
 export MLKC_CELL_RAW_DATA_IDLETIMEOUTMILLIS=60000
 export MLKC_CELL_RAW_DATA_USER_CELL_MASTER=postgres
 export MLKC_CELL_RAW_DATA_PASS_CELL_MASTER=postgres
+export MLKC_CELL_RAW_DATA_USER_CELL_READONLY=cell_master
+export MLKC_CELL_RAW_DATA_PASS_CELL_READONLY=postgres
 
 # -----
 # Redis persistence config, some items at mlkctxt/system
@@ -87,6 +91,6 @@ export MLKC_CELL_RAW_DATA_PASS_CELL_MASTER=postgres
 # Remember that for RxRedis clients this must be used as redis://whatever, but
 # not here
 export MLKC_CELL_REDIS_URL=cell-redis
-export MLKC_CELL_REDIS_PASSWORD=$MLKC_SYSTEM_CELL_REDIS_PASS
+export MLKC_CELL_REDIS_PASSWORD=redis_pass
 export MLKC_CELL_REDIS_DOCKER_EXTERNAL_PORT=6700
 export MLKC_CELL_REDIS_PORT=6379

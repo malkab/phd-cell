@@ -3,13 +3,19 @@ root: /home/git/malkab-phd/phd-cell
 
 windows:
   - node: >
+      cd 070-cell-cli/docker ;
+      sleep 1 ;
       clear ;
-      cd 070-cell-cli/docker
+      echo Node development here
 
   - psql: >
+      cd 010-celldb/docker ;
+      sleep 1 ;
       clear ;
-      cd 010-celldb/docker
+      echo psql to the DB here
 
   - celldb-compose: >
+      cd 010-celldb/docker ;
+      sleep 1 ;
       clear ;
-      cd 010-celldb/docker
+      echo Run the DB compose here
