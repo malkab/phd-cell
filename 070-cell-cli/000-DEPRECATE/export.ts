@@ -1,4 +1,4 @@
-import { process$ } from "./lib/export";
+import { process$ } from "../node/src/lib/export";
 
 import { readJsonSync } from "@malkab/node-utils";
 

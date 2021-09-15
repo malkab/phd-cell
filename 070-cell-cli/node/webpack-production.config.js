@@ -1,20 +1,18 @@
-// Doc version: 2020-12-10
+// Doc version: 2021-08-10
 
-// This will create a huge autocontained bundle
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
+// Webpack 5
+
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const nodeExternals = require("webpack-node-externals");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  entry: {
-    gridder: './src/gridder.ts',
-    griddersetup: './src/griddersetup.ts',
-    export: "./src/export.ts"
-  },
 
+  entry: "./src/index.ts",
   mode: "production",
   target: "node",
+
   plugins: [
 
     new CleanWebpackPlugin()
@@ -22,17 +20,23 @@ module.exports = {
   ],
 
   output: {
+    filename: "index.js",
     path: path.resolve(__dirname, "dist"),
-    filename: '[name].js'
+    libraryTarget: "umd",
+    library: "libcellbackend"
   },
+
+  // This does not bundle the global node_modules, resulting in a much smaller
+  // file, but less portable.
+  externals: [nodeExternals()],
 
   module: {
     rules: [{
       test: /\.tsx?$/,
-      use: 'ts-loader',
+      use: "ts-loader",
       exclude: [
 
-        path.join(__dirname, '/node_modules/'),
+        path.join(__dirname, "/node_modules/"),
         path.join(__dirname, "/test/")
 
       ]
@@ -45,7 +49,6 @@ module.exports = {
     minimizer: [new TerserPlugin({
       parallel: true,
       terserOptions: {
-        extractComments: true,
         mangle: {
           toplevel: true
         },
@@ -57,18 +60,8 @@ module.exports = {
 
   },
 
-  node: {
-    fs: "empty"
-  },
-
   resolve: {
-    extensions: ['.tsx', '.ts', '.js']
-  },
+    extensions: [".tsx", ".ts", ".js"]
+  }
 
-  plugins: [
-    new FilterWarningsPlugin({
-      exclude: /Critical dependency: the request of a dependency is an expression/
-    })
-  ]
-
-};
+}

@@ -6,16 +6,16 @@ windows:
       cd 070-cell-cli/docker ;
       sleep 1 ;
       clear ;
-      echo Node development here
+      echo Node development here (010)
 
   - psql: >
       cd 010-celldb/docker ;
       sleep 1 ;
       clear ;
-      echo psql to the DB here
+      echo psql to the DB (1XX) here
 
   - celldb-compose: >
       cd 010-celldb/docker ;
       sleep 1 ;
       clear ;
-      echo Run the DB compose here
+      echo Run the DB compose (010) here, drop it at the end (900)
