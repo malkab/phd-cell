@@ -1,0 +1,28 @@
+{
+
+  "cellPg": {
+    "host": "cell-db-postgis-dev",
+    "pass": "postgres",
+    "port": "5432",
+    "user": "postgres"
+  },
+
+  "mvName": "the_mv_name",
+
+  "variableKeys": [ "9961", "3f6f4" ],
+
+  "minZoom": 0,
+
+  "maxZoom": 1,
+
+  "schema": "the_schema",
+
+  "pgSqlDataTypes": [ "type0", "type1" ],
+
+  "addNullityFields": [ "9961", "3f6f4" ],
+
+  "excludeNullityFields": [ "3f6f4" ],
+
+  "verbose": true
+
+}

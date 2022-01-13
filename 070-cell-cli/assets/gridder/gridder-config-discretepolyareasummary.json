@@ -1,0 +1,76 @@
+{
+
+  "cellPg": {
+    "host": "cell-db-postgis-dev",
+    "pass": "postgres",
+    "port": "5432",
+    "user": "postgres"
+  },
+
+  "sourcePg": {
+    "db": "cell_raw_data",
+    "host": "cell-raw-data-postgis-dev",
+    "pass": "postgres",
+    "port": "5432",
+    "user": "postgres"
+  },
+
+  "grid": {
+    "description": "A grid based on the official EU one",
+    "gridId": "eu-grid",
+    "name": "eu-grid",
+    "originEpsg": "3035",
+    "originX": 2700000,
+    "originY": 1500000,
+    "zoomLevels": [
+      {"name": "100 km", "size": 100000},
+      {"name": "50 km", "size": 50000},
+      {"name": "10 km", "size": 10000},
+      {"name": "5 km", "size": 5000},
+      {"name": "1 km", "size": 1000},
+      {"name": "500 m", "size": 500},
+      {"name": "250 m", "size": 250},
+      {"name": "125 m", "size": 125},
+      {"name": "25 m", "size": 25},
+      {"name": "5 m", "size": 5}
+    ]
+  },
+
+  "gridderTask": {
+    "gridderTaskId": "municipioDiscreteAreaSummary",
+    "gridderTaskType": "DISCRETEPOLYAREASUMMARY",
+    "name": "Desglose de área de municipios",
+    "description": "Área de cada municipio en la celda, incluyendo su provincia",
+    "sourceTable": "context.municipio",
+    "geomField": "geom",
+    "discreteFields": [ "provincia", "municipio" ],
+    "variableNameTemplate": "Área {{{municipio}}} ({{{provincia}}})",
+    "variableDescriptionTemplate": "Área del municipio {{{municipio}}}, provincia {{{provincia}}}"
+  },
+
+  "cells": [
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 1,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 6
+    },
+    {
+      "gridId": "eu-grid",
+      "zoom": 1,
+      "x": 2,
+      "y": 5
+    }
+  ],
+
+  "targetZoom": 3,
+
+  "verbose": true
+
+}
