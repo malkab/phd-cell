@@ -1,0 +1,1 @@
+El contenido de esta primera versión 0.0.1 de la librería PostGIS CellDB se había quedado muy anticuada en muchos aspectos. Se ha rehecho con estándares más modernos y se ha migrado al repositorio cell-cell. Más info en Logseq.
